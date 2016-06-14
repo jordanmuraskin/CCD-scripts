@@ -191,6 +191,6 @@ do
 
     cp -vn ${file} ${finalDirectory}/feedback/fb_${count}.nii.gz;
 
-    ((count++))
+    count=${count}+1
   done
 done
