@@ -21,8 +21,9 @@ do
 
     subjBase=$(basename ${subj_dir})
 
-    finalDirectory=/home/jmuraskin/Projects/CCD/data/${subjBase}/anat
+    finalDirectory=/home/jmuraskin/Projects/CCD/data/${subjBase}
     mkdir ${finalDirectory}
+    mkdir ${finalDirectory}/anat
     # rename the anatomical file to anat.nii.gz
-    cp -v ${anat_file} ${finalDirectory}/anat.nii.gz
+    cp -v ${anat_file} ${finalDirectory}/anat/anat.nii.gz
 done
