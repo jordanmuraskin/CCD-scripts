@@ -5,7 +5,7 @@
 
 #First start with CCD data in the back up folder
 
-backupFolder= "/data/Projects/CCD/backup"
+backupFolder= /data/Projects/CCD/backup
 
 for anat_file in ${backupFolder}/*/*ANAT.nii.gz
 do
@@ -20,7 +20,7 @@ do
 
     subj_dir2=$(dirname ${subj_dir})
 
-    finalDirectory="/home/jmuraskin/Projects/CCD/data/${subj_dir2}/anat"
+    finalDirectory=/home/jmuraskin/Projects/CCD/data/${subj_dir2}/anat
     # rename the anatomical file to anat.nii.gz
     echo "cp -v ${anat_file} ${finalDirectory}/anat.nii.gz"
 done
