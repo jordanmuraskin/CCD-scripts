@@ -193,4 +193,16 @@ do
 
     count=2
   done
+
+  count=1;
+  for file in ${subj}/*TEST_info.txt;
+  do
+    finalDirectory=/home/jmuraskin/Projects/CCD/data/${subjBase};
+    mkdir ${finalDirectory};
+    mkdir ${finalDirectory}/feedback;
+
+    cp -vn ${file} ${finalDirectory}/feedback/fb_${count}_info.txt;
+
+    count=2
+  done
 done
