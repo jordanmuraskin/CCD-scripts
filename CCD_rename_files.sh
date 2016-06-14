@@ -7,7 +7,7 @@
 
 #First start with CCD data in the back up folder
 
-for directory in [newCCD];
+for directory in ["newCCD"];
 do
 
   #Copy Anatomy
