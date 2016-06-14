@@ -7,8 +7,11 @@
 
 #First start with CCD data in the back up folder
 
+for directory in [backup, newCCD];
+do
+
 #Copy Anatomy
-for anat_file in /data/Projects/CCD/backup/*/*ANAT.nii.gz
+for anat_file in /data/Projects/CCD/${directory}/*/*ANAT.nii.gz
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -29,7 +32,7 @@ do
 done
 
 #Copy Anatomy .txt
-for anat_file in /data/Projects/CCD/backup/*/*ANAT_info.txt
+for anat_file in /data/Projects/CCD/${directory}/*/*ANAT_info.txt
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -50,7 +53,7 @@ do
 done
 
 #Copy Tracking TRAIN
-for anat_file in /data/Projects/CCD/backup/*/*TRAIN.nii.gz
+for anat_file in /data/Projects/CCD/${directory}/*/*TRAIN.nii.gz
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -71,7 +74,7 @@ do
 done
 
 #Copy Tracking TRAIN .txt
-for anat_file in /data/Projects/CCD/backup/*/*TRAIN_info.txt
+for anat_file in /data/Projects/CCD/${directory}/*/*TRAIN_info.txt
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -92,7 +95,7 @@ do
 done
 
 #Copy Peer1
-for anat_file in /data/Projects/CCD/backup/*/*PEER1.nii.gz
+for anat_file in /data/Projects/CCD/${directory}/*/*PEER1.nii.gz
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -113,7 +116,7 @@ do
 done
 
 #Copy peer1 .txt
-for anat_file in /data/Projects/CCD/backup/*/*PEER1_info.txt
+for anat_file in /data/Projects/CCD/${directory}/*/*PEER1_info.txt
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -134,7 +137,7 @@ do
 done
 
 #Copy Peer2
-for anat_file in /data/Projects/CCD/backup/*/*PEER2.nii.gz
+for anat_file in /data/Projects/CCD/${directory}/*/*PEER2.nii.gz
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -155,7 +158,7 @@ do
 done
 
 #Copy peer2 .txt
-for anat_file in /data/Projects/CCD/backup/*/*PEER2_info.txt
+for anat_file in /data/Projects/CCD/${directory}/*/*PEER2_info.txt
 do
     # anat_file contains the full path to
     # an anatomical file, print it out
@@ -179,7 +182,7 @@ done
 #Copy Feedback Files but make sure there are 2 copied
 #Go through each subject
 
-for subj in /data/Projects/CCD/backup/*CCD*;
+for subj in /data/Projects/CCD/${directory}/*CCD*;
 do
   subjBase=$(basename ${subj});
   count=1;
