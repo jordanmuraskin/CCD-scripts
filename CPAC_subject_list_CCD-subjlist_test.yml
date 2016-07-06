@@ -1,0 +1,633 @@
+- anat: /home/jmuraskin/Projects/CCD/data/CCD011/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD011/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD011/rest/peer_2/peer2.nii.gz
+  subject_id: CCD011
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD017/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD017/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD017/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD017/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD017/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD017/rest/train/train.nii.gz
+  subject_id: CCD017
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD089/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD089/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD089/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD089/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD089/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD089/rest/train/train.nii.gz
+  subject_id: CCD089
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD003/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD003/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD003/rest/peer_2/peer2.nii.gz
+  subject_id: CCD003
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD074/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD074/rest/feedback_1/fb_1.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD074/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD074/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD074/rest/train/train.nii.gz
+  subject_id: CCD074
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD015/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD015/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD015/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD015/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD015/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD015/rest/train/train.nii.gz
+  subject_id: CCD015
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD021/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD021/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD021/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD021/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD021/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD021/rest/train/train.nii.gz
+  subject_id: CCD021
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD060/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD060/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD060/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD060/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD060/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD060/rest/train/train.nii.gz
+  subject_id: CCD060
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD066/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD066/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD066/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD066/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD066/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD066/rest/train/train.nii.gz
+  subject_id: CCD066
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD033/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD033/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD033/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD033/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD033/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD033/rest/train/train.nii.gz
+  subject_id: CCD033
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD052/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD052/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD052/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD052/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD052/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD052/rest/train/train.nii.gz
+  subject_id: CCD052
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD013/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD013/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD013/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD013/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD013/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD013/rest/train/train.nii.gz
+  subject_id: CCD013
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD076/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD076/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD076/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD076/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD076/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD076/rest/train/train.nii.gz
+  subject_id: CCD076
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD059/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD059/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD059/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD059/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD059/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD059/rest/train/train.nii.gz
+  subject_id: CCD059
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD023/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD023/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD023/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD023/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD023/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD023/rest/train/train.nii.gz
+  subject_id: CCD023
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD064/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD064/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD064/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD064/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD064/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD064/rest/train/train.nii.gz
+  subject_id: CCD064
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD040/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD040/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD040/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD040/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD040/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD040/rest/train/train.nii.gz
+  subject_id: CCD040
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD083/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD083/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD083/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD083/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD083/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD083/rest/train/train.nii.gz
+  subject_id: CCD083
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD034/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD034/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD034/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD034/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD034/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD034/rest/train/train.nii.gz
+  subject_id: CCD034
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD018/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD018/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD018/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD018/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD018/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD018/rest/train/train.nii.gz
+  subject_id: CCD018
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD095/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD095/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD095/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD095/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD095/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD095/rest/train/train.nii.gz
+  subject_id: CCD095
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD099/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD099/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD099/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD099/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD099/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD099/rest/train/train.nii.gz
+  subject_id: CCD099
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD042/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD042/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD042/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD042/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD042/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD042/rest/train/train.nii.gz
+  subject_id: CCD042
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD063/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD063/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD063/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD063/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD063/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD063/rest/train/train.nii.gz
+  subject_id: CCD063
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD008/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD008/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD008/rest/peer_2/peer2.nii.gz
+  subject_id: CCD008
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD061/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD061/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD061/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD061/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD061/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD061/rest/train/train.nii.gz
+  subject_id: CCD061
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD030/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    tra: /home/jmuraskin/Projects/CCD/data/CCD030/rest/train/train.nii.gz
+  subject_id: CCD030
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD093/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD093/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD093/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD093/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD093/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD093/rest/train/train.nii.gz
+  subject_id: CCD093
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD085/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD085/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD085/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD085/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD085/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD085/rest/train/train.nii.gz
+  subject_id: CCD085
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD014/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD014/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD014/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD014/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD014/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD014/rest/train/train.nii.gz
+  subject_id: CCD014
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD091/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD091/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD091/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD091/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD091/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD091/rest/train/train.nii.gz
+  subject_id: CCD091
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD097/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD097/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD097/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD097/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD097/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD097/rest/train/train.nii.gz
+  subject_id: CCD097
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD081/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD081/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD081/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD081/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD081/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD081/rest/train/train.nii.gz
+  subject_id: CCD081
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD005/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD005/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD005/rest/peer_2/peer2.nii.gz
+  subject_id: CCD005
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD088/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD088/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD088/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD088/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD088/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD088/rest/train/train.nii.gz
+  subject_id: CCD088
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD006/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD006/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD006/rest/peer_2/peer2.nii.gz
+  subject_id: CCD006
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD016/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD016/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD016/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD016/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD016/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD016/rest/train/train.nii.gz
+  subject_id: CCD016
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD022/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD022/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD022/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD022/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD022/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD022/rest/train/train.nii.gz
+  subject_id: CCD022
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD032/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD032/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD032/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD032/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD032/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD032/rest/train/train.nii.gz
+  subject_id: CCD032
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD073/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD073/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD073/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD073/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD073/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD073/rest/train/train.nii.gz
+  subject_id: CCD073
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD027/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD027/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD027/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD027/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD027/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD027/rest/train/train.nii.gz
+  subject_id: CCD027
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD075/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD075/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD075/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD075/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD075/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD075/rest/train/train.nii.gz
+  subject_id: CCD075
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD020/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD020/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD020/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD020/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD020/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD020/rest/train/train.nii.gz
+  subject_id: CCD020
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD067/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD067/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD067/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD067/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD067/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD067/rest/train/train.nii.gz
+  subject_id: CCD067
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD065/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD065/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD065/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD065/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD065/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD065/rest/train/train.nii.gz
+  subject_id: CCD065
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD012/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD012/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD012/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD012/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD012/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD012/rest/train/train.nii.gz
+  subject_id: CCD012
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD010/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD010/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD010/rest/peer_2/peer2.nii.gz
+  subject_id: CCD010
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD051/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD051/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD051/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD051/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD051/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD051/rest/train/train.nii.gz
+  subject_id: CCD051
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD035/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD035/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD035/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD035/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD035/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD035/rest/train/train.nii.gz
+  subject_id: CCD035
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD041/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD041/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD041/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD041/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD041/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD041/rest/train/train.nii.gz
+  subject_id: CCD041
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD025/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD025/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD025/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD025/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD025/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD025/rest/train/train.nii.gz
+  subject_id: CCD025
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD082/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD082/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD082/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD082/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD082/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD082/rest/train/train.nii.gz
+  subject_id: CCD082
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD062/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD062/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD062/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD062/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD062/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD062/rest/train/train.nii.gz
+  subject_id: CCD062
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD019/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD019/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD019/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD019/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD019/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD019/rest/train/train.nii.gz
+  subject_id: CCD019
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD026/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD026/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD026/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD026/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD026/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD026/rest/train/train.nii.gz
+  subject_id: CCD026
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD031/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD031/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD031/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD031/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD031/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD031/rest/train/train.nii.gz
+  subject_id: CCD031
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD098/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD098/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD098/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD098/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD098/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD098/rest/train/train.nii.gz
+  subject_id: CCD098
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD009/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD009/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD009/rest/peer_2/peer2.nii.gz
+  subject_id: CCD009
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD084/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD084/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD084/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD084/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD084/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD084/rest/train/train.nii.gz
+  subject_id: CCD084
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD071/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD071/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD071/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD071/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD071/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD071/rest/train/train.nii.gz
+  subject_id: CCD071
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD090/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD090/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD090/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD090/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD090/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD090/rest/train/train.nii.gz
+  subject_id: CCD090
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD053/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD053/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD053/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD053/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD053/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD053/rest/train/train.nii.gz
+  subject_id: CCD053
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD086/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD086/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD086/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD086/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD086/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD086/rest/train/train.nii.gz
+  subject_id: CCD086
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD080/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD080/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD080/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD080/rest/peer_1/peer1.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD080/rest/train/train.nii.gz
+  subject_id: CCD080
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD024/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD024/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD024/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD024/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD024/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD024/rest/train/train.nii.gz
+  subject_id: CCD024
+  unique_id: data_
+- anat: /home/jmuraskin/Projects/CCD/data/CCD096/anat/anat_brain.nii.gz
+  creds_path: null
+  rest:
+    feedback_1: /home/jmuraskin/Projects/CCD/data/CCD096/rest/feedback_1/fb_1.nii.gz
+    feedback_2: /home/jmuraskin/Projects/CCD/data/CCD096/rest/feedback_2/fb_2.nii.gz
+    peer_1: /home/jmuraskin/Projects/CCD/data/CCD096/rest/peer_1/peer1.nii.gz
+    peer_2: /home/jmuraskin/Projects/CCD/data/CCD096/rest/peer_2/peer2.nii.gz
+    tra: /home/jmuraskin/Projects/CCD/data/CCD096/rest/train/train.nii.gz
+  subject_id: CCD096
+  unique_id: data_
