@@ -92,8 +92,8 @@ def subjectinfo(subject_id):
         else:
             feedbackorder=int(list(SubjInfo.loc[subject_id]['V1_NSI_005'])[0])
         output.insert(r,[Bunch(conditions=names,
-                                onsets=[if feedbackorder Order1_onsets else Order2_onsets,if feedbackorder Order2_onsets else Order1_onsets],
-                                durations=[[if feedbackorder Order1_durations else Order2_durations], [if feedbackorder Order2_durations else Order1_durations]], regressors=None)])
+                                onsets=[ Order1_onsets if feedbackorder else Order2_onsets, Order2_onsets if feedbackorder else Order1_onsets],
+                                durations=[[Order1_durations if feedbackorder else Order2_durations], [Order2_durations if feedbackorder else Order1_durations]], regressors=None)])
     return output
 ## end moral dilemma
 
