@@ -98,7 +98,7 @@ def subjectinfo(subject_id):
 ## end moral dilemma
 
 
-workflow.connect(datasource, 'func', modelspec,'functional_runs')
+# workflow.connect(datasource, 'func', modelspec,'functional_runs')
 # workflow.connect(smooth, 'out_file', modelspec,'functional_runs')
 
 
@@ -119,7 +119,7 @@ workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo),'subject_in
 workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 
 #workflow.connect(datasource, 'func', modelfit, 'inputspec.functional_data')
-workflow.connect(modelspec,'functional_runs', modelfit, 'inputspec.functional_data')
+workflow.connect(datasource,'func', modelfit, 'inputspec.functional_data')
 
 
 workflow.run(plugin='MultiProc')
