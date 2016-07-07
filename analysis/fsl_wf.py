@@ -69,6 +69,7 @@ modelspec.inputs.input_units = 'secs'
 modelspec.inputs.time_repetition = TR
 modelspec.inputs.high_pass_filter_cutoff = 100
 
+workflow.connect(datasource, 'func', modelspec,'functional_runs')
 
 
 def subjectinfo(subject_id):
