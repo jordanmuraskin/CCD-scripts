@@ -105,16 +105,16 @@ def subjectinfo(subject_id):
 
 
 #modelfit
-modelfit = create_modelfit_workflow(name='feedback',f_contrasts=True)
+modelfit = create_modelfit_workflow(name='feedback')
 modelfit.inputs.inputspec.interscan_interval = TR
 modelfit.inputs.inputspec.model_serial_correlations = True
 modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': True}}
 cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
 cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
-cont4 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
-cont3 = ['Task','F', [cont1,cont2]]
+cont3 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
+# cont3 = ['Task','F', [cont1,cont2]]
 
-modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3, cont4]
+modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3]
 
 workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo),'subject_info')])])
 
