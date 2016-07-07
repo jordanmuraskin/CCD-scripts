@@ -122,4 +122,4 @@ workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 workflow.connect(datasource,'func', modelfit, 'inputspec.functional_data')
 
 
-workflow.run(plugin='MultiProc')
+workflow.run()
