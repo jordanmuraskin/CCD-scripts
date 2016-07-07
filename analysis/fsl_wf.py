@@ -7,7 +7,6 @@ import nipype.interfaces.fsl as fsl          # fsl
 import nipype.pipeline.engine as pe          # pypeline engine
 import nipype.algorithms.modelgen as model   # model generation
 from nipype.interfaces.base import Bunch
-import pandas as pd
 from CPAC.registration import create_wf_apply_ants_warp
 from nipype.workflows.fmri.fsl import (create_featreg_preproc,
                                        create_modelfit_workflow,
@@ -80,10 +79,11 @@ modelspec.inputs.high_pass_filter_cutoff = 100
 
 
 def subjectinfo(subject_id):
+    from pandas import read_csv
     #Make subject specific EVs given feedback ordering
     output=[]
     names=['Focus','Wander']
-    SubjInfo = pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/CCD-Stimulus-Public.csv')
+    SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/CCD-Stimulus-Public.csv')
     SubjInfo.drop(SubjInfo.index[0],inplace=True)
     SubjInfo.set_index('CCD',inplace=True)
     for r in range(2):
