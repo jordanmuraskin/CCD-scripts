@@ -6,7 +6,6 @@ import nipype.interfaces.io as nio           # Data i/o
 import nipype.interfaces.fsl as fsl          # fsl
 import nipype.pipeline.engine as pe          # pypeline engine
 import nipype.algorithms.modelgen as model   # model generation
-from nipype.interfaces.base import Bunch
 from CPAC.registration import create_wf_apply_ants_warp
 from nipype.workflows.fmri.fsl import (create_featreg_preproc,
                                        create_modelfit_workflow,
@@ -80,6 +79,7 @@ modelspec.inputs.high_pass_filter_cutoff = 100
 
 def subjectinfo(subject_id):
     from pandas import read_csv
+    from nipype.interfaces.base import Bunch
     #Make subject specific EVs given feedback ordering
     output=[]
     names=['Focus','Wander']
