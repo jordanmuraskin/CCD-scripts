@@ -18,13 +18,7 @@ from nipype.workflows.fmri.fsl import (create_featreg_preproc,
 template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 
-#       Focus   /       Wander
-#FB     Order1  /       Order2
-#NoFB   Order2  /       Order1
-Order1_onsets = [24,152,250,408,566,664]
-Order1_durations = [30,60,90,60,30,90]
-Order2_onsets = [58,216,344,472,600,758]
-Order2_durations = [90,30,60,90,60,30]
+
 
 # Specify the subject directories
 
@@ -80,6 +74,13 @@ modelspec.inputs.high_pass_filter_cutoff = 100
 def subjectinfo(subject_id):
     from pandas import read_csv
     from nipype.interfaces.base import Bunch
+    #       Focus   /       Wander
+    #FB     Order1  /       Order2
+    #NoFB   Order2  /       Order1
+    Order1_onsets = [24,152,250,408,566,664]
+    Order1_durations = [30,60,90,60,30,90]
+    Order2_onsets = [58,216,344,472,600,758]
+    Order2_durations = [90,30,60,90,60,30]
     #Make subject specific EVs given feedback ordering
     output=[]
     names=['Focus','Wander']
