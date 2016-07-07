@@ -114,7 +114,7 @@ cont3 = ['Task','F', [cont1,cont2]]
 
 modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3, cont4]
 
-workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo),'modelspec.subject_info')])])
+workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo),'inputs.subject_info')])])
 
 workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 
