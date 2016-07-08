@@ -75,27 +75,35 @@ workflow.connect(datasource, 'func', modelspec,'functional_runs')
 def subjectinfo(subject_id):
     from pandas import read_csv
     from nipype.interfaces.base import Bunch
-    #       Focus   /       Wander
-    #FB     Order1  /       Order2
-    #NoFB   Order2  /       Order1
-    Order1_onsets = [24,152,250,408,566,664]
+
+    Order1_onsets = [22,148,240,394,548,642]
     Order1_durations = [30,60,90,60,30,90]
-    Order2_onsets = [58,216,344,472,600,758]
+    Order2_onsets = [54,208,332,458,580,734]
     Order2_durations = [90,30,60,90,60,30]
+    button_onsets = [52,144,206,238,330,392,454,546,578,640,732]
+    button_duration =[2]
     #Make subject specific EVs given feedback ordering
     output=[]
-    names=['Focus','Wander']
-    SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/CCD-Stimulus-Public.csv')
-    SubjInfo.drop(SubjInfo.index[0],inplace=True)
-    SubjInfo.set_index('CCD',inplace=True)
+    names=['Focus','Wander','ButtonPress']
+    SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+    SubjInfo.set_index('JM_INTERNAL',inplace=True)
     for r in range(2):
         if r==0:
-            feedbackorder=int(list(SubjInfo.loc[subject_id]['V1_NSI_001'])[0])
+            paradigmType=SubjInfo.loc[subject_id]['SCAN_1_PARADIGM']
         else:
-            feedbackorder=int(list(SubjInfo.loc[subject_id]['V1_NSI_005'])[0])
-        output.insert(r,Bunch(conditions=names,
-                                onsets=[ Order1_onsets[:] if feedbackorder else Order2_onsets[:], Order2_onsets[:] if feedbackorder else Order1_onsets[:]],
-                                durations=[Order1_durations[:] if feedbackorder else Order2_durations[:], Order2_durations[:] if feedbackorder else Order1_durations[:]], regressors=None))
+            paradigmType=SubjInfo.loc[subject_id]['SCAN_2_PARADIGM']
+        if paradigmType==0 or paradigmType == 2:
+            focus_onset = Order2_onsets
+            focus_durations = Order2_durations
+            wander_onset = Order1_onsets
+            wander_durations = Order1_durations
+        elif paradigmType==1 or paradigmType == 3:
+            focus_onset = Order1_onsets
+            focus_durations = Order1_durations
+            wander_onset = Order2_onsets
+            wander_durations = Order2_durations
+        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,button_onsets],
+                              durations=[focus_durations, wander_durations,[2]], regressors=None))
     return output
 ## end moral dilemma
 
