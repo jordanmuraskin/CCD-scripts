@@ -22,8 +22,8 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 # Specify the subject directories
 
-subject_list = ['CCD060','CCD066','CCD089']
-
+# subject_list = ['CCD060','CCD066','CCD089']
+subject_list = ['CCD052','CCD076','CCD059','CCD064','CCD083']
 
 
 # scan_order1=list(SubjInfo.loc[subject_list]['V1_NSI_001'])
@@ -124,4 +124,4 @@ workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 workflow.connect(datasource,'func', modelfit, 'inputspec.functional_data')
 
 
-workflow.run()
+workflow.run(plugin='MultiProc')
