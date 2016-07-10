@@ -23,7 +23,7 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 # Specify the subject directories
 
 # subject_list = ['CCD060','CCD066','CCD089']
-subject_list = ['CCD052','CCD076','CCD059','CCD064','CCD083']
+subject_list = ['CCD066','CCD089','CCD052','CCD076','CCD059','CCD064','CCD083']
 
 
 # scan_order1=list(SubjInfo.loc[subject_list]['V1_NSI_001'])
@@ -80,11 +80,11 @@ def subjectinfo(subject_id):
     Order1_durations = [30,60,90,60,30,90]
     Order2_onsets = [54,208,332,458,580,734]
     Order2_durations = [90,30,60,90,60,30]
-    button_onsets = [52,144,206,238,330,392,454,546,578,640,732]
-    button_duration =[2]
+    # button_onsets = [52,144,206,238,330,392,454,546,578,640,732]
+    # button_duration =[2]
     #Make subject specific EVs given feedback ordering
     output=[]
-    names=['Focus','Wander','ButtonPress']
+    names=['Focus','Wander']
     SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
     SubjInfo.set_index('JM_INTERNAL',inplace=True)
     for r in range(2):
@@ -102,8 +102,8 @@ def subjectinfo(subject_id):
             focus_durations = Order1_durations
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
-        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,button_onsets],
-                              durations=[focus_durations, wander_durations,[2]], regressors=None))
+        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset],
+                              durations=[focus_durations, wander_durations, regressors=None))
     return output
 ## end moral dilemma
 
