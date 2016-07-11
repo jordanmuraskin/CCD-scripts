@@ -29,6 +29,12 @@ for ccd in CCD_numbers:
 
 secondlevel_folder_names=['noFeedback','Feedback']
 
+from nipype.interfaces.fsl import MultipleRegressDesign
+model = MultipleRegressDesign()
+model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]]]
+model.inputs.regressors = dict(reg1=[1]*len(CCD_numbers))
+model.run()
+
 for i in range(1,6):
     for fb in [0,1]:
         for t in ['cope', 'varcope']:
@@ -43,17 +49,16 @@ for i in range(1,6):
             merger.inputs.dimension = 't'
             merger.inputs.output_type = 'NIFTI_GZ'
             merger.run()
+        flameo = fsl.FLAMEO(cope_file='./cope' + str(i) + '/cope'+str(i)+'_merged.nii.gz',var_cope_file='./cope' + str(i) + '/varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
+        flameo.run()
         foldername='/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
         os.mkdir(foldername)
         shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
         shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
+        shutil.move('stats',foldername)
 
 
-# from nipype.interfaces.fsl import MultipleRegressDesign
-# model = MultipleRegressDesign()
-# model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]]]
-# model.inputs.regressors = dict(reg1=[1]*subjs)
-# model.run()
+
 #
 #
 # from nipype.interfaces import fsl
