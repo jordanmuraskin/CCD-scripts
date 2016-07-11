@@ -1,37 +1,63 @@
 import glob
 from nipype.interfaces.fsl import Merge
 
-subjs = 0
+def subjectinfo(subject_id,getFeedback=True):
+    #Get whether scan is a feedback scan or not
+    from pandas import read_csv
+
+    SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+    SubjInfo.set_index('JM_INTERNAL',inplace=True)
+    scan1=SubjInfo.loc[subject_id]['SCAN_1_FEEDBACK']
+    if scan1:
+        feedback=0
+        noFeedback=1
+    else:
+        feedback=1
+        noFeedback=0
+    if getFeedback:
+        return feedback
+    if not getFeedback:
+        return noFeedback
+
+#Create subject list
+CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
+subject_list=[]
+for ccd in CCD_numbers:
+    subject_list.append('CCD0%s' % ccd)
+
+feedbackFiles=[]
+noFeedbackFiles=[]
 for i in range(1,5):
-    for t in ['cope', 'varcope']:
-        base_dir = '/home2/cfroehlich/nfb3_preprocessed/working/moralft/ftest/*/modelestimate/mapflow/_modelestimate0/results/'+t+str(i)+'.nii.gz'
-        x = glob.glob(base_dir)
-        x.sort()
-        x = [a for a in x if '0040628' not in a ]
-        print x
-        subjs = len(x)
-        merger = Merge()
-        merger.inputs.in_files = x
-        merger.inputs.dimension = 't'
-        merger.inputs.output_type = 'NIFTI_GZ'
-        merger.run()
+    for fb in [0]:
+        for t in ['cope', 'varcope']:
+            x=[]
+            for subj in subject_list:
+                fbLoc=subjectinfo(subj,fb)
+                fname = '/home/jmuraskin/Projects/CCD/working/feedback/feedback/%s/modelestimate/mapflow/_modelestimate%d/results/'+t+str(i)+'.nii.gz' % (subj,fbLoc)
+                x.append(fname)
+            subjs = len(x)
+            merger = Merge()
+            merger.inputs.in_files = x
+            merger.inputs.dimension = 't'
+            merger.inputs.output_type = 'NIFTI_GZ'
+            merger.run()
 
-from nipype.interfaces.fsl import MultipleRegressDesign
-model = MultipleRegressDesign()
-model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]]]
-model.inputs.regressors = dict(reg1=[1]*subjs)
-model.run()
-
-
-from nipype.interfaces import fsl
-import os
-import shutil
-
-for i in range(1,5):
-  os.mkdir('./cope' + str(i))
-  shutil.move('cope' + str(i) + '_merged.nii.gz','./cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz')
-  shutil.move('varcope' + str(i) + '_merged.nii.gz','./cope' + str(i) + '/varcope' + str(i) + '_merged.nii.gz')
-  flameo = fsl.FLAMEO(cope_file='./cope' + str(i) + '/cope'+str(i)+'_merged.nii.gz',var_cope_file='./cope' + str(i) + '/varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
-
-  flameo.run()
-  shutil.move('stats','./cope' + str(i))
+# from nipype.interfaces.fsl import MultipleRegressDesign
+# model = MultipleRegressDesign()
+# model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]]]
+# model.inputs.regressors = dict(reg1=[1]*subjs)
+# model.run()
+#
+#
+# from nipype.interfaces import fsl
+# import os
+# import shutil
+#
+# for i in range(1,5):
+#   os.mkdir('./cope' + str(i))
+#   shutil.move('cope' + str(i) + '_merged.nii.gz','./cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz')
+#   shutil.move('varcope' + str(i) + '_merged.nii.gz','./cope' + str(i) + '/varcope' + str(i) + '_merged.nii.gz')
+#   flameo = fsl.FLAMEO(cope_file='./cope' + str(i) + '/cope'+str(i)+'_merged.nii.gz',var_cope_file='./cope' + str(i) + '/varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
+#
+#   flameo.run()
+#   shutil.move('stats','./cope' + str(i))
