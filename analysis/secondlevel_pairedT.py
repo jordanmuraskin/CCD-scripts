@@ -14,7 +14,7 @@ for i in range(1,6):
         merger.inputs.output_type = 'NIFTI_GZ'
         merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
         merger.run()
-    flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='PairedTtest_15subjects.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='PairedTtest_15subjects.mat',t_con_file='PairedTtest_15subjects.con', run_mode='flame1')
+    flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='pairedTTest_15subjects.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='pairedTTest_15subjects.mat',t_con_file='pairedTTest_15subjects.con', run_mode='flame1')
     flameo.run()
     foldername='/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/paired-Ttest/cope' + str(i)
     os.mkdir(foldername)
