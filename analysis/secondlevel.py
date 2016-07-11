@@ -1,3 +1,5 @@
+import os
+import shutil
 import glob
 from nipype.interfaces.fsl import Merge
 
