@@ -25,10 +25,10 @@ subject_list=[]
 for ccd in CCD_numbers:
     subject_list.append('CCD0%s' % ccd)
 
-feedbackFiles=[]
-noFeedbackFiles=[]
-for i in range(1,5):
-    for fb in [0]:
+secondlevel_folder_names=['noFeedback','Feedback']
+
+for i in range(1,6):
+    for fb in [0,1]:
         for t in ['cope', 'varcope']:
             x=[]
             for subj in subject_list:
@@ -41,6 +41,11 @@ for i in range(1,5):
             merger.inputs.dimension = 't'
             merger.inputs.output_type = 'NIFTI_GZ'
             merger.run()
+        foldername='/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
+        os.mkdir(foldername)
+        shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+        shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
+
 
 # from nipype.interfaces.fsl import MultipleRegressDesign
 # model = MultipleRegressDesign()
