@@ -105,7 +105,7 @@ def subjectinfo(subject_id):
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
         output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset],
-                              durations=[focus_durations, wander_durations, regressors=None))
+                              durations=[focus_durations, wander_durations], regressors=None))
     return output
 ## end moral dilemma
 
@@ -121,10 +121,12 @@ modelfit.inputs.inputspec.model_serial_correlations = True
 modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': True}}
 cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
 cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
-cont3 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
+cont3 = ['Mean Focus','T',['Focus'],[1]]
+cont4 = ['Mean Wander','T',['Wander'],[1]]
+cont5 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
 # cont3 = ['Task','F', [cont1,cont2]]
 
-modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3]
+modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5]
 
 workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo),'subject_info')])])
 
