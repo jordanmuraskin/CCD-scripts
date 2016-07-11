@@ -6,8 +6,8 @@ from nipype.interfaces import fsl
 
 for i in range(1,6):
     for t in ['cope', 'varcope']:
-        x=['/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/Feedback/' + t + str(i) + '/' + t + '_merged.nii.gz',\
-        '/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/noFeedback/' + t + str(i) + '/' +t + '_merged.nii.gz']
+        x=['/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/Feedback/' + t + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
+        '/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/noFeedback/' + t + str(i) + '/' +t + str(i) + '_merged.nii.gz']
         merger = Merge()
         merger.inputs.in_files = x
         merger.inputs.dimension = 't'
