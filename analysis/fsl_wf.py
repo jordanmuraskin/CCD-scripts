@@ -78,9 +78,9 @@ def subjectinfo(subject_id):
     from pandas import read_csv
     from nipype.interfaces.base import Bunch
 
-    Order1_onsets = [22,148,240,394,548,642]
+    Order1_onsets = [22,150,248,406,564,662]
     Order1_durations = [30,60,90,60,30,90]
-    Order2_onsets = [54,208,332,458,580,734]
+    Order2_onsets = [56,214,342,470,598,756]
     Order2_durations = [90,30,60,90,60,30]
     # button_onsets = [52,144,206,238,330,392,454,546,578,640,732]
     # button_duration =[2]
