@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 from nipype.interfaces.fsl import Merge
+from nipype.interfaces import fsl
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
