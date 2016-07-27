@@ -19,7 +19,8 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 
 
-CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
+# CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
+CCD_numbers=[17,89]
 # Specify the subject directories
 
 # subject_list = ['CCD060','CCD066','CCD089']
