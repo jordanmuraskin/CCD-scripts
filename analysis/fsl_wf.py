@@ -38,7 +38,7 @@ for ccd in CCD_numbers:
 workflow = pe.Workflow(name= "level1")
 workflow.base_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/')
 workflow.config = {"execution": {"crashdump_dir":os.path.abspath('%s/crashdumps' % workflow.base_dir)}}
-working_dir = os.path.abspath('%s/working' % workflow.base_dir)
+working_dir = os.path.abspath('%s/working_v1' % workflow.base_dir)
 
 
 # Workflow base directory
@@ -47,11 +47,12 @@ if not os.path.isdir(working_dir):
 workflow = pe.Workflow(name='feedback', base_dir=working_dir)
 
 # Specify the location of the data.
-data_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_JM')
+data_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1')
 
 
 # Map field names to individual subject runs.
-info = dict(func=[['subject_id', ['motion_correct_to_standard_smooth/_scan_feedback_1/_fwhm_6/fb_1_calc_tshift_resample_volreg_antswarp_maths','motion_correct_to_standard_smooth/_scan_feedback_2/_fwhm_6/fb_2_calc_tshift_resample_volreg_antswarp_maths']]])
+info = dict(func=[['subject_id', ['functional_mni_other_resolutions_smooth/_scan_feedback_1/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths',
+'functional_mni_other_resolutions_smooth/_scan_feedback_2/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths]]])
 
 infosource = pe.Node(interface=util.IdentityInterface(fields=['subject_id']), name="infosource")
 infosource.iterables = ('subject_id', subject_list)
