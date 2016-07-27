@@ -68,12 +68,12 @@ workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
 
 # add mean image to fmri
 
-addMeanImage =  pe.Node(interface=fsl.maths.MultiImageMaths(),name='addMeanImage')
+addMeanImage =  pe.MapNode(interface=fsl.maths.MultiImageMaths(),name='addMeanImage',iterfield=['in_file'])
 addMeanImage.inputs.op_string = "-add %s"
 # addMeanImage.inputs.operand_files = ["functional2.nii"]
 # addMeanImage.inputs.out_file = 'funcWithMean.nii.gz'
-workflow.connect(datasource,'func',addMeanImage,'in_file')
-workflow.connect(datasource,'funcMean',addMeanImage,'operand_files')
+workflow.connect([(datasource,addMeanImage,[('func','in_file')]),
+    (datasource,addMeanImage,[('funcMean','operand_files')])])
 
 
 
