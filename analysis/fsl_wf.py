@@ -20,7 +20,7 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 
 # CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
-CCD_numbers=[17,89]
+CCD_numbers=[15,17,74,89]
 # Specify the subject directories
 
 # subject_list = ['CCD060','CCD066','CCD089']
@@ -72,7 +72,7 @@ for feedbackRun in range(2):
     datasource.inputs.template_args = info
     datasource.inputs.sort_filelist = True
     workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
-    # 
+    #
     # def createOperandFileName(infoDict):
     #     print infoDict[0]
     #     print infoDict[1]
