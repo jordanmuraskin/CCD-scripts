@@ -52,18 +52,30 @@ data_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v
 
 # Map field names to individual subject runs.
 info = dict(func=[['subject_id', ['functional_mni_other_resolutions_smooth/_scan_feedback_1/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths',
-'functional_mni_other_resolutions_smooth/_scan_feedback_2/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths']]])
+'functional_mni_other_resolutions_smooth/_scan_feedback_2/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths']]],
+funcMean=[['subject_id',['mean_functional_in_mni/_scan_feedback_1/fb_1_calc_tshift_resample_volreg_calc_tstat_antswarp.nii.gz','mean_functional_in_mni/_scan_feedback_2/fb_2_calc_tshift_resample_volreg_calc_tstat_antswarp.nii.gz']])
 
 infosource = pe.Node(interface=util.IdentityInterface(fields=['subject_id']), name="infosource")
 infosource.iterables = ('subject_id', subject_list)
 
-datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'], outfields=['func']),
+datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'], outfields=['func','funcMean']),
                      name = 'datasource')
 datasource.inputs.base_directory = data_dir
 datasource.inputs.template = '%s_data_/%s.nii.gz'
 datasource.inputs.template_args = info
 datasource.inputs.sort_filelist = True
 workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
+
+# add mean image to fmri
+
+addMeanImage =  pe.Node(interface=fsl.maths.MultiImageMaths(),name='addMeanImage')
+addMeanImage.inputs.op_string = "-add %s"
+# addMeanImage.inputs.operand_files = ["functional2.nii"]
+# addMeanImage.inputs.out_file = 'funcWithMean.nii.gz'
+worflow.connect(datasource,'func',addMeanImage,'in_files)
+workflow.connect(datasource,'funcMean',addMeanImage,'operand_files')
+
+
 
 #modelspec
 TR = 2
@@ -73,7 +85,7 @@ modelspec.inputs.input_units = 'secs'
 modelspec.inputs.time_repetition = TR
 modelspec.inputs.high_pass_filter_cutoff = 100
 
-workflow.connect(datasource, 'func', modelspec,'functional_runs')
+workflow.connect(addMeanImage, 'out_file', modelspec,'functional_runs')
 
 
 def subjectinfo(subject_id):
@@ -135,7 +147,7 @@ workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo),'subject_in
 workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 
 #workflow.connect(datasource, 'func', modelfit, 'inputspec.functional_data')
-workflow.connect(datasource,'func', modelfit, 'inputspec.functional_data')
+workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
 workflow.run(plugin='MultiProc')
