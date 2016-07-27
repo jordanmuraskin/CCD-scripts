@@ -72,7 +72,7 @@ addMeanImage =  pe.Node(interface=fsl.maths.MultiImageMaths(),name='addMeanImage
 addMeanImage.inputs.op_string = "-add %s"
 # addMeanImage.inputs.operand_files = ["functional2.nii"]
 # addMeanImage.inputs.out_file = 'funcWithMean.nii.gz'
-worflow.connect(datasource,'func',addMeanImage,'in_files)
+worflow.connect(datasource,'func',addMeanImage,'in_files')
 workflow.connect(datasource,'funcMean',addMeanImage,'operand_files')
 
 
