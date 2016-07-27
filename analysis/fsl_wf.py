@@ -76,7 +76,7 @@ addMeanImage.inputs.op_string = "-add %s"
 # addMeanImage.inputs.operand_files = ['%s_data_/%s.nii.gz']
 # addMeanImage.inputs.out_file =
 workflow.connect([(datasource,addMeanImage,[('func','in_file')]),
-    (datasource,addMeanImage,[('funcMean',createOperandFileName,'operand_files')])])
+    (datasource,addMeanImage,[(('funcMean',createOperandFileName),'operand_files')])])
 
 
 
