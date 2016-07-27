@@ -70,8 +70,8 @@ workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
 
 addMeanImage =  pe.MapNode(interface=fsl.maths.MultiImageMaths(),name='addMeanImage',iterfield=['in_file'])
 addMeanImage.inputs.op_string = "-add %s"
-# addMeanImage.inputs.operand_files = ["functional2.nii"]
-# addMeanImage.inputs.out_file = 'funcWithMean.nii.gz'
+addMeanImage.inputs.operand_files = '%s_data_/%s.nii.gz'
+# addMeanImage.inputs.out_file =
 workflow.connect([(datasource,addMeanImage,[('func','in_file')]),
     (datasource,addMeanImage,[('funcMean','operand_files')])])
 
