@@ -66,14 +66,17 @@ datasource.inputs.template_args = info
 datasource.inputs.sort_filelist = True
 workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
 
-# add mean image to fmri
+def createOperandFileName(infoDict):
+    filename= '%s_data_/%s.nii.gz' % (infoDict[0],infoDict[1])
+    return filename
 
+# add mean image to fmri
 addMeanImage =  pe.MapNode(interface=fsl.maths.MultiImageMaths(),name='addMeanImage',iterfield=['in_file'])
 addMeanImage.inputs.op_string = "-add %s"
-addMeanImage.inputs.operand_files = '%s_data_/%s.nii.gz'
+# addMeanImage.inputs.operand_files = ['%s_data_/%s.nii.gz']
 # addMeanImage.inputs.out_file =
 workflow.connect([(datasource,addMeanImage,[('func','in_file')]),
-    (datasource,addMeanImage,[('funcMean','operand_files')])])
+    (datasource,addMeanImage,[('funcMean',createOperandFileName,'operand_files')])])
 
 
 
