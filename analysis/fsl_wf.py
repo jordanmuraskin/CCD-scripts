@@ -52,7 +52,7 @@ data_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v
 
 # Map field names to individual subject runs.
 info = dict(func=[['subject_id', ['functional_mni_other_resolutions_smooth/_scan_feedback_1/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths',
-'functional_mni_other_resolutions_smooth/_scan_feedback_2/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths]]])
+'functional_mni_other_resolutions_smooth/_scan_feedback_2/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths']]])
 
 infosource = pe.Node(interface=util.IdentityInterface(fields=['subject_id']), name="infosource")
 infosource.iterables = ('subject_id', subject_list)
