@@ -60,6 +60,42 @@ for i in range(1,6):
 
 
 
+pairedmodel = MultipleRegressDesign()
+pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1 -1]]]
+#make paired ttest model
+modelX=[0]*2*len(CCD_numbers)
+modelXAB=modelX
+modelXAB[range(0,len(CCD_numbers))]=1
+modelDict=dict(reg1=modelXAB)
+for indx,subj in enumerate(CCD_numbers):
+    modeltmp=[0]*2*len(CCD_numbers)
+    modeltmp[indx]=1
+    modeltmp[indx+len(CCD_numbers)]=1
+    modelDict['s%d' % indx]= modeltmp
+pairedmodel.inputs.regressors = modelDict
+pairedmodel.run()
+
+
+
+for i in range(1,6):
+    for t in ['cope', 'varcope']:
+        x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
+        '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+        merger = Merge()
+        merger.inputs.in_files = x
+        merger.inputs.dimension = 't'
+        merger.inputs.output_type = 'NIFTI_GZ'
+        merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
+        merger.run()
+
+    flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
+    flameo.run()
+    foldername='/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/paired-Ttest/cope' + str(i)
+    os.mkdir(foldername)
+    shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+    shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
+    shutil.move('stats',foldername)
+
 #
 #
 # from nipype.interfaces import fsl
