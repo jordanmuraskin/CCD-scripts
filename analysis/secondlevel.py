@@ -42,7 +42,7 @@ for i in range(1,6):
             x=[]
             for subj in subject_list:
                 fbLoc=subjectinfo(subj,fb)
-                fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/_subject_id_%s/modelestimate0/mapflow/_modelestimate/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                 x.append(fname)
             subjs = len(x)
             merger = Merge()
