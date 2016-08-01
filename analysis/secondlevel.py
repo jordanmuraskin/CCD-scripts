@@ -61,7 +61,7 @@ from nipype.interfaces.fsl import MultipleRegressDesign
 
 
 pairedmodel = MultipleRegressDesign()
-pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1 -1]]]
+pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
 #make paired ttest model
 modelX=[0]*2*len(CCD_numbers)
 modelXAB=modelX
