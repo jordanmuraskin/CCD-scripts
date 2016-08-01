@@ -23,7 +23,7 @@ def subjectinfo(subject_id,getFeedback=True):
         return noFeedback
 
 #Create subject list
-CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,76,83,89,95]
+CCD_numbers=[15,17,18,21,22,30,33,34,40,42,52,59,60,61,63,64,66,74,76,83,89,95,98,99]
 subject_list=[]
 for ccd in CCD_numbers:
     subject_list.append('CCD0%s' % ccd)
@@ -42,7 +42,7 @@ for i in range(1,6):
             x=[]
             for subj in subject_list:
                 fbLoc=subjectinfo(subj,fb)
-                fname = '/home/jmuraskin/Projects/CCD/working/feedback/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate%d/results/%s%d.nii.gz' % (subj,fbLoc,t,i)
+                fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback/feedback_run-%d/_subject_id_%s/modelestimate/mapflow/_modelestimate/results/%s%d.nii.gz' % (subj,fbLoc,t,i)
                 x.append(fname)
             subjs = len(x)
             merger = Merge()
@@ -52,7 +52,7 @@ for i in range(1,6):
             merger.run()
         flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
         flameo.run()
-        foldername='/home/jmuraskin/Projects/CCD/working/feedback/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
+        foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
         os.mkdir(foldername)
         shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
         shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
