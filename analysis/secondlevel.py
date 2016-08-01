@@ -30,7 +30,7 @@ for ccd in CCD_numbers:
 #
 # secondlevel_folder_names=['noFeedback','Feedback']
 #
-# from nipype.interfaces.fsl import MultipleRegressDesign
+from nipype.interfaces.fsl import MultipleRegressDesign
 # model = MultipleRegressDesign()
 # model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]]]
 # model.inputs.regressors = dict(reg1=[1]*len(CCD_numbers))
