@@ -65,7 +65,7 @@ pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[
 #make paired ttest model
 modelX=[0]*2*len(CCD_numbers)
 modelXAB=modelX
-modelXAB[0:len(CCD_numbers)-1]=[1]*len(CCD_numbers)
+modelXAB[0:len(CCD_numbers)]=[1]*len(CCD_numbers)
 modelDict=dict(reg1=modelXAB)
 for indx,subj in enumerate(CCD_numbers):
     modeltmp=[0]*2*len(CCD_numbers)
