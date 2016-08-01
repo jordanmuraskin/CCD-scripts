@@ -23,7 +23,7 @@ def subjectinfo(subject_id,getFeedback=True):
         return noFeedback
 
 #Create subject list
-CCD_numbers=[15,17,18,21,22,30,33,34,40,42,52,59,60,61,63,64,66,74,76,83,89,95,98,99]
+CCD_numbers=[15,17,18,21,22,33,34,40,42,52,59,60,61,63,64,66,74,76,83,89,95,98,99]
 subject_list=[]
 for ccd in CCD_numbers:
     subject_list.append('CCD0%s' % ccd)
