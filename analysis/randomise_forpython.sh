@@ -189,4 +189,4 @@ combineScript
 
 chmod a+x ${DIRNAME}/${BASENAME}.defragment
 
-sh ${DIRNAME}/${BASENAME}.defragment
+./${DIRNAME}/${BASENAME}.defragment
