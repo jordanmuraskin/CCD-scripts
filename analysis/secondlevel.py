@@ -3,6 +3,8 @@ import shutil
 import glob
 from nipype.interfaces.fsl import Merge
 from nipype.interfaces import fsl
+from subprocess import call
+
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
@@ -30,7 +32,7 @@ for ccd in CCD_numbers:
 #
 secondlevel_folder_names=['noFeedback','Feedback']
 
-runWithRandomise = False
+runWithRandomise = True
 nperms=5000
 #
 
@@ -52,6 +54,7 @@ if runWithRandomise:
             os.mkdir('stats')
 
             randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            call(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
             if os.path.exists(foldername):
@@ -81,7 +84,9 @@ if runWithRandomise:
             subtractCopes.run()
 
         randomiseCommand='randomise -i %s -o ./stats_FB_gt_nFB/cope%d -1 -m %s -T -n %d' % ('copediff_FB_gt_nFB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        call(randomiseCommand)
         randomiseCommand='randomise -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        call(randomiseCommand)
 
 
         foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/cope' + str(i)
