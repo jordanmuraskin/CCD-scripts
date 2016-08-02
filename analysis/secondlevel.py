@@ -50,11 +50,12 @@ if runWithRandomise:
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
+                merger.inputs.merged_file = 'cope' + str(i) + '_tfce_merged'
                 merger.run()
 
             os.mkdir('tfce_stats')
 
-            randomiseCommand='randomise -i %s -o ./tfce_stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            randomiseCommand='randomise -i %s -o ./tfce_stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + 'tfce_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             call(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
@@ -72,8 +73,8 @@ if runWithRandomise:
 
             subtractCopes =  fsl.maths.MultiImageMaths()
             subtractCopes.inputs.op_string = "-sub %s"
-            subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-            subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+            subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_tfce_merged.nii.gz'
+            subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_tfce_merged.nii.gz']
             subtractCopes.inputs.out_file = 'copediff_FB_gt_nFB_merged.nii.gz'
             subtractCopes.run()
 
