@@ -67,7 +67,7 @@ if runWithRandomise:
                 os.mkdir(foldername)
             else:
                 os.mkdir(foldername)
-            shutil.move('cope' + str(i) + '_tfce_merged.nii.gz',foldername)
+            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
             shutil.move('stats',foldername)
 
     for i in range(1,6):
