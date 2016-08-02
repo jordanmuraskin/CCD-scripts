@@ -125,7 +125,9 @@ while [ $CURRENT_SEED -le $SLOTS_PER_CONTRAST ] ; do
   CURRENT_SEED=`expr $CURRENT_SEED + 1`
 done
 chmod a+x ${DIRNAME}/${BASENAME}.generate
-GENERATE_ID=`$FSLDIR/bin/fsl_sub -T ${REQUESTED_TIME} -N ${BASENAME}.generate -l ${DIRNAME}/${BASENAME}_logs/ -t ${DIRNAME}/${BASENAME}.generate`
+# GENERATE_ID=`$FSLDIR/bin/fsl_sub -T ${REQUESTED_TIME} -N ${BASENAME}.generate -l ${DIRNAME}/${BASENAME}_logs/ -t ${DIRNAME}/${BASENAME}.generate`
+
+parallel -a ${DIRNAME}/${BASENAME}.generate
 
 #stage2:
 cat <<combineScript > ${DIRNAME}/${BASENAME}.defragment
@@ -187,4 +189,4 @@ combineScript
 
 chmod a+x ${DIRNAME}/${BASENAME}.defragment
 
-# parallel -a ${DIRNAME}/${BASENAME}.generate
+sh ${DIRNAME}/${BASENAME}.defragment
