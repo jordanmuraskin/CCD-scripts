@@ -56,6 +56,7 @@ if runWithRandomise:
             os.mkdir('stats')
 
             randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            print randomiseCommand
             call(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
