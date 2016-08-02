@@ -50,12 +50,14 @@ if runWithRandomise:
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
-                # merger.outputs.merged_file = 'cope' + str(i) + '_tfce_merged'
+                merger.inputs.merged_file = 'cope' + str(i) + '_tfce_merged'
                 merger.run()
 
-            os.mkdir('stats')
 
-            randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            shutil.rmtree('./stats')
+            os.mkdir('./stats')
+
+            randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_tfce_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             print randomiseCommand
             call(randomiseCommand)
 
