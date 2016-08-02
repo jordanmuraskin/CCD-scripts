@@ -55,11 +55,12 @@ for i in range(1,6):
         foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
         if os.path.exists(foldername):
             shutil.rmtree(foldername)
+            os.mkdir(foldername)
         else:
             os.mkdir(foldername)
         shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
         shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
-        shutil.move('stats',foldername)
+        shutil.move('stats',foldername + '/stats')
 
 
 
@@ -96,6 +97,7 @@ for i in range(1,6):
     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/paired-Ttest/cope' + str(i)
     if os.path.exists(foldername):
         shutil.rmtree(foldername)
+        os.mkdir(foldername)
     else:
         os.mkdir(foldername)
     shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
