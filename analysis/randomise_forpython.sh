@@ -184,6 +184,7 @@ done
 
 echo "Done"
 combineScript
-chmod +x ${DIRNAME}/${BASENAME}.defragment
 
-parallel -a ${DIRNAME}/${BASENAME}.generate
+chmod a+x ${DIRNAME}/${BASENAME}.defragment
+
+# parallel -a ${DIRNAME}/${BASENAME}.generate
