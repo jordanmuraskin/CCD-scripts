@@ -59,7 +59,7 @@ if runWithRandomise:
 
             randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             print randomiseCommand
-            call(randomiseCommand)
+            os.system(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
             if os.path.exists(foldername):
@@ -89,10 +89,10 @@ if runWithRandomise:
 
         os.mkdir('stats_FB_gt_nFB')
         randomiseCommand='randomise -i %s -o ./stats_FB_gt_nFB/cope%d -1 -m %s -T -n %d' % ('copediff_FB_gt_nFB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-        call(randomiseCommand)
+        os.system(randomiseCommand)
         os.mkdir('stats_nFB_gt_FB')
         randomiseCommand='randomise -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-        call(randomiseCommand)
+        os.system(randomiseCommand)
 
 
         foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/cope' + str(i)
