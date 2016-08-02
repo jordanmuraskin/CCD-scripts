@@ -53,7 +53,7 @@ if runWithRandomise:
 
             randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
 
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/' + secondlevel_folder_names[fb] + '/randomise/cope' + str(i)
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
                 os.mkdir(foldername)
@@ -68,15 +68,15 @@ if runWithRandomise:
 
             subtractCopes =  fsl.maths.MultiImageMaths()
             subtractCopes.inputs.op_string = "-sub %s"
-            subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-            subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+            subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
+            subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
             subtractCopes.inputs.out_file = 'copediff_FB_gt_nFB_merged.nii.gz'
             subtractCopes.run()
 
             subtractCopes =  fsl.maths.MultiImageMaths()
             subtractCopes.inputs.op_string = "-sub %s"
-            subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-            subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/Feedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+            subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
+            subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
             subtractCopes.inputs.out_file = 'copediff_nFB_gt_FB_merged.nii.gz'
             subtractCopes.run()
 
@@ -84,7 +84,7 @@ if runWithRandomise:
         randomiseCommand='randomise -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
 
 
-        foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/paired-Ttest/randomise/cope' + str(i)
+        foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/cope' + str(i)
         if os.path.exists(foldername):
             shutil.rmtree(foldername)
             os.mkdir(foldername)
@@ -119,7 +119,7 @@ else:
                 merger.run()
             flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
             flameo.run()
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/' + secondlevel_folder_names[fb] + '/flame/cope' + str(i)
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/' + secondlevel_folder_names[fb] + '/cope' + str(i)
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
                 os.mkdir(foldername)
@@ -150,8 +150,8 @@ else:
 
     for i in range(1,6):
         for t in ['cope', 'varcope']:
-            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
-            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
+            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
             merger = Merge()
             merger.inputs.in_files = x
             merger.inputs.dimension = 't'
@@ -161,7 +161,7 @@ else:
 
         flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
         flameo.run()
-        foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/paired-Ttest/flame/cope' + str(i)
+        foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/paired-Ttest/cope' + str(i)
         if os.path.exists(foldername):
             shutil.rmtree(foldername)
             os.mkdir(foldername)
