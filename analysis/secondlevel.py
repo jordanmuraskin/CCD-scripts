@@ -53,7 +53,10 @@ for i in range(1,6):
         flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
         flameo.run()
         foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
-        os.mkdir(foldername)
+        if os.path.exists(foldername):
+            os.remove(foldername)
+        else:
+            os.mkdir(foldername)
         shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
         shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
         shutil.move('stats',foldername)
@@ -91,7 +94,10 @@ for i in range(1,6):
     flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
     flameo.run()
     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/paired-Ttest/cope' + str(i)
-    os.mkdir(foldername)
+    if os.path.exists(foldername):
+        os.remove(foldername)
+    else:
+        os.mkdir(foldername)
     shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
     shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
     shutil.move('stats',foldername)
