@@ -50,7 +50,7 @@ if runWithRandomise:
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
-                merger.inputs.merged_file = 'cope' + str(i) + '_tfce_merged'
+                merger.inputs.merged_file = './cope' + str(i) + '_tfce_merged'
                 merger.run()
 
 
