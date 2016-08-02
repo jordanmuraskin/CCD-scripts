@@ -50,12 +50,12 @@ if runWithRandomise:
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
-                merger.outputs.merged_file = 'cope' + str(i) + '_tfce_merged'
+                # merger.outputs.merged_file = 'cope' + str(i) + '_tfce_merged'
                 merger.run()
 
-            os.mkdir('tfce_stats')
+            os.mkdir('stats')
 
-            randomiseCommand='randomise -i %s -o ./tfce_stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + 'tfce_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             call(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
@@ -65,7 +65,7 @@ if runWithRandomise:
             else:
                 os.mkdir(foldername)
             shutil.move('cope' + str(i) + '_tfce_merged.nii.gz',foldername)
-            shutil.move('tfce_stats',foldername)
+            shutil.move('stats',foldername)
 
     for i in range(1,6):
         for t in ['cope']:
