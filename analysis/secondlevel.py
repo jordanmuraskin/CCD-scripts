@@ -53,8 +53,8 @@ if runWithRandomise:
                 # merger.inputs.merged_file = './cope' + str(i) + '_tfce_merged'
                 merger.run()
 
-
-            shutil.rmtree('./stats')
+            if os.path.exists('./stats'):
+                shutil.rmtree('./stats')
             os.mkdir('./stats')
 
             randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
