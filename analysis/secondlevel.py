@@ -51,9 +51,10 @@ if runWithRandomise:
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
                 merger.run()
-            os.mkdir('stats')
 
-            randomiseCommand='randomise -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            os.mkdir('tfce_stats')
+
+            randomiseCommand='randomise -i %s -o ./tfce_stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             call(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
@@ -64,7 +65,7 @@ if runWithRandomise:
                 os.mkdir(foldername)
             shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
             shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
-            shutil.move('stats',foldername + '/stats')
+            shutil.move('tfce_stats',foldername)
 
     for i in range(1,6):
         for t in ['cope']:
@@ -83,8 +84,10 @@ if runWithRandomise:
             subtractCopes.inputs.out_file = 'copediff_nFB_gt_FB_merged.nii.gz'
             subtractCopes.run()
 
+        os.mkdir('stats_FB_gt_nFB')
         randomiseCommand='randomise -i %s -o ./stats_FB_gt_nFB/cope%d -1 -m %s -T -n %d' % ('copediff_FB_gt_nFB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         call(randomiseCommand)
+        os.mkdir('stats_nFB_gt_FB')
         randomiseCommand='randomise -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         call(randomiseCommand)
 
