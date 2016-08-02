@@ -50,7 +50,7 @@ if runWithRandomise:
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
-                merger.inputs.merged_file = 'cope' + str(i) + '_tfce_merged'
+                merger.outputs.merged_file = 'cope' + str(i) + '_tfce_merged'
                 merger.run()
 
             os.mkdir('tfce_stats')
@@ -64,8 +64,7 @@ if runWithRandomise:
                 os.mkdir(foldername)
             else:
                 os.mkdir(foldername)
-            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-            shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
+            shutil.move('cope' + str(i) + '_tfce_merged.nii.gz',foldername)
             shutil.move('tfce_stats',foldername)
 
     for i in range(1,6):
