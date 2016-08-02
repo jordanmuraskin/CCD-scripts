@@ -54,7 +54,7 @@ for i in range(1,6):
         flameo.run()
         foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/' + secondlevel_folder_names[fb] + '/cope' + str(i)
         if os.path.exists(foldername):
-            os.remove(foldername)
+            shutil.rmtree(foldername)
         else:
             os.mkdir(foldername)
         shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
@@ -95,7 +95,7 @@ for i in range(1,6):
     flameo.run()
     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/paired-Ttest/cope' + str(i)
     if os.path.exists(foldername):
-        os.remove(foldername)
+        shutil.rmtree(foldername)
     else:
         os.mkdir(foldername)
     shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
