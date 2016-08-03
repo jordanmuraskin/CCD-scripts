@@ -78,14 +78,14 @@ if runWithRandomise:
 
                 subtractCopes =  fsl.maths.MultiImageMaths()
                 subtractCopes.inputs.op_string = "-sub %s"
-                subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
+                subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
                 subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
                 subtractCopes.inputs.out_file = 'copediff_FB_gt_nFB_merged.nii.gz'
                 subtractCopes.run()
 
                 subtractCopes =  fsl.maths.MultiImageMaths()
                 subtractCopes.inputs.op_string = "-sub %s"
-                subtractCopes.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
+                subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
                 subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
                 subtractCopes.inputs.out_file = 'copediff_nFB_gt_FB_merged.nii.gz'
                 subtractCopes.run()
