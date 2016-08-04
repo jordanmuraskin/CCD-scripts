@@ -34,9 +34,9 @@ for ccd in CCD_numbers:
 secondlevel_folder_names=['noFeedback','Feedback']
 
 runWithRandomise = True
-nperms=5000
+nperms=10000
 runPair=True
-run1Sample=False
+run1Sample=True
 #
 
 if runWithRandomise:
