@@ -33,7 +33,7 @@ for ccd in CCD_numbers:
 #
 secondlevel_folder_names=['noFeedback','Feedback']
 
-runWithRandomise = True
+runWithRandomise = False
 nperms=10000
 runPair=True
 run1Sample=True
