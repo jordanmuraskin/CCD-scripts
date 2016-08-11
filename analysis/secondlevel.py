@@ -35,7 +35,7 @@ motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
 if runAll:
-    subject_list=unique(motionTest.Subject_ID)
+    subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
 else:
     motiohThreshold=0.2
