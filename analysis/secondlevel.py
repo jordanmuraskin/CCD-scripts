@@ -178,7 +178,7 @@ if run1Sample:
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
-            model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=meanFD)
+            model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD))
             model.run()
             if runFlame:
                 flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
@@ -225,8 +225,8 @@ if runPair:
         modeltmp[indx]=1
         modeltmp[indx+len(subject_list)]=1
         modelDict['s%d' % indx]= modeltmp
-    modelDict['FD'] = zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-    + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
+    modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+    + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
     pairedmodel.inputs.regressors = modelDict
     pairedmodel.run()
 
