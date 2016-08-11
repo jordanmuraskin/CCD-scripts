@@ -1,6 +1,7 @@
 import os
 import shutil
 import glob
+import pandas as pd
 from nipype.interfaces.fsl import Merge
 from nipype.interfaces import fsl
 from subprocess import call
@@ -24,168 +25,246 @@ def subjectinfo(subject_id,getFeedback=True):
     if not getFeedback:
         return noFeedback
 
-#Create subject list
-CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,42,51,
-53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
-90,91,93,95,97,98,99]
 
-subject_list=[]
-for ccd in CCD_numbers:
-    subject_list.append('CCD0%s' % ccd)
+#Decide if running all subjects or just good subjects
+runAll=True
+
+#load subject list
+motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
+fbNames=['NOFEEDBACK','FEEDBACK']
+
+if runAll:
+    subject_list=unique(motionTest.Subject_ID)
+    motionDir='all'
+else:
+    motiohThreshold=0.2
+    allsubj=unique(motionTest['Subject_ID'])
+    motionReject=unique((motionTest[motionTest.meanFD>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(allsubj,motionReject)
+    motionDir='motionThresh-%f' % motionThresh
+
+
+# #Create subject list
+# CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,42,51,
+# 53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
+# 90,91,93,95,97,98,99]
+
+# subject_list=[]
+# for ccd in CCD_numbers:
+#     subject_list.append('CCD0%s' % ccd)
 #
 secondlevel_folder_names=['noFeedback','Feedback']
 
+#create second level folders
+folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/
+for runType in ['randomise','flame']:
+    foldername=folderbase + '/' runType + '/paired-Ttest/' +  motionDir
+    if os.path.exists(foldername):
+        shutil.rmtree(foldername)
+        os.mkdir(foldername)
+    else:
+        os.mkdir(foldername)
+
+    for fb in secondlevel_folder_names:
+        foldername=folderbase + '/' runType + '/'  motionDir
+        if os.path.exists(foldername):
+            shutil.rmtree(foldername)
+            os.mkdir(foldername)
+        else:
+            os.mkdir(foldername)
+
+
 runWithRandomise = False
+runFlame=True
 nperms=10000
 runPair=True
 run1Sample=True
 #
-
-if runWithRandomise:
-    if run1Sample:
-        for i in range(1,6):
-            for fb in [0,1]:
-                for t in ['cope']:
-                    x=[]
-                    for subj in subject_list:
-                        fbLoc=subjectinfo(subj,fb)
-                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
-                        x.append(fname)
-                    subjs = len(x)
-                    merger = Merge()
-                    merger.inputs.in_files = x
-                    merger.inputs.dimension = 't'
-                    merger.inputs.output_type = 'NIFTI_GZ'
-                    # merger.inputs.merged_file = './cope' + str(i) + '_tfce_merged'
-                    merger.run()
-
-                if os.path.exists('./stats'):
-                    shutil.rmtree('./stats')
-                os.mkdir('./stats')
-
-                randomiseCommand='./randomise_forpython.sh -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-                print randomiseCommand
-                os.system(randomiseCommand)
-
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/cope' + str(i)
-                if os.path.exists(foldername):
-                    shutil.rmtree(foldername)
-                    os.mkdir(foldername)
-                else:
-                    os.mkdir(foldername)
-                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-                shutil.move('stats',foldername)
-    if runPair:
-        for i in range(1,6):
-            for t in ['cope']:
-
-                subtractCopes =  fsl.maths.MultiImageMaths()
-                subtractCopes.inputs.op_string = "-sub %s"
-                subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-                subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
-                subtractCopes.inputs.out_file = 'copediff_FB_gt_nFB_merged.nii.gz'
-                subtractCopes.run()
-
-                subtractCopes =  fsl.maths.MultiImageMaths()
-                subtractCopes.inputs.op_string = "-sub %s"
-                subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-                subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
-                subtractCopes.inputs.out_file = 'copediff_nFB_gt_FB_merged.nii.gz'
-                subtractCopes.run()
-
-            os.mkdir('stats_FB_gt_nFB')
-            randomiseCommand='./randomise_forpython.sh -i %s -o ./stats_FB_gt_nFB/cope%d -1 -m %s -T -n %d' % ('copediff_FB_gt_nFB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-            os.system(randomiseCommand)
-            os.mkdir('stats_nFB_gt_FB')
-            randomiseCommand='./randomise_forpython.sh -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-            os.system(randomiseCommand)
-
-
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/cope' + str(i)
-            if os.path.exists(foldername):
-                shutil.rmtree(foldername)
-                os.mkdir(foldername)
-            else:
-                os.mkdir(foldername)
-            shutil.move('copediff_FB_gt_nFB_merged.nii.gz',foldername)
-            shutil.move('copediff_nFB_gt_FB_merged.nii.gz',foldername)
-            shutil.move('stats_FB_gt_nFB',foldername)
-            shutil.move('stats_nFB_gt_FB',foldername)
-
-
-else:
-
-    if run1Sample:
-        from nipype.interfaces.fsl import MultipleRegressDesign
-        model = MultipleRegressDesign()
-        model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]]]
-        model.inputs.regressors = dict(reg1=[1]*len(CCD_numbers))
-        model.run()
-
-        for i in range(1,6):
-            for fb in [0,1]:
-                for t in ['cope', 'varcope']:
-                    x=[]
-                    for subj in subject_list:
-                        fbLoc=subjectinfo(subj,fb)
-                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
-                        x.append(fname)
-                    subjs = len(x)
-                    merger = Merge()
-                    merger.inputs.in_files = x
-                    merger.inputs.dimension = 't'
-                    merger.inputs.output_type = 'NIFTI_GZ'
-                    merger.run()
-                flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
-                flameo.run()
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/' + secondlevel_folder_names[fb] + '/cope' + str(i)
-                if os.path.exists(foldername):
-                    shutil.rmtree(foldername)
-                    os.mkdir(foldername)
-                else:
-                    os.mkdir(foldername)
-                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-                shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
-                shutil.move('stats',foldername + '/stats')
-
-
-    if runPair:
-        pairedmodel = MultipleRegressDesign()
-        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
-        #make paired ttest model
-        modelX=[0]*2*len(CCD_numbers)
-        modelXAB=modelX
-        modelXAB[0:len(CCD_numbers)]=[1]*len(CCD_numbers)
-        modelDict=dict(reg1=modelXAB)
-        for indx,subj in enumerate(CCD_numbers):
-            modeltmp=[0]*2*len(CCD_numbers)
-            modeltmp[indx]=1
-            modeltmp[indx+len(CCD_numbers)]=1
-            modelDict['s%d' % indx]= modeltmp
-        pairedmodel.inputs.regressors = modelDict
-        pairedmodel.run()
+#
+# if runWithRandomise:
+#     if run1Sample:
+#         for i in range(1,6):
+#             for fb in [0,1]:
+#                 for t in ['cope']:
+#                     x=[]
+#                     for subj in subject_list:
+#                         fbLoc=subjectinfo(subj,fb)
+#                         fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+#                         x.append(fname)
+#                     subjs = len(x)
+#                     merger = Merge()
+#                     merger.inputs.in_files = x
+#                     merger.inputs.dimension = 't'
+#                     merger.inputs.output_type = 'NIFTI_GZ'
+#                     # merger.inputs.merged_file = './cope' + str(i) + '_tfce_merged'
+#                     merger.run()
+#
+#                 if os.path.exists('./stats'):
+#                     shutil.rmtree('./stats')
+#                 os.mkdir('./stats')
+#
+#                 randomiseCommand='./randomise_forpython.sh -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+#                 print randomiseCommand
+#                 os.system(randomiseCommand)
+#
+#                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
+#                 if os.path.exists(foldername):
+#                     shutil.rmtree(foldername)
+#                     os.mkdir(foldername)
+#                 else:
+#                     os.mkdir(foldername)
+#                 shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+#                 shutil.move('stats',foldername)
+#     if runPair:
+#         for i in range(1,6):
+#             for t in ['cope']:
+#
+#                 subtractCopes =  fsl.maths.MultiImageMaths()
+#                 subtractCopes.inputs.op_string = "-sub %s"
+#                 subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
+#                 subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+#                 subtractCopes.inputs.out_file = 'copediff_FB_gt_nFB_merged.nii.gz'
+#                 subtractCopes.run()
+#
+#                 subtractCopes =  fsl.maths.MultiImageMaths()
+#                 subtractCopes.inputs.op_string = "-sub %s"
+#                 subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
+#                 subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+#                 subtractCopes.inputs.out_file = 'copediff_nFB_gt_FB_merged.nii.gz'
+#                 subtractCopes.run()
+#
+#             os.mkdir('stats_FB_gt_nFB')
+#             randomiseCommand='./randomise_forpython.sh -i %s -o ./stats_FB_gt_nFB/cope%d -1 -m %s -T -n %d' % ('copediff_FB_gt_nFB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+#             os.system(randomiseCommand)
+#             os.mkdir('stats_nFB_gt_FB')
+#             randomiseCommand='./randomise_forpython.sh -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+#             os.system(randomiseCommand)
+#
+#
+#             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
+#             if os.path.exists(foldername):
+#                 shutil.rmtree(foldername)
+#                 os.mkdir(foldername)
+#             else:
+#                 os.mkdir(foldername)
+#             shutil.move('copediff_FB_gt_nFB_merged.nii.gz',foldername)
+#             shutil.move('copediff_nFB_gt_FB_merged.nii.gz',foldername)
+#             shutil.move('stats_FB_gt_nFB',foldername)
+#             shutil.move('stats_nFB_gt_FB',foldername)
 
 
 
-        for i in range(1,6):
+if run1Sample:
+    from nipype.interfaces.fsl import MultipleRegressDesign
+    from scipy.stats import zscore
+
+
+    for i in range(1,6):
+        for fb in [0,1]:
             for t in ['cope', 'varcope']:
-                x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
-                '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+                x=[]
+                for subj in subject_list:
+                    fbLoc=subjectinfo(subj,fb)
+                    fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                    x.append(fname)
+                subjs = len(x)
                 merger = Merge()
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
-                merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
                 merger.run()
+            #get meanFD values for each subject and add as covariate
+            meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+            model = MultipleRegressDesign()
+            model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
+            model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=meanFD)
+            model.run()
+            if runFlame:
+                flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
+                flameo.run()
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
+                if os.path.exists(foldername):
+                    shutil.rmtree(foldername)
+                    os.mkdir(foldername)
+                else:
+                    os.mkdir(foldername)
+                if not runWithRandomise:
+                    shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+                shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
+                shutil.move('stats',foldername + '/stats')
+            if runWithRandomise:
+                os.mkdir('cope%d' + i)
+                randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                os.system(randomiseCommand)
 
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
+
+                if os.path.exists(foldername):
+                    shutil.rmtree(foldername)
+                    os.mkdir(foldername)
+                else:
+                    os.mkdir(foldername)
+                shutil.move('cope%d' % i,foldername)
+                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+
+
+
+
+if runPair:
+    pairedmodel = MultipleRegressDesign()
+    pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
+    pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
+    #make paired ttest model
+    modelX=[0]*2*len(subject_list)
+    modelXAB=modelX
+    modelXAB[0:len(subject_list)]=[1]*len(subject_list)
+    modelDict=dict(reg1=modelXAB)
+    for indx,subj in enumerate(subject_list):
+        modeltmp=[0]*2*len(subject_list)
+        modeltmp[indx]=1
+        modeltmp[indx+len(subject_list)]=1
+        modelDict['s%d' % indx]= modeltmp
+    modelDict['FD'] = zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+    + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
+    pairedmodel.inputs.regressors = modelDict
+    pairedmodel.run()
+
+
+
+    for i in range(1,6):
+        for t in ['cope', 'varcope']:
+            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
+            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+            merger = Merge()
+            merger.inputs.in_files = x
+            merger.inputs.dimension = 't'
+            merger.inputs.output_type = 'NIFTI_GZ'
+            merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
+            merger.run()
+
+        if runFlame:
             flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
             flameo.run()
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/paired-Ttest/cope' + str(i)
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/paired-Ttest/' + motionDir + '/cope' + str(i)
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
                 os.mkdir(foldername)
             else:
                 os.mkdir(foldername)
-            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+            if not runWithRandomise:
+                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
             shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
             shutil.move('stats',foldername)
+        if runWithRandomise:
+            os.mkdir('cope%d' + i)
+            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            os.system(randomiseCommand)
+
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
+            if os.path.exists(foldername):
+                shutil.rmtree(foldername)
+                os.mkdir(foldername)
+            else:
+                os.mkdir(foldername)
+            shutil.move('cope%d' % i,foldername)
+            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
