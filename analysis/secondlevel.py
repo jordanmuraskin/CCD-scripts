@@ -56,7 +56,7 @@ else:
 secondlevel_folder_names=['noFeedback','Feedback']
 
 #create second level folders
-folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/
+folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
     foldername=folderbase + '/' runType + '/paired-Ttest/' +  motionDir
     if os.path.exists(foldername):
