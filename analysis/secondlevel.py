@@ -67,7 +67,7 @@ for runType in ['randomise','flame']:
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' fb + '/' + motionDir
+        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
         if os.path.exists(foldername):
             shutil.rmtree(foldername)
             os.mkdir(foldername)
