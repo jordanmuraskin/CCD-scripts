@@ -6,6 +6,8 @@ import numpy as np
 from nipype.interfaces.fsl import Merge
 from nipype.interfaces import fsl
 from subprocess import call
+from nipype.interfaces.fsl import MultipleRegressDesign
+from scipy.stats import zscore
 
 
 def subjectinfo(subject_id,getFeedback=True):
@@ -156,8 +158,6 @@ run1Sample=False
 
 
 if run1Sample:
-    from nipype.interfaces.fsl import MultipleRegressDesign
-    from scipy.stats import zscore
 
 
     for i in range(1,6):
