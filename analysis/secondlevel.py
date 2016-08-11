@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 import pandas as pd
+import numpy
 from nipype.interfaces.fsl import Merge
 from nipype.interfaces import fsl
 from subprocess import call
