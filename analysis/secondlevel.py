@@ -63,16 +63,16 @@ folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
     foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
     if os.path.exists(foldername):
-        shutil.rmtree(foldername)
-        os.mkdir(foldername)
+        # shutil.rmtree(foldername)
+        # os.mkdir(foldername)
     else:
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
         foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
         if os.path.exists(foldername):
-            shutil.rmtree(foldername)
-            os.mkdir(foldername)
+            # shutil.rmtree(foldername)
+            # os.mkdir(foldername)
         else:
             os.mkdir(foldername)
 
@@ -81,7 +81,7 @@ runWithRandomise = False
 runFlame=True
 nperms=10000
 runPair=True
-run1Sample=False
+run1Sample=True
 #
 #
 # if runWithRandomise:
