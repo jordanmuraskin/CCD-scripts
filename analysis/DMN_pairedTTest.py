@@ -50,9 +50,20 @@ else:
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/DMN/'
 
+
+
 if not os.path.exists(folderbase):
     os.mkdir(folderbase)
 
+pairedFolder= folderbase + 'paired/'
+
+if not os.path.exists(pairedFolder):
+    os.mkdir(pairedFolder)
+
+pairedFolder= pairedFolder + motionDir
+
+if not os.path.exists(pairedFolder):
+    os.mkdir(pairedFolder)
 
 meanFBFolder=folderbase + 'meanFB'
 if not os.path.exists(meanFBFolder):
@@ -72,9 +83,9 @@ if not os.path.exists(meanNFBFolder):
     os.mkdir(meanNFBFolder)
 
 runWithRandomise = True
-nperms=1000
-runPair=False
-run1Sample=True
+nperms=100
+runPair=True
+run1Sample=False
 
 if run1Sample:
     for fb in [0,1]:
@@ -131,41 +142,19 @@ if runPair:
     pairedmodel.run()
 
 
+    x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
+    meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz']
+    merger = Merge()
+    merger.inputs.in_files = x
+    merger.inputs.dimension = 't'
+    merger.inputs.output_type = 'NIFTI_GZ'
+    merger.inputs.merged_file='./DMN_pair_merged.nii.gz'
+    merger.run()
 
-    for i in range(1,6):
-        for t in ['cope', 'varcope']:
-            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
-            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
-            merger = Merge()
-            merger.inputs.in_files = x
-            merger.inputs.dimension = 't'
-            merger.inputs.output_type = 'NIFTI_GZ'
-            merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
-            merger.run()
+    os.mkdir('DMN_pair')
+    randomiseCommand='./randomise_forpython.sh -i %s -o ./DMN_pair/paired -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+    os.system(randomiseCommand)
 
-        if runFlame:
-            flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
-            flameo.run()
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/paired-Ttest/' + motionDir + '/cope' + str(i)
-            if os.path.exists(foldername):
-                shutil.rmtree(foldername)
-                os.mkdir(foldername)
-            else:
-                os.mkdir(foldername)
-            if not runWithRandomise:
-                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-            shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
-            shutil.move('stats',foldername)
-        if runWithRandomise:
-            os.mkdir('cope%d' + i)
-            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-            os.system(randomiseCommand)
 
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
-            if os.path.exists(foldername):
-                shutil.rmtree(foldername)
-                os.mkdir(foldername)
-            else:
-                os.mkdir(foldername)
-            shutil.move('cope%d' % i,foldername)
-            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+    shutil.move('DMN_pair',pairedFolder)
+    shutil.move('DMN_pair_merged.nii.gz',pairedFolder)
