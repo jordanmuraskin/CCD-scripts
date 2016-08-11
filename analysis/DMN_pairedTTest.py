@@ -83,9 +83,9 @@ if not os.path.exists(meanNFBFolder):
     os.mkdir(meanNFBFolder)
 
 runWithRandomise = True
-nperms=100
+nperms=10000
 runPair=True
-run1Sample=False
+run1Sample=True
 
 if run1Sample:
     for fb in [0,1]:
@@ -113,8 +113,8 @@ if run1Sample:
             os.mkdir(fbNames[fb])
             randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('DMN_merged_%s.nii.gz' % fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
-            shutil.move(fbNames[fb],meanFBFolder if fb else meanNFBFolder)
-            shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],meanFBFolder if fb else meanNFBFolder)
+            shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb else meanNFBFolder + '/' + fbNames[fb])
+            shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],meanFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb] if fb else meanNFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb])
 
 
 
@@ -153,5 +153,5 @@ if runPair:
     os.system(randomiseCommand)
 
 
-    shutil.move('DMN_pair',pairedFolder)
-    shutil.move('DMN_pair_merged.nii.gz',pairedFolder)
+    shutil.move('DMN_pair',pairedFolder + '/DMN_par')
+    shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')
