@@ -75,80 +75,7 @@ runWithRandomise = False
 runFlame=True
 nperms=10000
 runPair=True
-run1Sample=True
-#
-#
-# if runWithRandomise:
-#     if run1Sample:
-#         for i in range(1,6):
-#             for fb in [0,1]:
-#                 for t in ['cope']:
-#                     x=[]
-#                     for subj in subject_list:
-#                         fbLoc=subjectinfo(subj,fb)
-#                         fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
-#                         x.append(fname)
-#                     subjs = len(x)
-#                     merger = Merge()
-#                     merger.inputs.in_files = x
-#                     merger.inputs.dimension = 't'
-#                     merger.inputs.output_type = 'NIFTI_GZ'
-#                     # merger.inputs.merged_file = './cope' + str(i) + '_tfce_merged'
-#                     merger.run()
-#
-#                 if os.path.exists('./stats'):
-#                     shutil.rmtree('./stats')
-#                 os.mkdir('./stats')
-#
-#                 randomiseCommand='./randomise_forpython.sh -i %s -o ./stats/cope%d -1 -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-#                 print randomiseCommand
-#                 os.system(randomiseCommand)
-#
-#                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
-#                 if os.path.exists(foldername):
-#                     shutil.rmtree(foldername)
-#                     os.mkdir(foldername)
-#                 else:
-#                     os.mkdir(foldername)
-#                 shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-#                 shutil.move('stats',foldername)
-#     if runPair:
-#         for i in range(1,6):
-#             for t in ['cope']:
-#
-#                 subtractCopes =  fsl.maths.MultiImageMaths()
-#                 subtractCopes.inputs.op_string = "-sub %s"
-#                 subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-#                 subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
-#                 subtractCopes.inputs.out_file = 'copediff_FB_gt_nFB_merged.nii.gz'
-#                 subtractCopes.run()
-#
-#                 subtractCopes =  fsl.maths.MultiImageMaths()
-#                 subtractCopes.inputs.op_string = "-sub %s"
-#                 subtractCopes.inputs.in_file = '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz'
-#                 subtractCopes.inputs.operand_files = ['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
-#                 subtractCopes.inputs.out_file = 'copediff_nFB_gt_FB_merged.nii.gz'
-#                 subtractCopes.run()
-#
-#             os.mkdir('stats_FB_gt_nFB')
-#             randomiseCommand='./randomise_forpython.sh -i %s -o ./stats_FB_gt_nFB/cope%d -1 -m %s -T -n %d' % ('copediff_FB_gt_nFB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-#             os.system(randomiseCommand)
-#             os.mkdir('stats_nFB_gt_FB')
-#             randomiseCommand='./randomise_forpython.sh -i %s -o ./stats_nFB_gt_FB/cope%d -1 -m %s -T -n %d' % ('copediff_nFB_gt_FB_merged.nii.gz',i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-#             os.system(randomiseCommand)
-#
-#
-#             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
-#             if os.path.exists(foldername):
-#                 shutil.rmtree(foldername)
-#                 os.mkdir(foldername)
-#             else:
-#                 os.mkdir(foldername)
-#             shutil.move('copediff_FB_gt_nFB_merged.nii.gz',foldername)
-#             shutil.move('copediff_nFB_gt_FB_merged.nii.gz',foldername)
-#             shutil.move('stats_FB_gt_nFB',foldername)
-#             shutil.move('stats_nFB_gt_FB',foldername)
-
+run1Sample=False
 
 
 if run1Sample:
@@ -206,30 +133,32 @@ if run1Sample:
 
 
 if runPair:
-    pairedmodel = MultipleRegressDesign()
-    pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
-    if runFlame:
-        pairedmodel.inputs.groups = [1]*len(subject_list)*2
-    else:
-        pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
-    #make paired ttest model
-    modelX=[0]*2*len(subject_list)
-    modelXAB=modelX
-    modelXAB[0:len(subject_list)]=[1]*len(subject_list)
-    modelDict=dict(reg1=modelXAB)
-    for indx,subj in enumerate(subject_list):
-        modeltmp=[0]*2*len(subject_list)
-        modeltmp[indx]=1
-        modeltmp[indx+len(subject_list)]=1
-        modelDict['s%d' % indx]= modeltmp
-    modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-    + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
-    pairedmodel.inputs.regressors = modelDict
-    pairedmodel.run()
-
 
 
     for i in range(1,6):
+
+        pairedmodel = MultipleRegressDesign()
+        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
+        if runFlame:
+            pairedmodel.inputs.groups = [1]*len(subject_list)*2
+        else:
+            pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
+        #make paired ttest model
+        modelX=[0]*2*len(subject_list)
+        modelXAB=modelX
+        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
+        modelDict=dict(reg1=modelXAB)
+        for indx,subj in enumerate(subject_list):
+            modeltmp=[0]*2*len(subject_list)
+            modeltmp[indx]=1
+            modeltmp[indx+len(subject_list)]=1
+            modelDict['s%d' % indx]= modeltmp
+        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
+        pairedmodel.inputs.regressors = modelDict
+        pairedmodel.run()
+
+
         for t in ['cope', 'varcope']:
             x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
             '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
