@@ -2,7 +2,7 @@ import os
 import shutil
 import glob
 import pandas as pd
-from numpy import unique 
+import numpy as np
 from nipype.interfaces.fsl import Merge
 from nipype.interfaces import fsl
 from subprocess import call
@@ -39,8 +39,8 @@ if runAll:
     motionDir='all'
 else:
     motiohThreshold=0.2
-    allsubj=unique(motionTest['Subject_ID'])
-    motionReject=unique((motionTest[motionTest.meanFD>motionThresh]['Subject_ID']))
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.meanFD>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(allsubj,motionReject)
     motionDir='motionThresh-%f' % motionThresh
 
