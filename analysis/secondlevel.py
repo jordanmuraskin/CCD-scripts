@@ -58,7 +58,7 @@ secondlevel_folder_names=['noFeedback','Feedback']
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
-    foldername=folderbase + '/' runType + '/paired-Ttest/' +  motionDir
+    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
     if os.path.exists(foldername):
         shutil.rmtree(foldername)
         os.mkdir(foldername)
@@ -66,7 +66,7 @@ for runType in ['randomise','flame']:
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' runType + '/'  motionDir
+        foldername=folderbase + '/' + runType + '/'  motionDir
         if os.path.exists(foldername):
             shutil.rmtree(foldername)
             os.mkdir(foldername)
