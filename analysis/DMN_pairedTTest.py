@@ -30,7 +30,7 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #Decide if running all subjects or just good subjects
-runAll=True
+runAll=False
 
 #load subject list
 motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
@@ -153,5 +153,5 @@ if runPair:
     os.system(randomiseCommand)
 
 
-    shutil.move('DMN_pair',pairedFolder + '/DMN_par')
+    shutil.move('DMN_pair',pairedFolder + '/DMN_pair')
     shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')

@@ -30,7 +30,7 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #Decide if running all subjects or just good subjects
-runAll=True
+runAll=False
 
 #load subject list
 motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
@@ -71,11 +71,11 @@ for runType in ['randomise','flame']:
             os.mkdir(foldername)
 
 
-runWithRandomise = False
-runFlame=True
+runWithRandomise = True
+runFlame=False
 nperms=10000
 runPair=True
-run1Sample=False
+run1Sample=True
 
 
 if run1Sample:
