@@ -40,7 +40,7 @@ if runAll:
     subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
 else:
-    motiohThresh=0.2
+    motionThresh=0.2
     allsubj=np.unique(motionTest['Subject_ID'])
     motionReject=np.unique((motionTest[motionTest.meanFD>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(allsubj,motionReject)
