@@ -33,7 +33,7 @@ def subjectinfo(subject_id,getFeedback=True):
 runAll=False
 
 #load subject list
-motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
+motionTest=pd.read_csv('~/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
 if runAll:
@@ -116,7 +116,7 @@ if run1Sample:
                 shutil.move('stats',foldername + '/stats')
             if runWithRandomise:
                 os.mkdir('cope%d' + i)
-                randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                randomiseCommand='~/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
@@ -159,6 +159,7 @@ if runPair:
         pairedmodel.run()
 
 
+
         for t in ['cope', 'varcope']:
             x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
             '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
@@ -184,7 +185,8 @@ if runPair:
             shutil.move('stats',foldername)
         if runWithRandomise:
             os.mkdir('cope%d' + i)
-            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            shutil.move('design.*','cope%d' + i)
+            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,i,i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
