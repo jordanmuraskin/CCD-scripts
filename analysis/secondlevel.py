@@ -184,8 +184,8 @@ if runPair:
             shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
             shutil.move('stats',foldername)
         if runWithRandomise:
-            os.mkdir('cope%d' + i)
-            shutil.move('design.*','cope%d' + i)
+            os.mkdir('cope%d' % i)
+            shutil.move('design.*','cope%d' % i)
             randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,i,i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
