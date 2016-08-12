@@ -101,6 +101,7 @@ if run1Sample:
             model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
             model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD))
             model.run()
+
             if runFlame:
                 flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
                 flameo.run()
@@ -115,8 +116,9 @@ if run1Sample:
                 shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
                 shutil.move('stats',foldername + '/stats')
             if runWithRandomise:
-                os.mkdir('cope%d' + i)
-                randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./cope%d/cope%d -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                os.mkdir('cope%d' % i)
+                shutil.move('design.*','cope%d' % i)
+                randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,i,i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
