@@ -165,14 +165,17 @@ if runPair:
 
 
         for t in ['cope', 'varcope']:
-            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
-            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
-            merger = Merge()
-            merger.inputs.in_files = x
-            merger.inputs.dimension = 't'
-            merger.inputs.output_type = 'NIFTI_GZ'
-            merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
-            merger.run()
+            try:
+                x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
+                '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+                merger = Merge()
+                merger.inputs.in_files = x
+                merger.inputs.dimension = 't'
+                merger.inputs.output_type = 'NIFTI_GZ'
+                merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
+                merger.run()
+            except:
+                print 'No Varcope'
 
         if runFlame:
             flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
