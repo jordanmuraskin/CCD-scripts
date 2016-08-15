@@ -165,8 +165,8 @@ if runPair:
 
 
         for t in ['cope', 'varcope']:
-            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
-            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
+            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
             merger = Merge()
             merger.inputs.in_files = x
             merger.inputs.dimension = 't'
