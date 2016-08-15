@@ -75,7 +75,7 @@ runWithRandomise = True
 runFlame=False
 nperms=10000
 runPair=True
-run1Sample=True
+run1Sample=False
 
 
 if run1Sample:
