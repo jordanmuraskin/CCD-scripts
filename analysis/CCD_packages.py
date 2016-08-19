@@ -8,7 +8,8 @@ import os.path
 from scipy.signal import butter,filtfilt
 import matplotlib as mpl
 from matplotlib import cm
-
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import networkx as nx
 
 class MplColorHelper:
 
@@ -439,7 +440,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
 
 def heatmap2Chord(matrix,plotName='ChordDiagram',title='',savefig=True,scale=[-1,1]):
-    import networkx as nx
+
     # check size of matrix
     matSize=np.shape(matrix)
     if len(matSize)==3:
