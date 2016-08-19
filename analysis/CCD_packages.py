@@ -512,8 +512,12 @@ def GroupRegression(GroupDF,feedback,numFolds=10):
     return groupGLM,coefs,performance
 
 def linearRegressionData(GroupDF,goodsubj,numFolds=10):
-    fb_pred,fb_coefs,fb_performance=CCD_packages.GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'FEEDBACK',numFolds=numFolds)
-    nfb_pred,nfb_coefs,nfb_performance=CCD_packages.GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'NOFEEDBACK',numFolds=numFolds)
+    print 'Running Feedback on Regressions'
+    fb_pred,fb_coefs,fb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'FEEDBACK',numFolds=numFolds)
+    print 'Finished...'
+    print 'Running Feedback off Regressions'
+    nfb_pred,nfb_coefs,nfb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'NOFEEDBACK',numFolds=numFolds)
+    print 'Finished...'
 
     fb_pred['fb']='FEEDBACK'
     nfb_pred['fb']='NOFEEDBACK'
@@ -527,4 +531,4 @@ def linearRegressionData(GroupDF,goodsubj,numFolds=10):
     nfb_performance['fb']='NOFEEDBACK'
     performance=pd.concat((fb_performance,nfb_performance),ignore_index=True)
 
-    return predictions,coefs,performacne
+    return predictions,coefs,performance
