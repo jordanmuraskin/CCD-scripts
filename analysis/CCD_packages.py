@@ -231,7 +231,8 @@ def BezierCv(b, nr=5):
 
 def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],title='',savefig=True):
     import plotly.plotly as py
-    from plotly.graph_objs import Data,Layout,Figure,Scatter,Line,Marker,Font
+    from plotly.graph_objs import *
+    
 
 
     widthScale=50.0/max(scale)
