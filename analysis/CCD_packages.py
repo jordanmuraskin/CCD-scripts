@@ -549,6 +549,7 @@ def createRegressionPlots(predictions,performance,coefs,GroupDF,goodsubj,savefig
     ax3=plt.subplot2grid((2,4),(1,0), colspan=2)
     ax4=plt.subplot2grid((2,4),(1,2), colspan=2)
 
+    dmnIdeal=pd.read_csv('/home/jmuraskin/Projects/NFB/analysis/DMN_ideal_2.csv')
 
     sns.tsplot(data=predictions,time='TR',value='predicted',unit='subj',condition='fb',ax=ax1)
     ax1.plot((dmnIdeal['Wander']-dmnIdeal['Focus'])/3,'k--')
