@@ -138,3 +138,32 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
     dmnPlot.set_title(title,{'fontsize':24})
     if savefig:
         f.savefig('%s_timeseries.pdf' % DMN_name, dpi=600)
+
+
+def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),savefig=True):
+
+    f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
+    sns.set(style="white")
+
+    maxModel=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject'])['modelcorr'].max().sort_values(ascending=False)
+    sortedOrder=maxModel.index
+
+    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder)
+
+    if savefig:
+        f.savefig('Subject_ModelCorrelations.pdf', dpi=600)
+
+def createScanOrderBarPlot(GroupDF,goodsubj,savefig=True):
+    plt.figure()
+    sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
+    if savefig:
+        plt.savefig('ScanOrder_ModelCorrelations.pdf',dpi=600)
+
+def printModelCorrelations(GroupDF,goodsubj):
+    dmnIdeal=pd.read_csv('/home/jmuraskin/Projects/NFB/analysis/DMN_ideal_2.csv')
+    print 'No Feedback Focus Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['NOFEEDBACK'].corr(dmnIdeal['Focus'])
+    print 'Feedback Focus Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['FEEDBACK'].corr(dmnIdeal['Focus'])
+    print 'No Feedback Wander Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['NOFEEDBACK'].corr(dmnIdeal['Wander'])
+    print 'Feedback Wander Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['FEEDBACK'].corr(dmnIdeal['Wander'])
+    print 'No Feedback Overall Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['NOFEEDBACK'].corr(dmnIdeal['Wander']-dmnIdeal['Focus'])
+    print 'Feedback Overall Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['FEEDBACK'].corr(dmnIdeal['Wander']-dmnIdeal['Focus'])
