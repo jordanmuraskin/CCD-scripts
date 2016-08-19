@@ -232,7 +232,7 @@ def BezierCv(b, nr=5):
 def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],title='',savefig=True):
     import plotly.plotly as py
     from plotly.graph_objs import Data,Layout,Figure
-    py.sign_in('jordan.muraskin', 'q8p1xy3l62')
+    # py.sign_in('jordan.muraskin', 'q8p1xy3l62')
 
 
     widthScale=50.0/max(scale)
@@ -260,8 +260,8 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
     params=[1.2, 1.5, 1.8, 2.1]
 
     #set node color
-    minColor=array(COL.get_rgb(scale[0]))*255.0
-    maxColor=array(COL.get_rgb(scale[1]))*255.0
+    minColor=np.array(COL.get_rgb(scale[0]))*255.0
+    maxColor=np.array(COL.get_rgb(scale[1]))*255.0
     node_color=['rgba(%f,%f,%f,1)' % (minColor[0],minColor[1],minColor[2]),
                 'rgba(%f,%f,%f,1)' % (maxColor[0],maxColor[1],maxColor[2])]*5
 
@@ -282,7 +282,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
         color=edge_colors[0]
         pts=BezierCv(b, nr=5)
         mark=list(deCasteljau(b,0.9))
-        rgb=array(COL.get_rgb(Weights[j]))*255.0
+        rgb=np.array(COL.get_rgb(Weights[j]))*255.0
 
         lines.append(Scatter(x=list(pts[:,0]),
                              y=list(pts[:,1]),
