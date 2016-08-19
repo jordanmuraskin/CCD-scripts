@@ -35,10 +35,6 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
     columnNames=[]
     for rsnNumber in range(numberOfICs):
         columnNames.append('RSN%d' % rsnNumber)
-    # filterOn=False
-    # zscoreOn=True
-    # lowpass=0.1
-    # globalNR=0
 
     for indx,row in SubjInfo.iterrows():
 
@@ -113,7 +109,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     return GroupDF,motionInfo
 
-def getSubjectList(RejectMotion=True,motionThresh=0.2):
+def getSubjectList(GroupDF=GroupDF,RejectMotion=True,motionThresh=0.2):
 
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
