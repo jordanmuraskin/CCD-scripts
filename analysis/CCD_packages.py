@@ -541,10 +541,10 @@ def linearRegressionData(GroupDF,goodsubj,numFolds=10):
     nfb_performance['fb']='NOFEEDBACK'
     performance=pd.concat((fb_performance,nfb_performance),ignore_index=True)
 
-    return predictions,coefs,performance
+    return predictions,coefs,performance,fb_coefs,nfb_coefs
 
 
-def createRegressionPlots(predictions,performance,coefs,GroupDF,goodsubj,savefig=True):
+def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,GroupDF,goodsubj,savefig=True):
     f=plt.figure(figsize=(22,12))
     ax1=plt.subplot2grid((2,4),(0,0), colspan=3)
     ax2=plt.subplot2grid((2,4),(0,3))
