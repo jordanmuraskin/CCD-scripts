@@ -540,3 +540,45 @@ def linearRegressionData(GroupDF,goodsubj,numFolds=10):
     performance=pd.concat((fb_performance,nfb_performance),ignore_index=True)
 
     return predictions,coefs,performance
+
+
+def createRegressionPlots(predictions,performance,coefs,GroupDF,goodsubj,savefig=True):
+    f=plt.figure(figsize=(22,12))
+    ax1=plt.subplot2grid((2,4),(0,0), colspan=3)
+    ax2=plt.subplot2grid((2,4),(0,3))
+    ax3=plt.subplot2grid((2,4),(1,0), colspan=2)
+    ax4=plt.subplot2grid((2,4),(1,2), colspan=2)
+
+
+    sns.tsplot(data=predictions,time='TR',value='predicted',unit='subj',condition='fb',ax=ax1)
+    ax1.plot((dmnIdeal['Wander']-dmnIdeal['Focus'])/3,'k--')
+    ax1.set_title('Average Predicted Time Series')
+
+    g=sns.factorplot(data=performance,x='fb',y='R',kind='bar',ax=ax2,units='subj',ci=68)
+    plt.close(g.fig)
+    ax2.set_title('Mean Subject Time Series Correlations')
+    g=sns.factorplot(data=coefs,x='pe',y='Coef',hue='fb',kind='bar',ax=ax3,units='subj',ci=68)
+    plt.close(g.fig)
+    ax3.set_title('Linear Regression Coeficients')
+
+    t,p=ttest_1samp(np.array(fb_coefs['Coef']-nfb_coefs['Coef']).reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),10),0)
+    p05,padj=fdr_correction(p,0.05)
+
+    sns.barplot(x=range(len(t)),y=t,ax=ax4,color='Red')
+    for idx,pFDR in enumerate(p05):
+        if pFDR:
+            ax4.scatter(idx,t[idx]+ sign(t[idx])*0.2,marker='*',s=75)
+    ax4.set_xlim([-0.5,10])
+    ax4.set_xlabel('pe')
+    ax4.set_ylabel('t-value')
+    ax4.set_title('FB vs. nFB PE')
+
+    for ax in [ax1,ax2,ax3,ax4]:
+        for item in ([ax.title, ax.xaxis.label, ax.yaxis.label]):
+            item.set_fontsize(18)
+        for item in (ax.get_xticklabels() + ax.get_yticklabels()):
+            item.set_fontsize(12)
+
+    f.tight_layout()
+    if savefig:
+        f.savefig('RSN_LinearRegPrediction.pdf',dpi=300)
