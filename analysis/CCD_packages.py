@@ -35,9 +35,6 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
     columnNames=[]
     for rsnNumber in range(numberOfICs):
         columnNames.append('RSN%d' % rsnNumber)
-
-    Rmap=numpy.zeros((numberOfICs,numberOfICs))
-
     # filterOn=False
     # zscoreOn=True
     # lowpass=0.1
@@ -100,9 +97,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     fd=pd.read_csv(fdFilePath,header=None,names=['fd'],delim_whitespace=True)
                     df['meanFD']=fd.mean()[0]
                     df['fd']=fd
-    #                 fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_tra/FD.1D' % (drFileLocation,subj)
-    #                 fd=pd.read_csv(fdFilePath,header=None,names=['fd'],delim_whitespace=True)
-    #                 df['train_meanFD']=fd.mean()[0]
+
                     if len(GroupDF)==0:
                         GroupDF=df
                     else:
