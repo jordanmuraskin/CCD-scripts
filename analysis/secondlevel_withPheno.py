@@ -30,7 +30,7 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #Decide if running all subjects or just good subjects
-runAll=False
+runAll=True
 
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
