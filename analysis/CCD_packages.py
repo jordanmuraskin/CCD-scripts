@@ -109,7 +109,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     return GroupDF,motionInfo
 
-def getSubjectList(GroupDF=GroupDF,RejectMotion=True,motionThresh=0.2):
+def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2):
 
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
