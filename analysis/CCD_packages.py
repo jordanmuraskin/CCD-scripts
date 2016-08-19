@@ -279,7 +279,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
         d=dist(A, B)
         K=get_idx_interv(d, Dist)
         b=[A, A/params[K], B/params[K], B]
-        color=edge_colors[0]
+        # color=edge_colors[0]
         pts=BezierCv(b, nr=5)
         mark=list(deCasteljau(b,0.9))
         rgb=np.array(COL.get_rgb(Weights[j]))*255.0
