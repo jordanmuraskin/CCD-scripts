@@ -493,7 +493,7 @@ def bayesianRidge(X,y):
     predicted = cross_validation.cross_val_predict(clf, X,y,cv=408)
     return clf,predicted
 
-def GroupRegression(GroupDF,feedback,numFolds=10):
+def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
     SubjectDF = GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject_ID','FB','TR']).mean()
     clf = linear_model.LinearRegression()
 
@@ -513,10 +513,10 @@ def GroupRegression(GroupDF,feedback,numFolds=10):
 
 def linearRegressionData(GroupDF,goodsubj,numFolds=10):
     print 'Running Feedback on Regressions'
-    fb_pred,fb_coefs,fb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'FEEDBACK',numFolds=numFolds)
+    fb_pred,fb_coefs,fb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],goodsubj,'FEEDBACK',numFolds=numFolds)
     print 'Finished...'
     print 'Running Feedback off Regressions'
-    nfb_pred,nfb_coefs,nfb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'NOFEEDBACK',numFolds=numFolds)
+    nfb_pred,nfb_coefs,nfb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],goodsubj,'NOFEEDBACK',numFolds=numFolds)
     print 'Finished...'
 
     fb_pred['fb']='FEEDBACK'
