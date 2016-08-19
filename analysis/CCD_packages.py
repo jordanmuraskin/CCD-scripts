@@ -13,6 +13,8 @@ import networkx as nx
 from sklearn import linear_model
 from sklearn import cross_validation
 from sklearn import metrics
+from scipy.stats import ttest_1samp
+from mne.stats.multi_comp import fdr_correction
 
 class MplColorHelper:
 
