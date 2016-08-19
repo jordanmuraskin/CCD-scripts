@@ -159,7 +159,7 @@ def createScanOrderBarPlot(GroupDF,goodsubj,savefig=True):
     if savefig:
         plt.savefig('ScanOrder_ModelCorrelations.pdf',dpi=600)
 
-def printModelCorrelations(GroupDF,goodsubj):
+def printModelCorrelations(GroupDF,goodsubj,DMN_name='RSN3'):
     dmnIdeal=pd.read_csv('/home/jmuraskin/Projects/NFB/analysis/DMN_ideal_2.csv')
     print 'No Feedback Focus Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['NOFEEDBACK'].corr(dmnIdeal['Focus'])
     print 'Feedback Focus Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['FEEDBACK'].corr(dmnIdeal['Focus'])
