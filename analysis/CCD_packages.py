@@ -232,7 +232,6 @@ def BezierCv(b, nr=5):
 def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],title='',savefig=True):
     import plotly.plotly as py
     from plotly.graph_objs import *
-    
 
 
     widthScale=50.0/max(scale)
@@ -449,6 +448,6 @@ def heatmap2Chord(matrix,plotName='ChordDiagram',title='',savefig=True,scale=[-1
 
     G = nx.from_numpy_matrix(matrix)
 
-    plot_out=makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=scale,title=title,savefig=True)
+    plot_out=makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=scale,title=title,savefig=savefig)
 
     return plot_out
