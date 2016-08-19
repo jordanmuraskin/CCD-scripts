@@ -199,6 +199,7 @@ def generateHeatMaps(GroupDF,goodsubj):
         hmNFB[:,:,indx]=heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr()
         hmDiff[:,:,indx]=np.arctan(heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr())*np.sqrt(405)-np.arctan(heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr())*np.sqrt(405)
 
+    return hmFB,hmNFB,hmDiff
 
 
 
