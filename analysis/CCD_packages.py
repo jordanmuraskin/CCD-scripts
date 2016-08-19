@@ -570,7 +570,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
     sns.barplot(x=range(len(t)),y=t,ax=ax4,color='Red')
     for idx,pFDR in enumerate(p05):
         if pFDR:
-            ax4.scatter(idx,t[idx]+ sign(t[idx])*0.2,marker='*',s=75)
+            ax4.scatter(idx,t[idx]+ np.sign(t[idx])*0.2,marker='*',s=75)
     ax4.set_xlim([-0.5,10])
     ax4.set_xlabel('pe')
     ax4.set_ylabel('t-value')
