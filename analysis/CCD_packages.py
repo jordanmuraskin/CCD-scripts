@@ -121,11 +121,11 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2):
 
     return goodsubj
 
-def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',ylabel=''):
+def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',ylabel='',figsize=(18,9),savefig=True):
 
     sns.set_context("paper")
     #plt.subplots(2,1,figsize=(12, 6))
-    f, axarr = plt.subplots(1, sharex=True,figsize=(18, 9))
+    f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
     sns.set(style="white")
     dmnPlot=sns.tsplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],time='TR',unit='Subject',condition='FB',value=DMN_name,ci=68)
     #get ideal DMN time line
@@ -134,6 +134,7 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
     #dmnPlot.plot(dmnIdeal['Focus'][4:]/(3*max(dmnIdeal['Focus'])),'r--')
     # dmnPlot.set_ylim([-.8,.8])
     dmnPlot.set_ylabel(ylabel,{'fontsize':18})
-    dmnPlot.set_xlabel('')
+    dmnPlot.set_xlabel('TR')
     dmnPlot.set_title(title,{'fontsize':24})
-    f.savefig('%s_timeseries.pdf' % DMN_name, dpi=600)
+    if savefig:
+        f.savefig('%s_timeseries.pdf' % DMN_name, dpi=600)
