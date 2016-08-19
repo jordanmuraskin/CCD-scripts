@@ -38,6 +38,7 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
 
 
 
+
 def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMotionInfo=False,verbose=False):
 
 
@@ -494,6 +495,13 @@ def bayesianRidge(X,y):
     return clf,predicted
 
 def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
+
+    numberOfICs=10
+    columnNames=[]
+    for rsnNumber in range(numberOfICs):
+            columnNames.append('RSN%d' % rsnNumber)
+    dmnIdeal=pd.read_csv('/home/jmuraskin/Projects/NFB/analysis/DMN_ideal_2.csv')
+
     SubjectDF = GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject_ID','FB','TR']).mean()
     clf = linear_model.LinearRegression()
 
@@ -502,12 +510,12 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
         if indx==0:
             groupGLM=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
             coefs=pd.DataFrame({'Coef':coef,'pe':range(10),'subj':[subj]*10})
-            performance=pd.DataFrame({'R':[spearmanr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})
+            performance=pd.DataFrame({'R':[pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})
         else:
             df=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
             groupGLM=pd.concat((groupGLM,df),ignore_index=True)
             coefs=pd.concat((coefs,pd.DataFrame({'Coef':coef,'pe':range(10),'subj':[subj]*10})),ignore_index=True)
-            performance=pd.concat((performance,pd.DataFrame({'R':[spearmanr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})),ignore_index=True)
+            performance=pd.concat((performance,pd.DataFrame({'R':[pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})),ignore_index=True)
 
     return groupGLM,coefs,performance
 
