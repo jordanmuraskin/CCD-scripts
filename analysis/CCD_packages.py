@@ -184,6 +184,7 @@ def printModelCorrelations(GroupDF,goodsubj,DMN_name='RSN3'):
 
 def generateHeatMaps(GroupDF,goodsubj):
 
+    numberOfICs=10
     columnNames=[]
     for rsnNumber in range(numberOfICs):
             columnNames.append('RSN%d' % rsnNumber)
