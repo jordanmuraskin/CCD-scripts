@@ -10,6 +10,9 @@ import matplotlib as mpl
 from matplotlib import cm
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import networkx as nx
+from sklearn import linear_model
+from sklearn import cross_validation
+from sklearn import metrics
 
 class MplColorHelper:
 
@@ -451,3 +454,77 @@ def heatmap2Chord(matrix,plotName='ChordDiagram',title='',savefig=True,scale=[-1
     plot_out=makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=scale,title=title,savefig=savefig)
 
     return plot_out
+
+
+
+def LinRegression(X,y):
+    regr = linear_model.LinearRegression()
+    regr.fit(X,y)
+
+    score=regr.score(X,y)
+    resids=y-regr.predict(X)
+
+    return score,resids,regr.coef_,regr.predict(X)
+
+
+def leaveOneOutCV(clf,X,y,LOO=False,numFolds=10):
+    from sklearn.cross_validation import LeaveOneOut,KFold
+    coefs=np.zeros((X.shape[1],))
+    intercept=0.0
+    predicted=np.zeros((len(y),))
+    if LOO:
+        loo = LeaveOneOut(n=len(y))
+        numFolds=len(y)
+    else:
+        loo = KFold(n=len(y),n_folds=numFolds)
+        # numFolds=10
+    for train_index, test_index in loo:
+        clf.fit(X[train_index,:],y[train_index])
+        predicted[test_index]=clf.predict(X[test_index,:])
+        intercept+=clf.intercept_
+        coefs+=clf.coef_
+
+    intercept=intercept/numFolds
+    coefs=coefs/numFolds
+    return predicted,intercept,coefs
+
+def bayesianRidge(X,y):
+    clf = linear_model.BayesianRidge(compute_score=True)
+    predicted = cross_validation.cross_val_predict(clf, X,y,cv=408)
+    return clf,predicted
+
+def GroupRegression(GroupDF,feedback,numFolds=10):
+    SubjectDF = GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject_ID','FB','TR']).mean()
+    clf = linear_model.LinearRegression()
+
+    for indx,subj in enumerate(unique(GroupDF['Subject_ID'])):
+        predicted,intercepts,coef = leaveOneOutCV(clf,np.array(SubjectDF.loc[subj,feedback][columnNames]),dmnIdeal['Wander']-dmnIdeal['Focus'],numFolds=numFolds)
+        if indx==0:
+            groupGLM=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
+            coefs=pd.DataFrame({'Coef':coef,'pe':range(10),'subj':[subj]*10})
+            performance=pd.DataFrame({'R':[spearmanr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})
+        else:
+            df=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
+            groupGLM=pd.concat((groupGLM,df),ignore_index=True)
+            coefs=pd.concat((coefs,pd.DataFrame({'Coef':coef,'pe':range(10),'subj':[subj]*10})),ignore_index=True)
+            performance=pd.concat((performance,pd.DataFrame({'R':[spearmanr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})),ignore_index=True)
+
+    return groupGLM,coefs,performance
+
+def linearRegressionData(GroupDF,goodsubj,numFolds=10):
+    fb_pred,fb_coefs,fb_performance=CCD_packages.GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'FEEDBACK',numFolds=numFolds)
+    nfb_pred,nfb_coefs,nfb_performance=CCD_packages.GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],'NOFEEDBACK',numFolds=numFolds)
+
+    fb_pred['fb']='FEEDBACK'
+    nfb_pred['fb']='NOFEEDBACK'
+    predictions=pd.concat((fb_pred,nfb_pred),ignore_index=True)
+
+    fb_coefs['fb']='FEEDBACK'
+    nfb_coefs['fb']='NOFEEDBACK'
+    coefs=pd.concat((fb_coefs,nfb_coefs),ignore_index=True)
+
+    fb_performance['fb']='FEEDBACK'
+    nfb_performance['fb']='NOFEEDBACK'
+    performance=pd.concat((fb_performance,nfb_performance),ignore_index=True)
+
+    return predictions,coefs,performacne
