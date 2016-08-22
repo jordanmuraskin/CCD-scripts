@@ -105,7 +105,10 @@ for feedbackRun in range(2):
         from nipype.interfaces.base import Bunch
 
         drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
-
+        numberOfICs=10
+        columnNames=[]
+        for rsnNumber in range(numberOfICs):
+            columnNames.append('RSN%d' % rsnNumber)
         filterOn=False
         zscoreOn=True
         lowpass=0.1
