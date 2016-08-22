@@ -20,10 +20,10 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 
 # CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
-# CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,41,42,51,52,
-# 53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
-# 90,91,92,93,94,95,96,97,98,99]
-CCD_numbers=[16]
+CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,41,42,51,52,
+53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
+90,91,92,93,94,95,96,97,98,99]
+# CCD_numbers=[16]
 # Specify the subject directories
 
 # subject_list = ['CCD060','CCD066','CCD089']
@@ -172,4 +172,4 @@ for feedbackRun in range(2):
     workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
-    workflow.run(plugin='MultiProc',plugin_args={'n_procs':1})
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
