@@ -345,7 +345,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                               ),
                   hovermode='closest',
                   images=[dict(
-                        source="https://dl.dropboxusercontent.com/u/13758/RSN/RSN0.png",
+                        source="../RSN/RSN0.png",
                         xref="paper", yref="paper",
                         x=.93, y=.4,
                         sizex=.2, sizey=.2,
