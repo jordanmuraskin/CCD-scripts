@@ -345,7 +345,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                               ),
                   hovermode='closest',
                   images=[dict(
-                        source="../RSN/RSN0.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN0.png",
                         xref="paper", yref="paper",
                         x=.93, y=.4,
                         sizex=.2, sizey=.2,
@@ -354,7 +354,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN1.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN1.png",
                         xref="paper", yref="paper",
                         x=.85, y=.7,
                         sizex=.2, sizey=.2,
@@ -363,7 +363,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN2.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN2.png",
                         xref="paper", yref="paper",
                         x=.55, y=.94,
                         sizex=.2, sizey=.2,
@@ -372,7 +372,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN3.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN3.png",
                         xref="paper", yref="paper",
                         x=.25, y=.94,
                         sizex=.2, sizey=.2,
@@ -381,7 +381,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN4.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN4.png",
                         xref="paper", yref="paper",
                         x=-0.02, y=.7,
                         sizex=.2, sizey=.2,
@@ -390,7 +390,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN5.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN5.png",
                         xref="paper", yref="paper",
                         x=-.1, y=.4,
                         sizex=.2, sizey=.2,
@@ -399,7 +399,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN6.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN6.png",
                         xref="paper", yref="paper",
                         x=-0.03, y=.1,
                         sizex=.2, sizey=.2,
@@ -408,7 +408,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN7.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN7.png",
                         xref="paper", yref="paper",
                         x=.25, y=-0.14,
                         sizex=.2, sizey=.2,
@@ -417,7 +417,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN8.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN8.png",
                         xref="paper", yref="paper",
                         x=.55, y=-0.14,
                         sizex=.2, sizey=.2,
@@ -426,7 +426,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
 
                       ),
                     dict(
-                        source="../RSN/RSN9.png",
+                        source="~/Projects/CCD/CCD-scripts/RSN/RSN9.png",
                         xref="paper", yref="paper",
                         x=.85, y=.1,
                         sizex=.2, sizey=.2,
