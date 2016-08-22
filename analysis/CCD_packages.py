@@ -440,7 +440,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
     fig=Figure(data=data, layout=layout)
     if savefig:
         py.image.save_as(fig, filename='%s.png' % plotName)
-    return iplot(fig)
+    return fig
 
 
 def heatmap2Chord(matrix,plotName='ChordDiagram',title='',savefig=True,scale=[-1,1]):
@@ -453,9 +453,9 @@ def heatmap2Chord(matrix,plotName='ChordDiagram',title='',savefig=True,scale=[-1
 
     G = nx.from_numpy_matrix(matrix)
 
-    plot_out=makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=scale,title=title,savefig=savefig)
+    fig=makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=scale,title=title,savefig=savefig)
 
-    return plot_out
+    return fig
 
 
 
