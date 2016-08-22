@@ -16,7 +16,6 @@ from nipype.workflows.fmri.fsl import (create_featreg_preproc,
 
 
 template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
-drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
 
 
 
@@ -104,6 +103,8 @@ for feedbackRun in range(2):
     def subjectinfo(subject_id,r):
         from pandas import read_csv
         from nipype.interfaces.base import Bunch
+
+        drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
 
         filterOn=False
         zscoreOn=True
