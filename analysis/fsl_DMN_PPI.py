@@ -16,6 +16,7 @@ from nipype.workflows.fmri.fsl import (create_featreg_preproc,
 
 
 template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
+drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
 
 
 
@@ -50,7 +51,7 @@ for feedbackRun in range(2):
     workflow = pe.Workflow(name= "level1")
     workflow.base_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/')
     workflow.config = {"execution": {"crashdump_dir":os.path.abspath('%s/crashdumps' % workflow.base_dir)}}
-    working_dir = os.path.abspath('%s/working_v1' % workflow.base_dir)
+    working_dir = os.path.abspath('%s/working_v1/PPI_DMN' % workflow.base_dir)
 
 
 
@@ -84,8 +85,6 @@ for feedbackRun in range(2):
     # add mean image to fmri
     addMeanImage =  pe.MapNode(interface=fsl.maths.MultiImageMaths(),name='addMeanImage',iterfield=['in_file'])
     addMeanImage.inputs.op_string = "-add %s"
-    # addMeanImage.inputs.operand_files = ['%s_data_/%s.nii.gz']
-    # addMeanImage.inputs.out_file =
     workflow.connect([(datasource,addMeanImage,[('func','in_file')]),
         (datasource,addMeanImage,[('funcMean','operand_files')])])
 
@@ -106,15 +105,25 @@ for feedbackRun in range(2):
         from pandas import read_csv
         from nipype.interfaces.base import Bunch
 
-        Order1_onsets = [22,150,248,406,564,662]
-        Order1_durations = [30,60,90,60,30,90]
-        Order2_onsets = [56,214,342,470,598,756]
-        Order2_durations = [90,30,60,90,60,30]
-        # button_onsets = [52,144,206,238,330,392,454,546,578,640,732]
-        # button_duration =[2]
+        filterOn=False
+        zscoreOn=True
+        lowpass=0.1
+        globalNR=0
+        #load DMN_network
+        drFilePath = '%s/%s_data_/spatial_map_timeseries_for_DR/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/spatial_map_timeseries.txt' % (drFileLocation,subject_id,1,globalNR)
+        df = read_csv(drFilePath,header=None,names=columnNames,delim_whitespace=True)
+        df['Subject_ID'] = subject_id
+        # df['Subject'] = indx
+        df.index.name = 'TR'
+        df.reset_index(level=0,inplace=True)
+
+
+
+        regressor_names=list(regressors.keys().values)
+        regressor_values=list(regressors.values.transpose().tolist())
+
         #Make subject specific EVs given feedback ordering
         output=[]
-        names=['Focus','Wander']
         SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
         SubjInfo.set_index('JM_INTERNAL',inplace=True)
         if r==0:
@@ -122,17 +131,15 @@ for feedbackRun in range(2):
         else:
             paradigmType=SubjInfo.loc[subject_id]['SCAN_2_PARADIGM']
         if paradigmType==0 or paradigmType == 2:
-            focus_onset = Order2_onsets
-            focus_durations = Order2_durations
-            wander_onset = Order1_onsets
-            wander_durations = Order1_durations
+            signFlip=1
         elif paradigmType==1 or paradigmType == 3:
-            focus_onset = Order1_onsets
-            focus_durations = Order1_durations
-            wander_onset = Order2_onsets
-            wander_durations = Order2_durations
-        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset],
-                              durations=[focus_durations, wander_durations], regressors=None))
+            signFlip=-1
+        PPI=list(regressors['Cont']*df['RSN3'])
+        regressor_names+=['PHYS','PPI']
+        regressor_values.append(list(signFlip*df['RSN3']))
+        regressor_values.append(PPI)
+        output.insert(0,Bunch(regressor_names=regressor_names,regressors=regressor_values))
+
         return output
     ## end moral dilemma
 
@@ -142,18 +149,15 @@ for feedbackRun in range(2):
 
 
     #modelfit
-    modelfit = create_modelfit_workflow(name='feedback')
+    modelfit = create_modelfit_workflow(name='PPI_model_fit')
     modelfit.inputs.inputspec.interscan_interval = TR
     modelfit.inputs.inputspec.model_serial_correlations = True
-    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': True}}
-    cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
-    cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
-    cont3 = ['Mean Focus','T',['Focus'],[1]]
-    cont4 = ['Mean Wander','T',['Wander'],[1]]
-    cont5 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
-    # cont3 = ['Task','F', [cont1,cont2]]
+    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
+    cont1 = ['Wander>Focus','T', ['Cont'],[1]]
+    cont2 = ['Focus>Wander','T', ['Cont'],[-1]]
+    cont3 = ['DMN PPI','T',['PPI'],[1]]
 
-    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5]
+    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3]
 
     workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun),'subject_info')])])
 
@@ -163,4 +167,4 @@ for feedbackRun in range(2):
     workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
-    workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':1})
