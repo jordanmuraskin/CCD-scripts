@@ -17,6 +17,9 @@ from scipy.stats import ttest_1samp
 from mne.stats.multi_comp import fdr_correction
 import plotly.plotly as py
 from plotly.graph_objs import *
+from nilearn import plotting
+from nilearn import image
+
 
 class MplColorHelper:
 
@@ -584,3 +587,24 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
     f.tight_layout()
     if savefig:
         f.savefig('RSN_LinearRegPrediction.pdf',dpi=300)
+
+
+def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vmax=8,slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True):
+
+    bg_img='./Templates/MNI152_.5mm_masked_edged.nii.gz'
+    threshold=0.949
+    pos=image.math_img("np.multiply(img1,img2)",
+                         img1=image.threshold_img(TFCEposImg,threshold=threshold),
+                         img2=posImg)
+    neg=image.math_img("np.multiply(img1,img2)",
+                         img1=image.threshold_img(TFCEnegImg,threshold=threshold),
+                         img2=negImg')
+    fw=image.math_img("img1-img2",img1=pos,img2=neg)
+
+    if plotToAxis:
+        display=plotting.plot_stat_map(fw,display_mode='z',threshold=0,
+                                       cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,black_bg=False,title=title,dim=0,figure=f,axes=ax)
+    else:
+        display=plotting.plot_stat_map(fw,display_mode='z',threshold=0,
+                                       cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,black_bg=False,title=title,dim=0)
+    return display
