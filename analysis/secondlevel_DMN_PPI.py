@@ -84,7 +84,7 @@ run1Sample=True
 if run1Sample:
 
 
-    for i in [3]]:
+    for i in [3]:
         for fb in [0,1]:
             for t in ['cope', 'varcope']:
                 x=[]
