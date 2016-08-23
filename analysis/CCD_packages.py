@@ -594,11 +594,9 @@ def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vma
     bg_img='./Templates/MNI152_.5mm_masked_edged.nii.gz'
     threshold=0.949
     pos=image.math_img("np.multiply(img1,img2)",
-                         img1=image.threshold_img(TFCEposImg,threshold=threshold),
-                         img2=posImg)
+                         img1=image.threshold_img(TFCEposImg,threshold=threshold),img2=posImg)
     neg=image.math_img("np.multiply(img1,img2)",
-                         img1=image.threshold_img(TFCEnegImg,threshold=threshold),
-                         img2=negImg')
+                         img1=image.threshold_img(TFCEnegImg,threshold=threshold),img2=negImg)
     fw=image.math_img("img1-img2",img1=pos,img2=neg)
 
     if plotToAxis:
