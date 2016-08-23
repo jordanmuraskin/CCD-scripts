@@ -63,12 +63,26 @@ folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/PPI_DMN'
 if not os.path.exists(folderbase):
     os.mkdir(folderbase)
 
+
+
 for runType in ['randomise','flame']:
+    foldername=folderbase + '/' + runType
+    if not os.path.exists(foldername):
+        os.mkdir(foldername)
+
+    foldername=folderbase + '/' + runType + '/paired-Ttest/'
+    if not os.path.exists(foldername):
+        os.mkdir(foldername)
+
     foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
     if not os.path.exists(foldername):
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
+        foldername=folderbase + '/' + runType + '/' + fb 
+        if not os.path.exists(foldername):
+            os.mkdir(foldername)
+
         foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
         if not os.path.exists(foldername):
             os.mkdir(foldername)
