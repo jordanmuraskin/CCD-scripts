@@ -601,7 +601,7 @@ def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vma
 
     if plotToAxis:
         display=plotting.plot_stat_map(fw,display_mode='z',threshold=0,
-                                       cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,black_bg=False,title=title,dim=0,figure=f,axes=ax)
+                                       cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,black_bg=False,title=title,dim=0,figure=f,axes=axes)
     else:
         display=plotting.plot_stat_map(fw,display_mode='z',threshold=0,
                                        cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,black_bg=False,title=title,dim=0)
