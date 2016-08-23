@@ -79,7 +79,7 @@ for runType in ['randomise','flame']:
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' + fb 
+        foldername=folderbase + '/' + runType + '/' + fb
         if not os.path.exists(foldername):
             os.mkdir(foldername)
 
@@ -104,7 +104,7 @@ if run1Sample:
                 x=[]
                 for subj in subject_list:
                     fbLoc=subjectinfo(subj,fb)
-                    fname = '/home/jmuraskin/Projects/CCD/working_v1/PPI_DMN/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                    fname = '/home/jmuraskin/Projects/CCD/working_v1/PPI_DMN/feedback_run-%d/PPI_model_fit/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
