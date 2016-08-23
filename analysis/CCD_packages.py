@@ -325,8 +325,8 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
               showticklabels=False,
               title=''
               )
-    width=1200
-    height=1150
+    width=600
+    height=575
 
     layout=Layout(title=title,
                   paper_bgcolor='rgba(0,0,0,0)',
@@ -348,7 +348,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN0.png",
                         xref="paper", yref="paper",
                         x=.93, y=.4,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -357,7 +357,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN1.png",
                         xref="paper", yref="paper",
                         x=.85, y=.7,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -366,7 +366,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN2.png",
                         xref="paper", yref="paper",
                         x=.55, y=.94,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -375,7 +375,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN3.png",
                         xref="paper", yref="paper",
                         x=.25, y=.94,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -384,7 +384,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN4.png",
                         xref="paper", yref="paper",
                         x=-0.02, y=.7,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -393,7 +393,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN5.png",
                         xref="paper", yref="paper",
                         x=-.1, y=.4,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -402,7 +402,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN6.png",
                         xref="paper", yref="paper",
                         x=-0.03, y=.1,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -411,7 +411,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN7.png",
                         xref="paper", yref="paper",
                         x=.25, y=-0.14,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -420,7 +420,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN8.png",
                         xref="paper", yref="paper",
                         x=.55, y=-0.14,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
@@ -429,7 +429,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
                         source="./RSN/RSN9.png",
                         xref="paper", yref="paper",
                         x=.85, y=.1,
-                        sizex=.2, sizey=.2,
+                        sizex=.1, sizey=.1,
                         xanchor="left", yanchor="bottom",
                         layer='below'
 
