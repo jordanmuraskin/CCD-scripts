@@ -110,7 +110,7 @@ if run1Sample:
         meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
-        model.inputs.regressors = dict(reg1=list(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(goodsubj)]['scanorder']-1.5)),FD=list(meanFD))
+        model.inputs.regressors = dict(reg1=list(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(goodsubj)]['scanorder']-1.5),FD=list(meanFD))
         model.run()
 
         if runWithRandomise:
