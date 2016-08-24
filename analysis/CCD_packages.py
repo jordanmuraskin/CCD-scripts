@@ -592,7 +592,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
 def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vmax=8,slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True,tight_layout=False):
 
     bg_img='./Templates/MNI152_.5mm_masked_edged.nii.gz'
-    threshold=0.949
+    # threshold=0.949
     pos=image.math_img("np.multiply(img1,img2)",
                          img1=image.threshold_img(TFCEposImg,threshold=threshold),img2=posImg)
     neg=image.math_img("np.multiply(img1,img2)",
