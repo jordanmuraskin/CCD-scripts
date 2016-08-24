@@ -84,8 +84,9 @@ if not os.path.exists(meanNFBFolder):
 
 runWithRandomise = True
 nperms=10000
-runPair=True
+runPair=False
 run1Sample=False
+runPairNew=True
 
 if run1Sample:
     for fb in [0,1]:
@@ -154,4 +155,20 @@ if runPair:
 
 
     shutil.move('DMN_pair',pairedFolder + '/DMN_pair')
+    shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')
+
+
+if runPairNew:
+
+    x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
+    meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz']
+    fslMathsCommand='fslmaths %s -sub %s DMN_pair_diff' % (x[0],x[1])
+    os.system(fslMathsCommand)
+
+    os.mkdir('DMN_pairNew')
+    randomiseCommand='./randomise_forpython.sh -i %s -o ./DMN_pairNew/paired -1 -m %s -T -n %d' % ('DMN_pair_diff.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+    os.system(randomiseCommand)
+
+
+    shutil.move('DMN_pairNew',pairedFolder + '/DMN_pairNew')
     shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')
