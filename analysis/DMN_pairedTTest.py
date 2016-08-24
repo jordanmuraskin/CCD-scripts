@@ -124,7 +124,7 @@ if runPair:
     pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
     pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
     #make paired ttest model
-    modelX=[0]*2*len(subject_list)
+    modelX=[-1]*2*len(subject_list)
     modelXAB=modelX
     modelXAB[0:len(subject_list)]=[1]*len(subject_list)
     modelDict=dict(reg1=modelXAB)
