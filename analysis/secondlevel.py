@@ -31,9 +31,12 @@ def subjectinfo(subject_id,getFeedback=True):
 
 #Decide if running all subjects or just good subjects
 runAll=False
+addScanOrder=True
 
 #load subject list
-motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
+motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
+# scanorderInfo=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_scanorder.csv',names=['Subject_ID','FB','meanFD'])
+
 fbNames=['NOFEEDBACK','FEEDBACK']
 
 if runAll:
@@ -159,6 +162,9 @@ if runPair:
             modelDict['s%d' % indx]= modeltmp
         modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
         + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
+        if addScanOrder:
+            modelDict['scanorder']= list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])
+        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])))
         pairedmodel.inputs.regressors = modelDict
         pairedmodel.run()
 
@@ -198,7 +204,10 @@ if runPair:
             randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_merged.nii.gz',i,i,i,i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
+            if addScanOrder:
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/so_cope' + str(i)
+            else:
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
                 os.mkdir(foldername)
