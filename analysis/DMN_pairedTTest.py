@@ -85,7 +85,7 @@ if not os.path.exists(meanNFBFolder):
 runWithRandomise = True
 nperms=10000
 runPair=True
-run1Sample=True
+run1Sample=False
 
 if run1Sample:
     for fb in [0,1]:
