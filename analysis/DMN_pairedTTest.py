@@ -148,8 +148,8 @@ if runPair:
     merger.inputs.output_type = 'NIFTI_GZ'
     merger.inputs.merged_file='./DMN_pair_merged.nii.gz'
     merger.run()
-
-    os.mkdir('DMN_pair')
+    if not os.path.exists('DMN_pair'):
+        os.mkdir('DMN_pair')
     randomiseCommand='./randomise_forpython.sh -i %s -o ./DMN_pair/paired -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
     os.system(randomiseCommand)
 
