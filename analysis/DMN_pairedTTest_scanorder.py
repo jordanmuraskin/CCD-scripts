@@ -117,8 +117,8 @@ if run1Sample:
             os.mkdir(fbNames[fb])
             randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -D -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('DMN_merged_%s.nii.gz' % fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
-            shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb else meanNFBFolder + '/' + fbNames[fb])
-            shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],meanFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb] if fb else meanNFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb])
+            shutil.move(fbNames[fb],pairedFolder)
+            shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],pairedFolder)
 
 
 
