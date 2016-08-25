@@ -128,7 +128,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     GroupDF.reset_index(inplace=True)
 
-    motionInfo=GroupDF.groupby(['Subject_ID','FB']).mean()['meanFD']
+    motionInfo=GroupDF.groupby(['Subject_ID','FB','scanorder']).mean()['meanFD']
     if saveMotionInfo:
         motionInfo.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
 
@@ -178,9 +178,12 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),savefig=True):
     if savefig:
         f.savefig('Subject_ModelCorrelations.pdf', dpi=600)
 
-def createScanOrderBarPlot(GroupDF,goodsubj,savefig=True):
+def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,savefig=True):
     plt.figure()
-    sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
+    if BV:
+        sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
+    else:
+        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile')
     if savefig:
         plt.savefig('ScanOrder_ModelCorrelations.pdf',dpi=600)
 
