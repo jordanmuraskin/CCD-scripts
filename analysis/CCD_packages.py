@@ -615,7 +615,7 @@ def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vma
     return display
 
 
-def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True):
+def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=(20,20)):
     import statsmodels.api as sm
     if addconstant:
         X=sm.add_constant(X)
