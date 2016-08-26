@@ -648,8 +648,8 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
                 if column==3:
                     column=0
                     row+=1
-            for n in range(numX,int(np.ceil(numX/3.0))*3):
-                axarr[n].cla()
+            for indx,n in enumerate(range(numX,int(np.ceil(numX/3.0))*3)):
+                axarr[row][indx+1].cla()
 
         else:
             fig, axarr = plt.subplots(figsize=figsize)
