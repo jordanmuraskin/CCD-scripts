@@ -627,24 +627,27 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
     print results.summary()
 
     if plotFigure:
-        #first figure out how many plots
-        numX=X.shape[1]-1
-        if numX>2:
-            fig, axarr = plt.subplots(int(np.ceil(numX/3.0)),3,figsize=(20,20))
-        else:
-            fig, axarr = plt.subplots(1,2,figsize=(20,20))
-        row=0
-        column=0
-        for n in range(1,numX+1):
-#             fig, axarr = plt.subplots(int(np.ceil(numX/3.0)),3,figsize=(10,10))
+        if RLM:
+            #first figure out how many plots
+            numX=X.shape[1]-1
             if numX>2:
-                sm.graphics.plot_ccpr(results,results.model.exog_names[n], ax = axarr[row][column])
+                fig, axarr = plt.subplots(int(np.ceil(numX/3.0)),3,figsize=(20,20))
             else:
-                sm.graphics.plot_ccpr(results,results.model.exog_names[n], ax = axarr[column])
+                fig, axarr = plt.subplots(1,2,figsize=(20,20))
+            row=0
+            column=0
+            for n in range(1,numX+1):
+    #             fig, axarr = plt.subplots(int(np.ceil(numX/3.0)),3,figsize=(10,10))
+                if numX>2:
+                    sm.graphics.plot_ccpr(results,results.model.exog_names[n], ax = axarr[row][column])
+                else:
+                    sm.graphics.plot_ccpr(results,results.model.exog_names[n], ax = axarr[column])
 
-            axarr[row][column].set_title(modelNames[n-1])
-            column+=1
-            if column==3:
-                column=0
-                row+=1
+                axarr[row][column].set_title(modelNames[n-1])
+                column+=1
+                if column==3:
+                    column=0
+                    row+=1
+        else:
+            sm.graphics.plot_ccpr_grid(results)
     return results
