@@ -631,9 +631,9 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
             #first figure out how many plots
             numX=X.shape[1]-1
             if numX>2:
-                fig, axarr = plt.subplots(int(np.ceil(numX/3.0)),3,figsize=(20,20))
+                fig, axarr = plt.subplots(int(np.ceil(numX/3.0)),3,figsize=figsize)
             else:
-                fig, axarr = plt.subplots(1,2,figsize=(20,20))
+                fig, axarr = plt.subplots(1,2,figsize=figsize)
             row=0
             column=0
             for n in range(1,numX+1):
@@ -649,5 +649,6 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
                     column=0
                     row+=1
         else:
-            sm.graphics.plot_ccpr_grid(results)
+            fig, axarr = plt.subplots(figsize=figsize)
+            sm.graphics.plot_ccpr_grid(results,fig=fig)
     return results
