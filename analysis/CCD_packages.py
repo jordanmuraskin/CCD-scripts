@@ -649,7 +649,8 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
                     column=0
                     row+=1
             for indx,t in enumerate(range(n,int(np.ceil(numX/3.0))*3)):
-                fig.delaxes(axarr[row][indx+1])
+                fig.delaxes(axarr[row][column])
+                column+=1
 
         else:
             fig, axarr = plt.subplots(figsize=figsize)
