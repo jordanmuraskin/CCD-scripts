@@ -648,6 +648,9 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
                 if column==3:
                     column=0
                     row+=1
+            for n in range(numX,int(np.ceil(numX/3.0))*3):
+                axarr[n].cla()
+
         else:
             fig, axarr = plt.subplots(figsize=figsize)
             sm.graphics.plot_ccpr_grid(results,fig=fig)
