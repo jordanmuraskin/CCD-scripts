@@ -80,7 +80,7 @@ for feedbackRun in range(2):
                          name = 'datasource_csv')
     datasource2.inputs.base_directory = csv_dir
     datasource2.inputs.template = '%s/%s'
-    datasource2.inputs.template_args = info
+    datasource2.inputs.template_args = info_2
     datasource2.inputs.sort_filelist = True
     workflow.connect(infosource2, 'subject_id', datasource2, 'subject_id')
 
