@@ -88,7 +88,7 @@ for feedbackRun in range(2):
 
 
     glmNode = pe.Node(interface=fsl.GLM(),name='GLM')
-    glmNode.inputs.out_res='residuals.nii.gz'
+    glmNode.inputs.out_res_name='residuals.nii.gz'
 
     workflow.connect([(datasource,glmNode,[('func','in_file')]),
     (datasource,glmNode,[('mask','mask')]),
