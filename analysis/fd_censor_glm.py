@@ -73,8 +73,8 @@ for feedbackRun in range(2):
 
     info_2 = dict(csv=['subject_id', ['feedback_run_%d.csv' % (feedbackRun+1)]])
 
-    infosource2 = pe.Node(interface=util.IdentityInterface(fields=['subject_id']), name="infosource_csv")
-    infosource2.iterables = ('subject_id', subject_list)
+    # infosource2 = pe.Node(interface=util.IdentityInterface(fields=['subject_id']), name="infosource_csv")
+    # infosource2.iterables = ('subject_id', subject_list)
 
     datasource2 = pe.Node(interface=nio.DataGrabber(infields=['subject_id'], outfields=['csv']),
                          name = 'datasource_csv')
@@ -82,7 +82,7 @@ for feedbackRun in range(2):
     datasource2.inputs.template = '%s/%s'
     datasource2.inputs.template_args = info_2
     datasource2.inputs.sort_filelist = True
-    workflow.connect(infosource2, 'subject_id', datasource2, 'subject_id')
+    workflow.connect(infosource, 'subject_id', datasource2, 'subject_id')
 
 
 
