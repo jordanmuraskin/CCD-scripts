@@ -650,7 +650,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
         f.savefig('RSN_LinearRegPrediction.pdf',dpi=300)
 
 
-def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vmax=8,display_mode='z',slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True,tight_layout=False):
+def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vmax=8,display_mode='z',slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True,tight_layout=False,draw_cross=False):
 
     bg_img='./Templates/MNI152_.5mm_masked_edged.nii.gz'
     # threshold=0.949
