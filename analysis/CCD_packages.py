@@ -19,6 +19,7 @@ import plotly.plotly as py
 from plotly.graph_objs import *
 from nilearn import plotting
 from nilearn import image
+from scipy import stats, linalg
 
 
 class MplColorHelper:
@@ -213,6 +214,62 @@ def generateHeatMaps(GroupDF,goodsubj):
         hmFB[:,:,indx]=heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr()
         hmNFB[:,:,indx]=heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr()
         hmDiff[:,:,indx]=np.arctan(heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr())*np.sqrt(405)-np.arctan(heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr())*np.sqrt(405)
+
+    return hmFB,hmNFB,hmDiff
+
+
+def partial_corr(C):
+    """
+    Returns the sample linear partial correlation coefficients between pairs of variables in C, controlling
+    for the remaining variables in C.
+    Parameters
+    ----------
+    C : array-like, shape (n, p)
+        Array with the different variables. Each column of C is taken as a variable
+    Returns
+    -------
+    P : array-like, shape (p, p)
+        P[i, j] contains the partial correlation of C[:, i] and C[:, j] controlling
+        for the remaining variables in C.
+    """
+
+    C = np.asarray(C)
+    p = C.shape[1]
+    P_corr = np.zeros((p, p), dtype=np.float)
+    for i in range(p):
+        P_corr[i, i] = 1
+        for j in range(i+1, p):
+            idx = np.ones(p, dtype=np.bool)
+            idx[i] = False
+            idx[j] = False
+            beta_i = linalg.lstsq(C[:, idx], C[:, j])[0]
+            beta_j = linalg.lstsq(C[:, idx], C[:, i])[0]
+
+            res_j = C[:, j] - C[:, idx].dot( beta_i)
+            res_i = C[:, i] - C[:, idx].dot(beta_j)
+
+            corr = stats.pearsonr(res_i, res_j)[0]
+            P_corr[i, j] = corr
+            P_corr[j, i] = corr
+
+    return P_corr
+
+def generateHeatMaps_pcorr(GroupDF,goodsubj):
+
+    numberOfICs=10
+    columnNames=[]
+    for rsnNumber in range(numberOfICs):
+            columnNames.append('RSN%d' % rsnNumber)
+
+    heatmapDF=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject_ID','FB','TR']).mean()
+    hmDiff=np.zeros((10,10,len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID']))))
+    hmFB=hmDiff.copy()
+    hmNFB=hmDiff.copy()
+
+    for indx,subj in enumerate(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])):
+        hmFB[:,:,indx]=partial_corr(heatmapDF.loc[subj,'FEEDBACK'][columnNames])
+        hmNFB[:,:,indx]=partial_corr(heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr())
+        hmDiff[:,:,indx]=np.arctan(hmFB[:,:,indx])-np.arctan(hmNFB[:,:,indx])
 
     return hmFB,hmNFB,hmDiff
 
