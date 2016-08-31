@@ -30,10 +30,13 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #Decide if running all subjects or just good subjects
-runAll=False
+runAll=True
 
+#if run with performance
+runWithPerformance=True
 #load subject list
 motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
+performance=pd.read_csv('CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
 if runAll:
@@ -82,10 +85,21 @@ if not os.path.exists(meanFBFolder):
 if not os.path.exists(meanNFBFolder):
     os.mkdir(meanNFBFolder)
 
+if runWithPerformance:
+    meanFBFolder=meanFBFolder+'/performance'
+
+    if not os.path.exists(meanFBFolder):
+        os.mkdir(meanFBFolder)
+
+    meanNFBFolder=meanNFBFolder+'/performance'
+
+    if not os.path.exists(meanNFBFolder):
+        os.mkdir(meanNFBFolder)
+
 runWithRandomise = True
 nperms=10000
-runPair=True
-run1Sample=False
+runPair=False
+run1Sample=True
 runPairNew=False
 
 if run1Sample:
@@ -105,9 +119,16 @@ if run1Sample:
         merger.run()
         #get meanFD values for each subject and add as covariate
         meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+
         model = MultipleRegressDesign()
-        model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
-        model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD))
+        if runWithPerformance:
+            perf=zscore(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R'])
+            model.inputs.contrasts = [['group mean', 'T',['R'],[1]],['group neg mean', 'T',['R'],[-1]]]
+            model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD),R=list(perf))
+
+        else:
+            model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
+            model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD))
         model.run()
 
         if runWithRandomise:
