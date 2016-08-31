@@ -33,7 +33,7 @@ def subjectinfo(subject_id,getFeedback=True):
 runAll=True
 
 #if run with performance
-runWithPerformance=True
+runWithPerformance=False
 #load subject list
 motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
 performance=pd.read_csv('CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
@@ -50,8 +50,11 @@ else:
     motionDir='motionThresh-%f' % motionThresh
 
 
+#which RSN
+RSN=8
+
 #create second level folders
-folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/DMN/'
+folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/RSN%d/' % RSN
 
 
 
@@ -107,7 +110,7 @@ if run1Sample:
         x=[]
         for subj in subject_list:
             fbLoc=subjectinfo(subj,fb)
-            fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_03/temp_reg_map_0003_antswarp_maths.nii.gz' % (subj,fbLoc)
+            fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc,RSN,RSN)
             # fname = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/%s%d.nii.gz' % (fbLoc,subj,t,i)
             x.append(fname)
         subjs = len(x)
