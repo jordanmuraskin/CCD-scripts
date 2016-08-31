@@ -30,8 +30,10 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #Decide if running all subjects or just good subjects
-runAll=False
-addScanOrder=True
+runAll=True
+addScanOrder=False
+
+copesToRun=[1,5]
 
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
@@ -78,13 +80,13 @@ runWithRandomise = True
 runFlame=False
 nperms=10000
 runPair=True
-run1Sample=False
+run1Sample=True
 
 
 if run1Sample:
 
 
-    for i in range(1,6):
+    for i in copesToRun:
         for fb in [0,1]:
             for t in ['cope', 'varcope']:
                 x=[]
@@ -142,7 +144,7 @@ if run1Sample:
 if runPair:
 
 
-    for i in range(1,6):
+    for i in copesToRun:
 
         pairedmodel = MultipleRegressDesign()
         pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
