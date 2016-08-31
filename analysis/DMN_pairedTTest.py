@@ -101,7 +101,7 @@ if runWithPerformance:
 
 runWithRandomise = True
 nperms=10000
-runPair=False
+runPair=True
 run1Sample=True
 runPairNew=False
 
