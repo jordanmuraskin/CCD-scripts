@@ -570,15 +570,16 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
     clf = linear_model.LinearRegression()
 
     for indx,subj in enumerate(unique(GroupDF['Subject_ID'])):
-        predicted,intercepts,coef = leaveOneOutCV(clf,np.array(SubjectDF.loc[subj,feedback][columnNames]),dmnIdeal['Wander']-dmnIdeal['Focus'],numFolds=numFolds)
+        X=np.columnstack((np.array(SubjectDF.loc[subj,feedback][columnNames],SubjectDF.loc[subj,feedback]['fd'])))
+        predicted,intercepts,coef = leaveOneOutCV(clf,X,dmnIdeal['Wander']-dmnIdeal['Focus'],numFolds=numFolds)
         if indx==0:
             groupGLM=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
-            coefs=pd.DataFrame({'Coef':coef,'pe':range(10),'subj':[subj]*10})
+            coefs=pd.DataFrame({'Coef':coef,'pe':range(X.shape[1]),'subj':[subj]*X.shape[1]})
             performance=pd.DataFrame({'R':[pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})
         else:
             df=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
             groupGLM=pd.concat((groupGLM,df),ignore_index=True)
-            coefs=pd.concat((coefs,pd.DataFrame({'Coef':coef,'pe':range(10),'subj':[subj]*10})),ignore_index=True)
+            coefs=pd.concat((coefs,pd.DataFrame({'Coef':coef,'pe':range(X.shape[1]),'subj':[subj]*X.shape[1]})),ignore_index=True)
             performance=pd.concat((performance,pd.DataFrame({'R':[pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],predicted)[0]],'subj':[subj]})),ignore_index=True)
 
     return groupGLM,coefs,performance
