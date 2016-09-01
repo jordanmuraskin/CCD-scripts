@@ -570,7 +570,7 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
     clf = linear_model.LinearRegression()
 
     for indx,subj in enumerate(unique(GroupDF['Subject_ID'])):
-        X=np.columnstack((np.array(SubjectDF.loc[subj,feedback][columnNames],SubjectDF.loc[subj,feedback]['fd'])))
+        X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames],SubjectDF.loc[subj,feedback]['fd'])))
         predicted,intercepts,coef = leaveOneOutCV(clf,X,dmnIdeal['Wander']-dmnIdeal['Focus'],numFolds=numFolds)
         if indx==0:
             groupGLM=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
