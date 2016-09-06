@@ -202,7 +202,7 @@ for RSN in rsn:
         merger.run()
         if not os.path.exists('RSN_pair'):
             os.mkdir('RSN_pair')
-        os.system('mv ./design.* ./RSN_pair)
+        os.system('mv ./design.* ./RSN_pair')
         randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair/paired -d ./RSN_pair/design.mat -t ./RSN_pair/design.con -e ./RSN_pair/design.grp -m %s -T -n %d' % ('DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
