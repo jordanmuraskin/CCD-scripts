@@ -64,7 +64,7 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #load subject list
-motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','meanFD'])
+motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
 if runAll:
