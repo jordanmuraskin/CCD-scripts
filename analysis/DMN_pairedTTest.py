@@ -161,7 +161,10 @@ for RSN in rsn:
 
             if runWithRandomise:
                 os.mkdir(fbNames[fb])
-                randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('DMN_merged_%s.nii.gz' % fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                if not os.path.exists(fbNames[fb]):
+                    os.mkdir(fbNames[fb])
+                os.system('mv ./design.* ./%s' % fbNames[fb])
+                randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('DMN_merged_%s.nii.gz' % fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
                 shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb else meanNFBFolder + '/' + fbNames[fb])
                 shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],meanFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb] if fb else meanNFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb])
@@ -197,13 +200,14 @@ for RSN in rsn:
         merger.inputs.output_type = 'NIFTI_GZ'
         merger.inputs.merged_file='./DMN_pair_merged.nii.gz'
         merger.run()
-        if not os.path.exists('DMN_pair'):
-            os.mkdir('DMN_pair')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./DMN_pair/paired -d design.mat -t design.con -e design.grp -m %s -T -n %d' % ('DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        if not os.path.exists('RSN_pair'):
+            os.mkdir('RSN_pair')
+        os.system('mv ./design.* ./RSN_pair)
+        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair/paired -d ./RSN_pair/design.mat -t ./RSN_pair/design.con -e ./RSN_pair/design.grp -m %s -T -n %d' % ('DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
 
-        shutil.move('DMN_pair',pairedFolder + '/DMN_pair')
+        shutil.move('RSN_pair',pairedFolder + '/RSN_pair')
         shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')
 
 
