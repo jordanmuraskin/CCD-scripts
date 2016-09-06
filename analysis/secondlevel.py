@@ -8,6 +8,52 @@ from nipype.interfaces import fsl
 from subprocess import call
 from nipype.interfaces.fsl import MultipleRegressDesign
 from scipy.stats import zscore
+import sys
+import argparse
+
+
+
+
+# class Usage(Exception):
+#     def __init__(self, msg):
+#         self.msg = msg
+#
+# def main(argv=None):
+#     if argv is None:
+#         argv = sys.argv
+#     try:
+#         try:
+#             opts, args = getopt.getopt(argv[1:], "h", ["help"])
+#         except getopt.error, msg:
+#              raise Usage(msg)
+#         # more code, unchanged
+#     except Usage, err:
+#         print >>sys.stderr, err.msg
+#         print >>sys.stderr, "for help use --help"
+#         return 2
+#
+# if __name__ == "__main__":
+#     sys.exit(main())
+
+parser = argparse.ArgumentParser(description='Run Second Level Results for CCD')
+parser.add_argument('-rwr', help='Option to run with Randomise',required=False,default=True,type=bool)
+parser.add_argument('-rwf', help='Option to run with FLAME',required=False,default=False,type=bool)
+parser.add_argument('-n',help='Number of Permutations to Run', required=False,default=10000,type=int)
+parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=True,type=bool)
+parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=True,type=bool)
+parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=True,type=bool)
+parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=range(5))
+args = parser.parse_args()
+
+#Decide if running all subjects or just good subjects
+runWithRandomise =args.rwr
+runFlame= args.rwf
+nperms=args.n
+runPair=args.rpair
+run1Sample=args.r1samp
+runAll=args.rall
+addScanOrder=False
+copesToRun=args.copes
 
 
 def subjectinfo(subject_id,getFeedback=True):
@@ -29,11 +75,7 @@ def subjectinfo(subject_id,getFeedback=True):
         return noFeedback
 
 
-#Decide if running all subjects or just good subjects
-runAll=True
-addScanOrder=False
 
-copesToRun=[1,3,4,5]
 
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
@@ -76,15 +118,9 @@ for runType in ['randomise','flame']:
             os.mkdir(foldername)
 
 
-runWithRandomise = True
-runFlame=False
-nperms=10000
-runPair=True
-run1Sample=True
 
 
 if run1Sample:
-
 
     for i in copesToRun:
         for fb in [0,1]:
@@ -146,7 +182,6 @@ if run1Sample:
 
 
 if runPair:
-
 
     for i in copesToRun:
 
