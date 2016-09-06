@@ -33,7 +33,7 @@ def subjectinfo(subject_id,getFeedback=True):
 runAll=True
 addScanOrder=False
 
-copesToRun=[1,5]
+copesToRun=[1,3,4,5]
 
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
@@ -135,8 +135,12 @@ if run1Sample:
                     os.mkdir(foldername)
                 else:
                     os.mkdir(foldername)
-                shutil.move('cope%d' % i,foldername)
-                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+                filename='cope%d' % i
+                shutil.move(filename, os.path.join(foldername, filename))
+                # shutil.move('cope%d' % i,foldername)
+                filename='cope' + str(i) + '_merged.nii.gz'
+                # shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+                shutil.move(filename, os.path.join(foldername, filename))
 
 
 
@@ -215,5 +219,9 @@ if runPair:
                 os.mkdir(foldername)
             else:
                 os.mkdir(foldername)
-            shutil.move('cope%d' % i,foldername)
-            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+            filename='cope%d' % i
+            shutil.move(filename, os.path.join(foldername, filename))
+            # shutil.move('cope%d' % i,foldername)
+            filename='cope' + str(i) + '_merged.nii.gz'
+            # shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+            shutil.move(filename, os.path.join(foldername, filename))
