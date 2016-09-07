@@ -120,6 +120,11 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df['meanFD']=fd.mean()[0]
                     df['fd']=fd
 
+                    fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_train/FD.1D' % (drFileLocation,subj,scan)
+                    fd=pd.read_csv(fdFilePath,header=None,names=['fd'],delim_whitespace=True)
+                    df['train_meanFD']=fd.mean()[0]
+                    df['train_fd']=fd
+
                     if len(GroupDF)==0:
                         GroupDF=df
                     else:
@@ -132,6 +137,10 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
     motionInfo=GroupDF.groupby(['Subject_ID','FB','scanorder']).mean()['meanFD']
     if saveMotionInfo:
         motionInfo.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
+
+    motionInfo_train=GroupDF.groupby(['Subject_ID']).mean()['train_meanFD']
+    if saveMotionInfo:
+        motionInfo_train.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_train_meanFD.csv')
 
     return GroupDF,motionInfo
 
