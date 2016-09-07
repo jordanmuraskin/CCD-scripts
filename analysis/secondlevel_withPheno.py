@@ -75,7 +75,7 @@ else:
 phenoFile='/home/jmuraskin/Projects/CCD/Pheno/narsad+vt_new.csv'
 pheno=pd.read_csv(phenoFile)
 pheno=pheno.set_index('participant')
-# pheno_measure_name='V1_CCDRSQ_72'
+pheno_measure_name=args.pheno
 pheno_measure = zscore(pheno.loc[subject_list][pheno_measure_name])
 
 secondlevel_folder_names=['noFeedback','Feedback']
