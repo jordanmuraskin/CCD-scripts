@@ -120,10 +120,10 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df['meanFD']=fd.mean()[0]
                     df['fd']=fd
 
-                    fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_tra/FD.1D' % (drFileLocation,subj)
-                    fd=pd.read_csv(fdFilePath,header=None,names=['fd'],delim_whitespace=True)
-                    df['train_meanFD']=fd.mean()[0]
-                    df['train_fd']=fd
+                    # fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_tra/FD.1D' % (drFileLocation,subj)
+                    # fd=pd.read_csv(fdFilePath,header=None,names=['fd'],delim_whitespace=True)
+                    # df['train_meanFD']=fd.mean()[0]
+                    # df['train_fd']=fd
 
                     if len(GroupDF)==0:
                         GroupDF=df
