@@ -558,7 +558,7 @@ def bayesianRidge(X,y):
     predicted = cross_validation.cross_val_predict(clf, X,y,cv=408)
     return clf,predicted
 
-def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
+def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10,addMotion=True,verbose=False):
 
     numberOfICs=10
     columnNames=[]
@@ -570,9 +570,15 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10):
     clf = linear_model.LinearRegression()
 
     for indx,subj in enumerate(unique(GroupDF['Subject_ID'])):
-        X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames],SubjectDF.loc[subj,feedback]['fd'])))
-        X=X.T
-        # print X.shape
+        if verbose:
+            print "Running Subject- %s" % subj
+        if addMotion:
+            X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames],SubjectDF.loc[subj,feedback]['fd'])))
+            X=X.T
+        else:
+            X=SubjectDF.loc[subj,feedback][columnNames]
+        if verbose:
+            print X.shape
         predicted,intercepts,coef = leaveOneOutCV(clf,X,dmnIdeal['Wander']-dmnIdeal['Focus'],numFolds=numFolds)
         if indx==0:
             groupGLM=pd.DataFrame({'TR':range(408),'predicted':predicted,'subj':[subj]*408})
