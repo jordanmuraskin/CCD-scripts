@@ -138,9 +138,9 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
     if saveMotionInfo:
         motionInfo.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
 
-    motionInfo_train=GroupDF.groupby(['Subject_ID']).mean()['train_meanFD']
-    if saveMotionInfo:
-        motionInfo_train.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_train_meanFD.csv')
+    # motionInfo_train=GroupDF.groupby(['Subject_ID']).mean()['train_meanFD']
+    # if saveMotionInfo:
+    #     motionInfo_train.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_train_meanFD.csv')
 
     return GroupDF,motionInfo
 
