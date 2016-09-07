@@ -130,7 +130,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     else:
                         GroupDF=pd.concat((GroupDF,df),ignore_index=True)
                 except:
-                    print 'No DR .txt file found or error'
+                    print 'No DR .txt file found or error for subject : %s' % subj
 
     GroupDF.reset_index(inplace=True)
 
