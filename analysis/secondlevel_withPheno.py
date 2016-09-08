@@ -86,9 +86,9 @@ for runType in ['randomise','flame']:
     foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
     if not os.path.exists(foldername):
         os.mkdir(foldername)
-    pfoldername= foldername + '/' + pheno_measure_name
-    if not os.path.exists(pfoldername):
-        os.mkdir(pfoldername)
+    foldername= foldername + '/' + pheno_measure_name
+    if not os.path.exists(foldername):
+        os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
         foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
@@ -184,11 +184,13 @@ if runPair:
             randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -D -m %s -T -n %d' % ('cope' + str(i) + '_pair_diff.nii.gz',i,i,i,i,i,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
-            foldername=pfoldername + '/cope' + str(i)
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
+            print 'Making folder: %s' % foldername
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
                 os.mkdir(foldername)
             else:
                 os.mkdir(foldername)
+
             shutil.move('cope%d' % i,foldername)
-            shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+            shutil.move('cope%d_pair_diff.nii.gz' % (x[0],x[1],i),foldername)
