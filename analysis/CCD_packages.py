@@ -582,10 +582,9 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10,addMotion=True,verbose
         if verbose:
             print "Running Subject- %s" % subj
         if addMotion:
-            # print SubjectDF.loc[subj,feedback]['fd']
             X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames]),zscore(SubjectDF.loc[subj,feedback]['fd'])))
         else:
-            X=SubjectDF.loc[subj,feedback][columnNames]
+            X=np.array(SubjectDF.loc[subj,feedback][columnNames])
         if verbose:
             print X.shape
         predicted,intercepts,coef = leaveOneOutCV(clf,X,dmnIdeal['Wander']-dmnIdeal['Focus'],numFolds=numFolds)
