@@ -641,18 +641,18 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
     # plt.close(g.fig)
     ax2.set_title('Mean Subject Time Series Correlations')
     g=sns.violinplot(data=coefs,x='pe',y='Coef',hue='fb',split=True,bw=.3,inner='quartile',ax=ax3)
-    g.plot([-1,10],[0,0],'k--')
+    g.plot([-1,len(unique(coefs['pe']))],[0,0],'k--')
     g.set_xlim([-.5,9.5])
 
 
-    t,p=ttest_1samp(np.array(fb_coefs['Coef']-nfb_coefs['Coef']).reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),10),0)
+    t,p=ttest_1samp(np.array(fb_coefs['Coef']-nfb_coefs['Coef']).reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe']))),0)
     p05,padj=fdr_correction(p,0.05)
 
     sns.barplot(x=range(len(t)),y=t,ax=ax4,color='Red')
     for idx,pFDR in enumerate(p05):
         if pFDR:
             ax4.scatter(idx,t[idx]+ np.sign(t[idx])*0.2,marker='*',s=75)
-    ax4.set_xlim([-0.5,10])
+    ax4.set_xlim([-0.5,len(unique(coefs['pe']))])
     ax4.set_xlabel('pe')
     ax4.set_ylabel('t-value')
     ax4.set_title('FB vs. nFB PE')
