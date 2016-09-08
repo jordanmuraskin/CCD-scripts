@@ -12,12 +12,12 @@ import argparse
 
 
 parser = argparse.ArgumentParser(description='Run Second Level Results with PhenoTypic Measures')
-parser.add_argument('-rwr', help='Option to run with Randomise',required=False,default=True,type=bool)
-parser.add_argument('-rwf', help='Option to run with FLAME',required=False,default=False,type=bool)
+parser.add_argument('-rwr', help='Option to run with Randomise',required=False,default=1,type=int)
+parser.add_argument('-rwf', help='Option to run with FLAME',required=False,default=0,type=int)
 parser.add_argument('-n',help='Number of Permutations to Run', required=False,default=10000,type=int)
-parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=True,type=bool)
-parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=False,type=bool)
-parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=True,type=bool)
+parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=1,type=int)
+parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=0,type=int)
+parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=1,type=int)
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=[1,3,4,5])
 parser.add_argument('-pheno', help='Phenotype Measure to Run', type=str,required=False,default='V1_CCDRSQ_75')
 args = parser.parse_args()
@@ -124,7 +124,7 @@ if run1Sample:
             model.run()
 
             if runFlame:
-                flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
+                flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
                 flameo.run()
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
                 if os.path.exists(foldername):
@@ -140,7 +140,7 @@ if run1Sample:
                     os.mkdir('cope%d' % i)
                 os.system('mv ./design.* ./cope%d' % i)
                 # shutil.move('./design.*','cope%d' % i)
-                randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d -D'  % ('cope' + str(i) + '_merged.nii.gz',i,i,i,i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d -D'  % ('cope' + str(i) + '_merged.nii.gz',i,i,i,i,i,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
@@ -181,7 +181,7 @@ if runPair:
                 os.mkdir('cope%d' % i)
             # shutil.move('./design.*','cope%d' % i)
             os.system('mv ./design.* ./cope%d' % i)
-            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_pair_diff.nii.gz',i,i,i,i,i,'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_pair_diff.nii.gz',i,i,i,i,i,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
             foldername=pfoldername + '/cope' + str(i)
