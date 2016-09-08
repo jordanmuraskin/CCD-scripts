@@ -639,10 +639,13 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
 
     g=sns.violinplot(data=performance,x='fb',y='R',split=True,bw=.3,inner='quartile',ax=ax2)
     # plt.close(g.fig)
-    ax2.set_title('Mean Subject Time Series Correlations')
+
     g=sns.violinplot(data=coefs,x='pe',y='Coef',hue='fb',split=True,bw=.3,inner='quartile',ax=ax3)
     g.plot([-1,len(unique(coefs['pe']))],[0,0],'k--')
     g.set_xlim([-.5,len(unique(coefs['pe']))])
+
+    t,p = ttest_1samp(np.array(performance[performance.fb=='FEEDBACK']['R'])-np.array(performance[performance.fb=='NOFEEDBACK']['R']))
+    ax2.set_title('Mean Subject Time Series Correlations-p=%0.2f' % p)
 
 
     t,p=ttest_1samp(np.array(fb_coefs['Coef']-nfb_coefs['Coef']).reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe']))),0)
