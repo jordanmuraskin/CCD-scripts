@@ -601,12 +601,12 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10,addMotion=True,verbose
 
     return groupGLM,coefs,performance
 
-def linearRegressionData(GroupDF,goodsubj,numFolds=10,verbose=False):
+def linearRegressionData(GroupDF,goodsubj,numFolds=10,addMotion=True,verbose=False):
     print 'Running Feedback on Regressions'
-    fb_pred,fb_coefs,fb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],goodsubj,'FEEDBACK',numFolds=numFolds,verbose=verbose)
+    fb_pred,fb_coefs,fb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],goodsubj,'FEEDBACK',numFolds=numFolds,addMotion=addMotion,verbose=verbose)
     print 'Finished...'
     print 'Running Feedback off Regressions'
-    nfb_pred,nfb_coefs,nfb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],goodsubj,'NOFEEDBACK',numFolds=numFolds,verbose=verbose)
+    nfb_pred,nfb_coefs,nfb_performance=GroupRegression(GroupDF[GroupDF.Subject_ID.isin(goodsubj)],goodsubj,'NOFEEDBACK',numFolds=numFolds,addMotion=addMotion,verbose=verbose)
     print 'Finished...'
 
     fb_pred['fb']='FEEDBACK'
@@ -644,7 +644,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
     g.plot([-1,len(unique(coefs['pe']))],[0,0],'k--')
     g.set_xlim([-.5,len(unique(coefs['pe']))])
 
-    t,p = ttest_1samp(np.array(performance[performance.fb=='FEEDBACK']['R'])-np.array(performance[performance.fb=='NOFEEDBACK']['R']))
+    t,p = ttest_1samp(np.array(performance[performance.fb=='FEEDBACK']['R'])-np.array(performance[performance.fb=='NOFEEDBACK']['R']),0)
     ax2.set_title('Mean Subject Time Series Correlations-p=%0.2f' % p)
 
 
