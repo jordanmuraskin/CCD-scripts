@@ -582,8 +582,8 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10,addMotion=True,verbose
         if verbose:
             print "Running Subject- %s" % subj
         if addMotion:
-            print SubjectDF.loc[subj,feedback]['fd']
-            X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames],SubjectDF.loc[subj,feedback]['fd'])))
+            # print SubjectDF.loc[subj,feedback]['fd']
+            X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames]),np.array(SubjectDF.loc[subj,feedback]['fd'])))
             X=X.T
         else:
             X=SubjectDF.loc[subj,feedback][columnNames]
