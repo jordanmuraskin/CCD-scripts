@@ -163,7 +163,7 @@ if runPair:
     for i in copesToRun:
 
 
-        meanFD=np.array(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])+np.array(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        meanFD=zscore(np.array(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])+np.array(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
         model.inputs.regressors = dict(pheno=list(pheno_measure),FD=list(meanFD))
@@ -181,7 +181,7 @@ if runPair:
                 os.mkdir('cope%d' % i)
             # shutil.move('./design.*','cope%d' % i)
             os.system('mv ./design.* ./cope%d' % i)
-            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -m %s -T -n %d' % ('cope' + str(i) + '_pair_diff.nii.gz',i,i,i,i,i,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            randomiseCommand='./randomise_forpython.sh -i %s -o ./cope%d/cope%d -d ./cope%d/design.mat -t ./cope%d/design.con -e ./cope%d/design.grp -D -m %s -T -n %d' % ('cope' + str(i) + '_pair_diff.nii.gz',i,i,i,i,i,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
             foldername=pfoldername + '/cope' + str(i)
