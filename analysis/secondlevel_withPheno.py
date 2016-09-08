@@ -20,6 +20,8 @@ parser.add_argument('-rpair', help='Option to run paired t-test',required=False,
 parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=1,type=int)
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=[1,3,4,5])
 parser.add_argument('-pheno', help='Phenotype Measure to Run', type=str,required=False,default='V1_CCDRSQ_75')
+parser.add_argument('-perf',help='Run with Performance instead of Phenotype',type=int,required=False,default=0)
+
 args = parser.parse_args()
 
 
@@ -32,6 +34,7 @@ run1Sample=args.r1samp
 runAll=args.rall
 addScanOrder=False
 copesToRun=args.copes
+runWithPerformance=args.perf
 
 
 def subjectinfo(subject_id,getFeedback=True):
@@ -58,6 +61,7 @@ def subjectinfo(subject_id,getFeedback=True):
 
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
+performance=pd.read_csv('CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
 if runAll:
@@ -77,6 +81,9 @@ pheno=pd.read_csv(phenoFile)
 pheno=pheno.set_index('participant')
 pheno_measure_name=args.pheno
 pheno_measure = zscore(pheno.loc[subject_list][pheno_measure_name])
+if runWithPerformance:
+    pheno_measure_name='Performance'
+
 
 secondlevel_folder_names=['noFeedback','Feedback']
 
@@ -118,6 +125,8 @@ if run1Sample:
                 merger.run()
             #get meanFD values for each subject and add as covariate
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+            if runWithPerformance:
+                pheno_measure = zscore(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R'])
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
             model.inputs.regressors = dict(pheno=list(pheno_measure),FD=list(meanFD))
