@@ -193,4 +193,4 @@ if runPair:
                 os.mkdir(foldername)
 
             shutil.move('cope%d' % i,foldername)
-            shutil.move('cope%d_pair_diff.nii.gz' % (x[0],x[1],i),foldername)
+            shutil.move('cope%d_pair_diff.nii.gz' % i,foldername)
