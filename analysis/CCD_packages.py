@@ -583,7 +583,7 @@ def GroupRegression(GroupDF,goodsubj,feedback,numFolds=10,addMotion=True,verbose
             print "Running Subject- %s" % subj
         if addMotion:
             # print SubjectDF.loc[subj,feedback]['fd']
-            X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames]),np.array(SubjectDF.loc[subj,feedback]['fd'])))
+            X=np.column_stack((np.array(SubjectDF.loc[subj,feedback][columnNames]),zscore(SubjectDF.loc[subj,feedback]['fd'])))
         else:
             X=SubjectDF.loc[subj,feedback][columnNames]
         if verbose:
@@ -642,7 +642,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
     ax2.set_title('Mean Subject Time Series Correlations')
     g=sns.violinplot(data=coefs,x='pe',y='Coef',hue='fb',split=True,bw=.3,inner='quartile',ax=ax3)
     g.plot([-1,len(unique(coefs['pe']))],[0,0],'k--')
-    g.set_xlim([-.5,9.5])
+    g.set_xlim([-.5,len(unique(coefs['pe']))])
 
 
     t,p=ttest_1samp(np.array(fb_coefs['Coef']-nfb_coefs['Coef']).reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe']))),0)
