@@ -126,7 +126,7 @@ if run1Sample:
             #get meanFD values for each subject and add as covariate
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             if runWithPerformance:
-                pheno_measure = zscore(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R'])
+                pheno_measure = zscore(np.arctan(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
             model.inputs.regressors = dict(pheno=list(pheno_measure),FD=list(meanFD))
