@@ -173,7 +173,7 @@ if runPair:
         '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz']
 
 
-        fslMathsCommand='fslmaths %s -sub %s cope%d_pair_diff' % (i,x[0],x[1])
+        fslMathsCommand='fslmaths %s -sub %s cope%d_pair_diff' % (x[0],x[1],i)
         os.system(fslMathsCommand)
 
         if runWithRandomise:
