@@ -195,7 +195,7 @@ if runPair:
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
         if runWithPerformance:
-            pheno_measure = zscore(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])-np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))
+            pheno_measure = zscore(np.array(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])))
         regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
         if age:
             regressors['age']=list(ages)
