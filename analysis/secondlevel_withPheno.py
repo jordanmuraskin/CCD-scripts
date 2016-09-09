@@ -178,11 +178,12 @@ if run1Sample:
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
 
                 if os.path.exists(foldername):
-                    shutil.rmtree(foldername)
-                    os.mkdir(foldername)
+                    # shutil.rmtree(foldername)
+                    # os.mkdir(foldername)
                 else:
                     os.mkdir(foldername)
-                shutil.move(filename,foldername)
+
+                shutil.move(filename,foldername+ '/' + filename )
 
 
 
@@ -196,6 +197,8 @@ if runPair:
         meanFD=zscore(np.array(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])+np.array(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
+        if runWithPerformance:
+            pheno_measure = zscore(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])-np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))
         regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
         if age:
             regressors['age']=list(ages)
@@ -230,10 +233,10 @@ if runPair:
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
             print 'Making folder: %s' % foldername
             if os.path.exists(foldername):
-                shutil.rmtree(foldername)
-                os.mkdir(foldername)
+                # shutil.rmtree(foldername)
+                # os.mkdir(foldername)
             else:
                 os.mkdir(foldername)
 
-            shutil.move(filename,foldername)
+            shutil.move(filename,foldername+ '/' + filename )
             # shutil.move('cope%d_pair_diff.nii.gz' % i,foldername)
