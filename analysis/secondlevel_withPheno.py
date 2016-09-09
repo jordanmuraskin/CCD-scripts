@@ -177,10 +177,7 @@ if run1Sample:
 
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
 
-                if os.path.exists(foldername):
-                    # shutil.rmtree(foldername)
-                    # os.mkdir(foldername)
-                else:
+                if not os.path.exists(foldername):
                     os.mkdir(foldername)
 
                 shutil.move(filename,foldername+ '/' + filename )
@@ -232,10 +229,7 @@ if runPair:
 
             foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
             print 'Making folder: %s' % foldername
-            if os.path.exists(foldername):
-                # shutil.rmtree(foldername)
-                # os.mkdir(foldername)
-            else:
+            if not os.path.exists(foldername):
                 os.mkdir(foldername)
 
             shutil.move(filename,foldername+ '/' + filename )
