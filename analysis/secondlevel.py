@@ -158,7 +158,7 @@ if run1Sample:
             model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
             regressors=dict(reg1=[1]*len(subject_list),FD=list(meanFD))
             if age:
-                regressors['age']=list(age)
+                regressors['age']=list(ages)
             if gender:
                 regressors['mf']=list(mf)
             model.inputs.regressors = regressors
