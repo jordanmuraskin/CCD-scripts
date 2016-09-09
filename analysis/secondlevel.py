@@ -236,7 +236,7 @@ if runPair:
             modelDict['scanorder']= list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])
         + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])))
         if age:
-            modelDict['age']=list(age)+list(age)
+            modelDict['age']=list(ages)+list(ages)
         if gender:
             modelDict['mf']=list(mf)+list(mf)
         pairedmodel.inputs.regressors = modelDict
