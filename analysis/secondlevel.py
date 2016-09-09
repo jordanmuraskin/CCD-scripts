@@ -36,12 +36,12 @@ import argparse
 #     sys.exit(main())
 
 parser = argparse.ArgumentParser(description='Run Second Level Results for CCD')
-parser.add_argument('-rwr', help='Option to run with Randomise',required=False,default=True,type=bool)
-parser.add_argument('-rwf', help='Option to run with FLAME',required=False,default=False,type=bool)
+parser.add_argument('-rwr', help='Option to run with Randomise',required=False,default=1,type=int)
+parser.add_argument('-rwf', help='Option to run with FLAME',required=False,default=0,type=int)
 parser.add_argument('-n',help='Number of Permutations to Run', required=False,default=10000,type=int)
-parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=True,type=bool)
-parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=True,type=bool)
-parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=True,type=bool)
+parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=1,type=int)
+parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=1,type=int)
+parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=1,type=int)
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=range(5))
 args = parser.parse_args()
 
