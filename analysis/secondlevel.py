@@ -104,7 +104,7 @@ else:
 
 if perfSplit>0:
     # sort by performance
-    maxModel=performance[performance.Subject_ID.isin(subject_list)].groupby(['Subject'])['R'].max().sort_values(ascending=False)
+    maxModel=performance[performance.Subject_ID.isin(subject_list)].groupby(['Subject_ID'])['R'].max().sort_values(ascending=False)
     sortedOrder=maxModel.index
     numSubjs=len(sortedOrder)
     numSubjsPerGroup=numSubjs/3
