@@ -120,6 +120,10 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df['meanFD']=fd.mean()[0]
                     df['fd']=fd
 
+                    motion=pd.read_csv('%s/%s_data_/motion_params/_scan_feedback_%d/motion_parameters.txt' % (drFileLocation,subj,scan),sep=',',index_col=False)
+                    df['Movements_gt_threshold']=motion['Movements_gt_threshold']
+                    df['Max_Relative_RMS_Displacement']=motion['Max_Relative_RMS_Displacement']
+                    df['Mean_Relative_RMS_Displacement']=motion['Mean_Relative_RMS_Displacement']
                     # fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_tra/FD.1D' % (drFileLocation,subj)
                     # fd=pd.read_csv(fdFilePath,header=None,names=['fd'],delim_whitespace=True)
                     # df['train_meanFD']=fd.mean()[0]
