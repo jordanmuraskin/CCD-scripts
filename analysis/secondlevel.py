@@ -111,7 +111,12 @@ if perfSplit>0:
     if perfSplit==1:
         subject_list=np.array(sortedOrder[0:numSubjsPerGroup])
         perf_split_name='_Tier-1'
-
+    if perfSplit==2:
+        subject_list=np.array(sortedOrder[numSubjsPerGroup+1:2*numSubjsPerGroup])
+        perf_split_name='_Tier-2'
+    if perfSplit==3:
+        subject_list=np.array(sortedOrder[-numSubjsPerGroup:])
+        perf_split_name='_Tier-3'
 
 #load phenotypic data
 phenoFile='/home/jmuraskin/Projects/CCD/Pheno/narsad+vt_new.csv'
