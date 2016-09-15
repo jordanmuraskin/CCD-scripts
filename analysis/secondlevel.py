@@ -217,10 +217,7 @@ if run1Sample:
                 # if perfSplit>0:
                 #     foldername+=perf_split_name
 
-                if os.path.exists(foldername):
-                    shutil.rmtree(foldername)
-                    os.mkdir(foldername)
-                else:
+                if not os.path.exists(foldername):
                     os.mkdir(foldername)
 
                 shutil.move(filename, os.path.join(foldername, filename))
@@ -318,10 +315,7 @@ if runPair:
             # if perfSplit>0:
             #     foldername+=perf_split_name
 
-            if os.path.exists(foldername):
-                shutil.rmtree(foldername)
-                os.mkdir(foldername)
-            else:
+            if not os.path.exists(foldername):
                 os.mkdir(foldername)
 
             shutil.move(filename, os.path.join(foldername, filename))
