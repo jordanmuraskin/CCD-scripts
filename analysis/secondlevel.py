@@ -266,8 +266,23 @@ if runPair:
 
         for t in ['cope', 'varcope']:
             try:
-                x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + '/' + t + str(i) + '_merged.nii.gz',\
-                '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + '/' +t + str(i) + '_merged.nii.gz']
+                feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i)
+                if age:
+                    feedbackFile+='_age'
+                if gender:
+                    feedbackFile+='_gender'
+                if perfSplit>0:
+                    feedbackFile+=perf_split_name
+                feedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
+                nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i)
+                if age:
+                    nofeedbackFile+='_age'
+                if gender:
+                    nofeedbackFile+='_gender'
+                if perfSplit>0:
+                    nofeedbackFile+=perf_split_name
+                nofeedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
+                x=[feedbackFile,nofeedbackFile]
                 merger = Merge()
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
