@@ -45,6 +45,7 @@ parser.add_argument('-rall', help='Option to run all subjects or good motion sub
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=range(5))
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
+parser.add_argument('-perfSplit', help='Option run by performance split (0-No Split,1-Top Tier,2-Middle Tier,3-Lowest Tier)',required=False,default=0,type=int)
 
 args = parser.parse_args()
 
@@ -59,6 +60,7 @@ addScanOrder=False
 copesToRun=args.copes
 age=args.a
 gender=args.g
+perfSplit=args.perfSplit
 
 
 def subjectinfo(subject_id,getFeedback=True):
@@ -85,6 +87,7 @@ def subjectinfo(subject_id,getFeedback=True):
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
 # scanorderInfo=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_scanorder.csv',names=['Subject_ID','FB','meanFD'])
+performance=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 
 fbNames=['NOFEEDBACK','FEEDBACK']
 
@@ -98,6 +101,16 @@ else:
     subject_list=np.setdiff1d(allsubj,motionReject)
     motionDir='motionThresh-%f' % motionThresh
 
+
+if perfSplit>0:
+    # sort by performance
+    maxModel=performance[performance.Subject_ID.isin(subject_list)].groupby(['Subject'])['R'].max().sort_values(ascending=False)
+    sortedOrder=maxModel.index
+    numSubjs=len(sortedOrder)
+    numSubjsPerGroup=numSubjs/3
+    if perfSplit==1:
+        subject_list=subject_list(sortedOrder[0:numSubjsPerGroup])
+        perf_split_name='/Tier-1'
 
 
 #load phenotypic data
@@ -198,6 +211,8 @@ if run1Sample:
                     foldername+='_age'
                 if gender:
                     foldername+='_gender'
+                if perfSplit>0:
+                    foldername+=perf_split_name
 
                 if os.path.exists(foldername):
                     shutil.rmtree(foldername)
@@ -295,6 +310,8 @@ if runPair:
                 foldername+='_age'
             if gender:
                 foldername+='_gender'
+            if perfSplit>0:
+                foldername+=perf_split_name
 
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
