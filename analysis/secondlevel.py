@@ -197,6 +197,9 @@ if run1Sample:
                 if gender:
                     filename+='_gender'
 
+                if perfSplit>0:
+                    filename+=perf_split_name
+
                 if not os.path.exists(filename):
                     os.mkdir(filename)
                 os.system('mv ./design.* ./%s' % filename)
@@ -205,14 +208,14 @@ if run1Sample:
                 randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir
 
-                if age:
-                    foldername+='_age'
-                if gender:
-                    foldername+='_gender'
-                if perfSplit>0:
-                    foldername+=perf_split_name
+                # if age:
+                #     foldername+='_age'
+                # if gender:
+                #     foldername+='_gender'
+                # if perfSplit>0:
+                #     foldername+=perf_split_name
 
                 if os.path.exists(foldername):
                     shutil.rmtree(foldername)
@@ -291,6 +294,8 @@ if runPair:
                 filename+='_age'
             if gender:
                 filename+='_gender'
+            if perfSplit>0:
+                filename+=perf_split_name
 
             if not os.path.exists(filename):
                 os.mkdir(filename)
@@ -304,14 +309,14 @@ if runPair:
             if addScanOrder:
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/so_cope' + str(i)
             else:
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/cope' + str(i)
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir
 
-            if age:
-                foldername+='_age'
-            if gender:
-                foldername+='_gender'
-            if perfSplit>0:
-                foldername+=perf_split_name
+            # if age:
+            #     foldername+='_age'
+            # if gender:
+            #     foldername+='_gender'
+            # if perfSplit>0:
+            #     foldername+=perf_split_name
 
             if os.path.exists(foldername):
                 shutil.rmtree(foldername)
