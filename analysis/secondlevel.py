@@ -109,7 +109,7 @@ if perfSplit>0:
     numSubjs=len(sortedOrder)
     numSubjsPerGroup=numSubjs/3
     if perfSplit==1:
-        subject_list=subject_list(sortedOrder[0:numSubjsPerGroup])
+        subject_list=subject_list[sortedOrder[0:numSubjsPerGroup]]
         perf_split_name='/Tier-1'
 
 
