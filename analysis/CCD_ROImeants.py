@@ -135,7 +135,7 @@ for feedbackRun in range(2):
         ROI=list(zscore(df['ROI']))
         regressor_names+=['ROI']
         # regressor_values.append(list(signFlip*df['RSN3']))
-        regressor_values.append(POI)
+        regressor_values.append(ROI)
         output.insert(0,Bunch(regressor_names=regressor_names,regressors=regressor_values))
 
         return output
