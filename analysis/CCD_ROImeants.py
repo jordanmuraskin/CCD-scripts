@@ -92,7 +92,7 @@ for feedbackRun in range(2):
 
     workflow.connect([(datasource,modelspec,[('func','functional_runs')])])
 
-    def subjectinfo(subject_id,r):
+    def subjectinfo(subject_id,r,working_dir):
         from pandas import read_csv
         from nipype.interfaces.base import Bunch
 
@@ -147,7 +147,7 @@ for feedbackRun in range(2):
 
     modelfit.inputs.inputspec.contrasts = [cont1]
 
-    workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun),'subject_info')])])
+    workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun,working_dir),'subject_info')])])
 
     workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 
