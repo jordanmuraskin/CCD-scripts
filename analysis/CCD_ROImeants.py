@@ -95,6 +95,7 @@ for feedbackRun in range(2):
     def subjectinfo(subject_id,r,working_dir):
         from pandas import read_csv
         from nipype.interfaces.base import Bunch
+        from scipy.stats import zscore
 
         # drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
         # # numberOfICs=10
