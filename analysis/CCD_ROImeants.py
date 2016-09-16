@@ -106,7 +106,7 @@ for feedbackRun in range(2):
         lowpass=0.1
         globalNR=0
         #load DMN_network
-        ROIFilePath = '%s/feedback_run-%d/_subject_id_%d/ExtractTimeSeries/residual_antswarp_maths_ts.txt' % (working_dir,r,subject_id)
+        ROIFilePath = '%s/feedback_run-%d/_subject_id_%s/ExtractTimeSeries/residual_antswarp_maths_ts.txt' % (working_dir,r,subject_id)
         df = read_csv(ROIFilePath,header=None,names=['ROI'],delim_whitespace=True)
         df['Subject_ID'] = subject_id
         # df['Subject'] = indx
