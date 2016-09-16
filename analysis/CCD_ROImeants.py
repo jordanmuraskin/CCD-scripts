@@ -82,6 +82,11 @@ for feedbackRun in range(2):
 
     workflow.connect([(datasource,meanTs,[('func','in_file')])])
 
+
+    addMeanImage =  pe.MapNode(interface=fsl.maths.MultiImageMaths(),name='addMeanImage',iterfield=['in_file'])
+    addMeanImage.inputs.op_string = "-add %s"
+    workflow.connect([(datasource,addMeanImage,[('func','in_file')]),
+        (datasource,addMeanImage,[('funcMean','operand_files')])])
     #modelspec
     TR = 2
     ##  moral dilemma
@@ -90,7 +95,7 @@ for feedbackRun in range(2):
     modelspec.inputs.time_repetition = TR
     modelspec.inputs.high_pass_filter_cutoff = 100
 
-    workflow.connect([(datasource,modelspec,[('func','functional_runs')])])
+    workflow.connect(addMeanImage, 'out_file', modelspec,'functional_runs')
 
     def subjectinfo(subject_id,r,working_dir):
         from pandas import read_csv
@@ -153,7 +158,7 @@ for feedbackRun in range(2):
     workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
 
     #workflow.connect(datasource, 'func', modelfit, 'inputspec.functional_data')
-    workflow.connect(datasource,'func', modelfit, 'inputspec.functional_data')
+    workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
     workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
