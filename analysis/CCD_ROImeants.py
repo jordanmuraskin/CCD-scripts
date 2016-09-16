@@ -80,9 +80,9 @@ for feedbackRun in range(2):
     meanTs=pe.Node(interface=fsl.utils.ImageMeants(),name='ExtractTimeSeries',iterfield=['in_file'])
     meanTs.inputs.mask=ROI_file
 
-    worflow.connect(datasource,meanTs,[('func','in_file')])
+    workflow.connect(datasource,meanTs,[('func','in_file')])
 
-    worflow.run()
+    workflow.run()
 
     # def createOperandFileName(infoDict):
     #     print infoDict[0]
