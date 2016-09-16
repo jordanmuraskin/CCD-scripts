@@ -82,7 +82,81 @@ for feedbackRun in range(2):
 
     workflow.connect([(datasource,meanTs,[('func','in_file')])])
 
-    workflow.run()
+    #modelspec
+    TR = 2
+    ##  moral dilemma
+    modelspec = pe.Node(interface=model.SpecifyModel(),name="modelspec")
+    modelspec.inputs.input_units = 'secs'
+    modelspec.inputs.time_repetition = TR
+    modelspec.inputs.high_pass_filter_cutoff = 100
+
+    workflow.connect([(datasource,modelspec,[('func','functional_runs')])])
+
+    def subjectinfo(subject_id,r):
+        from pandas import read_csv
+        from nipype.interfaces.base import Bunch
+
+        # drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
+        # # numberOfICs=10
+        # # columnNames=[]
+        # # for rsnNumber in range(numberOfICs):
+        # #     columnNames.append('RSN%d' % rsnNumber)
+        filterOn=False
+        zscoreOn=True
+        lowpass=0.1
+        globalNR=0
+        #load DMN_network
+        ROIFilePath = '%s/feedback_run-%d/_subject_id_%d/ExtractTimeSeries/residual_antswarp_maths_ts.txt' % (working_dir,r,subject_id)
+        df = read_csv(ROIFilePath,header=None,names=['ROI'],delim_whitespace=True)
+        df['Subject_ID'] = subject_id
+        # df['Subject'] = indx
+        df.index.name = 'TR'
+        df.reset_index(level=0,inplace=True)
+
+
+        regressors=read_csv('./PPI.csv',sep=',',header=0)
+        regressor_names=list(regressors.keys().values)
+        regressor_values=list(regressors.values.transpose().tolist())
+
+        #Make subject specific EVs given feedback ordering
+        output=[]
+        SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+        SubjInfo.set_index('JM_INTERNAL',inplace=True)
+        if r==0:
+            paradigmType=SubjInfo.loc[subject_id]['SCAN_1_PARADIGM']
+        else:
+            paradigmType=SubjInfo.loc[subject_id]['SCAN_2_PARADIGM']
+        if paradigmType==0 or paradigmType == 2:
+            signFlip=1
+        elif paradigmType==1 or paradigmType == 3:
+            signFlip=-1
+
+        ROI=list(zscore(df['ROI']))
+        regressor_names+=['ROI']
+        # regressor_values.append(list(signFlip*df['RSN3']))
+        regressor_values.append(POI)
+        output.insert(0,Bunch(regressor_names=regressor_names,regressors=regressor_values))
+
+        return output
+
+    modelfit = create_modelfit_workflow(name='ROI_model_fit')
+    modelfit.inputs.inputspec.interscan_interval = TR
+    modelfit.inputs.inputspec.model_serial_correlations = True
+    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
+    cont1 = ['ROI Correlation','T', ['ROI'],[1]]
+
+    modelfit.inputs.inputspec.contrasts = [cont1]
+
+    workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun),'subject_info')]))
+
+    workflow.connect(modelspec, 'session_info', modelfit, 'inputspec.session_info')
+
+    #workflow.connect(datasource, 'func', modelfit, 'inputspec.functional_data')
+    workflow.connect(datasource,'func', modelfit, 'inputspec.functional_data')
+
+
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
+
 
     # def createOperandFileName(infoDict):
     #     print infoDict[0]
