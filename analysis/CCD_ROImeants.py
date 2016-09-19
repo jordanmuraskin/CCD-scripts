@@ -55,7 +55,7 @@ for feedbackRun in range(2):
     workflow = pe.Workflow(name= "ROI_ts")
     workflow.base_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/')
     workflow.config = {"execution": {"crashdump_dir":os.path.abspath('%s/crashdumps' % workflow.base_dir)}}
-    working_dir = os.path.abspath('%s/working_v1/AI_ROI_ts_%s' % (workflow.base_dir,GSR)
+    working_dir = os.path.abspath('%s/working_v1/AI_ROI_ts_%s' % (workflow.base_dir,GSR))
 
 
 
