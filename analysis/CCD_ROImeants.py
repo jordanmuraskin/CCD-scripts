@@ -165,7 +165,7 @@ for feedbackRun in range(2):
     workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
-    workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':15})
 
 
     # def createOperandFileName(infoDict):
