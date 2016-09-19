@@ -86,6 +86,7 @@ for feedbackRun in range(2):
 
     workflow.connect([(datasource,meanTs,[('func','in_file')])])
 
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':15})
 
     addMeanImage =  pe.MapNode(interface=fsl.maths.MultiImageMaths(),name='addMeanImage',iterfield=['in_file'])
     addMeanImage.inputs.op_string = "-add %s"
