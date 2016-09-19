@@ -46,7 +46,7 @@ parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,re
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-perfSplit', help='Option run by performance split (0-No Split,1-Top Tier,2-Middle Tier,3-Lowest Tier)',required=False,default=0,type=int)
-parser.add_argument('-ROIname', help='ROI Foldername',required=True,default='AI_ROI_ts',type=str)
+parser.add_argument('-ROIname', help='ROI Foldername',required=True,default='AI_ROI_ts_GSR1',type=str)
 
 args = parser.parse_args()
 
