@@ -227,7 +227,8 @@ if run1Sample:
 
                 if not os.path.exists(foldername):
                     os.mkdir(foldername)
-
+                if os.path.exists(os.path.join(foldername,filename)):
+                    shutil.rmtree(os.path.join(foldername,filename))
                 shutil.move(filename, os.path.join(foldername, filename))
 
 
@@ -341,4 +342,6 @@ if runPair:
             if not os.path.exists(foldername):
                 os.mkdir(foldername)
 
+            if os.path.exists(os.path.join(foldername,filename)):
+                shutil.rmtree(os.path.join(foldername,filename))
             shutil.move(filename, os.path.join(foldername, filename))

@@ -175,10 +175,13 @@ if run1Sample:
                 randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d -D' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name + '/cope' + str(i)
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
 
                 if not os.path.exists(foldername):
                     os.mkdir(foldername)
+                    
+                if os.path.exists(os.path.join(foldername,filename)):
+                    shutil.rmtree(os.path.join(foldername,filename))
 
                 shutil.move(filename,foldername+ '/' + filename )
 
@@ -231,6 +234,9 @@ if runPair:
             print 'Making folder: %s' % foldername
             if not os.path.exists(foldername):
                 os.mkdir(foldername)
+
+            if os.path.exists(os.path.join(foldername,filename)):
+                shutil.rmtree(os.path.join(foldername,filename))
 
             shutil.move(filename,foldername + '/' + filename )
             # shutil.move('cope%d_pair_diff.nii.gz' % i,foldername)
