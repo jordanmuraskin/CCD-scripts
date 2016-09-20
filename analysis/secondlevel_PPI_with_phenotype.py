@@ -257,110 +257,49 @@ if runPair:
 
     for i in copesToRun:
 
-        pairedmodel = MultipleRegressDesign()
-        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
-        if runFlame:
-            pairedmodel.inputs.groups = [1]*len(subject_list)*2
-        else:
-            pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
-        #make paired ttest model
-        modelX=[0]*2*len(subject_list)
-        modelXAB=modelX
-        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
-        modelDict=dict(reg1=modelXAB)
-        for indx,subj in enumerate(subject_list):
-            modeltmp=[0]*2*len(subject_list)
-            modeltmp[indx]=1
-            modeltmp[indx+len(subject_list)]=1
-            modelDict['s%d' % indx]= modeltmp
-        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
-        if addScanOrder:
-            modelDict['scanorder']= list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])
-        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])))
+        pmeanFD=zscore(np.array(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])+np.array(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
+        model = MultipleRegressDesign()
+        model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
+        if runWithPerformance:
+            pheno_measure = zscore(np.array(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])))
+        regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
         if age:
-            modelDict['age']=list(ages)+list(ages)
+            regressors['age']=list(ages)
         if gender:
-            modelDict['mf']=list(mf)+list(mf)
-        pairedmodel.inputs.regressors = modelDict
-        pairedmodel.run()
+            regressors['mf']=list(mf)
+        model.inputs.regressors = regressors
+        model.run()
 
 
+        x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + roiFolder + '/' + pheno_measure_name +  '/cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz',\
+        '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir + '/' + roiFolder + '/' + pheno_measure_name +  '/cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz']
 
-        for t in ['cope', 'varcope']:
-            try:
-                feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + roiFolder + '/cope' + str(i)
-                if age:
-                    feedbackFile+='_age'
-                if gender:
-                    feedbackFile+='_gender'
-                if perfSplit>0:
-                    feedbackFile+=perf_split_name
-                feedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
-                nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir + '/' + roiFolder + '/cope' + str(i)
-                if age:
-                    nofeedbackFile+='_age'
-                if gender:
-                    nofeedbackFile+='_gender'
-                if perfSplit>0:
-                    nofeedbackFile+=perf_split_name
-                nofeedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
-                x=[feedbackFile,nofeedbackFile]
-                merger = Merge()
-                merger.inputs.in_files = x
-                merger.inputs.dimension = 't'
-                merger.inputs.output_type = 'NIFTI_GZ'
-                merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
-                merger.run()
-            except:
-                print 'No Varcope'
 
-        if runFlame:
-            flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file='/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',design_file='design.mat',t_con_file='design.con', run_mode='flame1')
-            flameo.run()
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/paired-Ttest/' + motionDir + '/' + roiFolder + '/cope' + str(i)
-            if os.path.exists(foldername):
-                shutil.rmtree(foldername)
-                os.mkdir(foldername)
-            else:
-                os.mkdir(foldername)
-            if not runWithRandomise:
-                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-            shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
-            shutil.move('stats',foldername)
+        fslMathsCommand='fslmaths %s -sub %s cope%d_merged' % (x[0],x[1],i)
+        os.system(fslMathsCommand)
+
         if runWithRandomise:
             filename='cope%d' % i
+            filename+='_%s' % pheno_measure_name
             if age:
                 filename+='_age'
             if gender:
                 filename+='_gender'
-            if perfSplit>0:
-                filename+=perf_split_name
 
             if not os.path.exists(filename):
                 os.mkdir(filename)
             os.system('mv ./design.* ./%s' % filename)
             os.system('mv cope%d_merged.nii.gz ./%s' % (i,filename))
             # shutil.move('./design.*','cope%d' % i)
-            randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+            randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d -D' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
-
-            if addScanOrder:
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/so_cope' + str(i)
-            else:
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + roiFolder
-
-            # if age:
-            #     foldername+='_age'
-            # if gender:
-            #     foldername+='_gender'
-            # if perfSplit>0:
-            #     foldername+=perf_split_name
-
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/'  + roiFolder + '/' + pheno_measure_name
+            print 'Making folder: %s' % foldername
             if not os.path.exists(foldername):
                 os.mkdir(foldername)
 
             if os.path.exists(os.path.join(foldername,filename)):
                 shutil.rmtree(os.path.join(foldername,filename))
-            shutil.move(filename, os.path.join(foldername, filename))
+
+            shutil.move(filename,foldername + '/' + filename )
