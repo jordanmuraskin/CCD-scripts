@@ -125,7 +125,7 @@ pheno=pheno.set_index('participant')
 if age:
     ages=zscore(pheno.loc[subject_list]['V1_DEM_001'])
 if gender:
-    mf=pheno.loc[subject_list]['V1_DEM_002']
+    mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
 # pheno_measure = zscore(pheno.loc[subject_list][pheno_measure_name])
 
 # #Create subject list
