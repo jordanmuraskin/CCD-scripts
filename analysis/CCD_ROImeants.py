@@ -125,9 +125,9 @@ for feedbackRun in range(2):
         df.reset_index(level=0,inplace=True)
 
 
-        regressors=read_csv('./PPI.csv',sep=',',header=0)
-        regressor_names=list(regressors.keys().values)
-        regressor_values=list(regressors.values.transpose().tolist())
+        # regressors=read_csv('./PPI.csv',sep=',',header=0)
+        # regressor_names=list(regressors.keys().values)
+        # regressor_values=list(regressors.values.transpose().tolist())
 
         #Make subject specific EVs given feedback ordering
         output=[]
