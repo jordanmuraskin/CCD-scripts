@@ -144,8 +144,8 @@ for feedbackRun in range(2):
 
         PPI=list(signFlip*regressors['Cont']*df['ROI'])
         regressor_names+=['PHYS','PPI']
-        regressor_values['Cont']=regressor_values['Cont']*signFlip
-        regressor_values['Cont_Deriv']=regressor_values['Cont_Deriv']*signFlip
+        regressor_values['Cont']=list(regressors['Cont']*signFlip)
+        regressor_values['Cont_Deriv']=list(regressors['Cont_Deriv']*signFlip)
         regressor_values.append(list(df['ROI']))
         regressor_values.append(PPI)
         # regressor_values.append(list(signFlip*df['RSN3']))
