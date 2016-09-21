@@ -36,7 +36,7 @@ for ccd in CCD_numbers:
 # scan_order2=list(SubjInfo.loc[subject_list]['V1_NSI_005'])
 
 
-globalSR=1
+globalSR=0
 if globalSR:
     GSR='GSR1'
 else:
@@ -48,7 +48,7 @@ else:
 data_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1')
 
 
-ROI_file='/home/jmuraskin/Projects/CCD/working_v1/ROIs/SMG.nii.gz'
+ROI_file='/home/jmuraskin/Projects/CCD/working_v1/ROIs/R_AI.nii.gz'
 
 for feedbackRun in range(2):
 
