@@ -141,11 +141,13 @@ for feedbackRun in range(2):
             signFlip=1
         elif paradigmType==1 or paradigmType == 3:
             signFlip=-1
-
+        regressors=read_csv('./PPI.csv',sep=',',header=0)
+        regressors['Cont']=regressors['Cont']*signFlip
+        regressors['Cont_Deriv']=regressors['Cont_Deriv']*signFlip
+        regressor_names=list(regressors.keys().values)
+        regressor_values=list(regressors.values.transpose().tolist())
         PPI=list(signFlip*regressors['Cont']*df['ROI'])
         regressor_names+=['PHYS','PPI']
-        regressor_values['Cont']=list(regressors['Cont']*signFlip)
-        regressor_values['Cont_Deriv']=list(regressors['Cont_Deriv']*signFlip)
         regressor_values.append(list(df['ROI']))
         regressor_values.append(PPI)
         # regressor_values.append(list(signFlip*df['RSN3']))
