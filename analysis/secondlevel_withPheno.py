@@ -8,7 +8,7 @@ from nipype.interfaces import fsl
 from subprocess import call
 from nipype.interfaces.fsl import MultipleRegressDesign
 from scipy.stats import zscore
-from CCD_packages import make_pysurfer_images
+
 
 import argparse
 
@@ -25,6 +25,7 @@ parser.add_argument('-pheno', help='Phenotype Measure to Run', type=str,required
 parser.add_argument('-perf',help='Run with Performance instead of Phenotype',type=int,required=False,default=0)
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
+parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
 
 args = parser.parse_args()
 
@@ -41,8 +42,9 @@ copesToRun=args.copes
 runWithPerformance=args.perf
 age=args.a
 gender=args.g
-
-
+surface=args.surface
+if surface:
+    from CCD_packages import make_pysurfer_images
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
@@ -186,7 +188,8 @@ if run1Sample:
                     shutil.rmtree(os.path.join(foldername,filename))
 
                 shutil.move(filename,foldername+ '/' + filename )
-                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+                if surface:
+                    make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
 
 
 
@@ -243,6 +246,6 @@ if runPair:
                 shutil.rmtree(os.path.join(foldername,filename))
 
             shutil.move(filename,os.path.join(foldername,filename))
-
-            make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+            if surface:
+                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
             # shutil.move('cope%d_pair_diff.nii.gz' % i,foldername)

@@ -51,6 +51,7 @@ parser.add_argument('-perfSplit', help='Option run by performance split (0-No Sp
 parser.add_argument('-ROIname', help='ROI Foldername',required=True,default='AI_ROI_ts_GSR1',type=str)
 parser.add_argument('-pheno', help='Phenotype Measure to Run', type=str,required=False,default='V1_CCDRSQ_75')
 parser.add_argument('-perf',help='Run with Performance instead of Phenotype',type=int,required=False,default=0)
+parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
 
 
 args = parser.parse_args()
@@ -69,7 +70,10 @@ gender=args.g
 perfSplit=args.perfSplit
 roiFolder=args.ROIname
 runWithPerformance=args.perf
+surface=args.surface
 
+if surface:
+    from CCD_packages import make_pysurfer_images
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
@@ -251,7 +255,8 @@ if run1Sample:
                 if os.path.exists(os.path.join(foldername,filename)):
                     shutil.rmtree(os.path.join(foldername,filename))
                 shutil.move(filename, os.path.join(foldername, filename))
-                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+                if surface:
+                    make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
 
 
 
@@ -314,5 +319,5 @@ if runPair:
                 shutil.rmtree(os.path.join(foldername,filename))
 
             shutil.move(filename,os.path.join(foldername,filename))
-
-            make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+            if surface:
+                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
