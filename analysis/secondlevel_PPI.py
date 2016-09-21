@@ -10,7 +10,7 @@ from nipype.interfaces.fsl import MultipleRegressDesign
 from scipy.stats import zscore
 import sys
 import argparse
-
+from CCD_packages import make_pysurfer_images
 
 
 
@@ -230,6 +230,7 @@ if run1Sample:
                 if os.path.exists(os.path.join(foldername,filename)):
                     shutil.rmtree(os.path.join(foldername,filename))
                 shutil.move(filename, os.path.join(foldername, filename))
+                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
 
 
 
@@ -345,3 +346,4 @@ if runPair:
             if os.path.exists(os.path.join(foldername,filename)):
                 shutil.rmtree(os.path.join(foldername,filename))
             shutil.move(filename, os.path.join(foldername, filename))
+            make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
