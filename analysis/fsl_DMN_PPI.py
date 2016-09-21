@@ -123,9 +123,7 @@ for feedbackRun in range(2):
         df.reset_index(level=0,inplace=True)
 
 
-        regressors=read_csv('./PPI.csv',sep=',',header=0)
-        regressor_names=list(regressors.keys().values)
-        regressor_values=list(regressors.values.transpose().tolist())
+
 
         #Make subject specific EVs given feedback ordering
         output=[]
@@ -139,10 +137,13 @@ for feedbackRun in range(2):
             signFlip=1.0
         elif paradigmType==1 or paradigmType == 3:
             signFlip=-1.0
+        regressors=read_csv('./PPI.csv',sep=',',header=0)
+        regressors['Cont']=regressors['Cont']*signFlip
+        regressors['Cont_Deriv']=regressors['Cont_Deriv']*signFlip
+        regressor_names=list(regressors.keys().values)
+        regressor_values=list(regressors.values.transpose().tolist())
         PPI=list(signFlip*regressors['Cont']*df['RSN3'])
         regressor_names+=['PHYS','PPI']
-        regressor_values['Cont']=list(regressors['Cont']*signFlip)
-        regressor_values['Cont_Deriv']=list(regressors['Cont_Deriv']*signFlip)
         regressor_values.append(list(signFlip*df['RSN3']))
         regressor_values.append(PPI)
         output.insert(0,Bunch(regressor_names=regressor_names,regressors=regressor_values))
