@@ -139,8 +139,10 @@ for feedbackRun in range(2):
             signFlip=1
         elif paradigmType==1 or paradigmType == 3:
             signFlip=-1
-        PPI=list(regressors['Cont']*df['RSN3'])
+        PPI=list(signFlip*regressors['Cont']*df['RSN3'])
         regressor_names+=['PHYS','PPI']
+        regressor_values['Cont']=regressor_values['Cont']*signFlip
+        regressor_values['Cont_Deriv']=regressor_values['Cont_Deriv']*signFlip
         regressor_values.append(list(signFlip*df['RSN3']))
         regressor_values.append(PPI)
         output.insert(0,Bunch(regressor_names=regressor_names,regressors=regressor_values))
@@ -172,4 +174,4 @@ for feedbackRun in range(2):
     workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
-    workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':20})

@@ -142,10 +142,13 @@ for feedbackRun in range(2):
         elif paradigmType==1 or paradigmType == 3:
             signFlip=-1
 
-        ROI=list(zscore(df['ROI']))
-        regressor_names+=['ROI']
+        PPI=list(signFlip*regressors['Cont']*df['ROI'])
+        regressor_names+=['PHYS','PPI']
+        regressor_values['Cont']=regressor_values['Cont']*signFlip
+        regressor_values['Cont_Deriv']=regressor_values['Cont_Deriv']*signFlip
+        regressor_values.append(list(df['ROI']))
+        regressor_values.append(PPI)
         # regressor_values.append(list(signFlip*df['RSN3']))
-        regressor_values.append(ROI)
         output.insert(0,Bunch(regressor_names=regressor_names,regressors=regressor_values))
 
         return output
@@ -154,7 +157,7 @@ for feedbackRun in range(2):
     modelfit.inputs.inputspec.interscan_interval = TR
     modelfit.inputs.inputspec.model_serial_correlations = True
     modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
-    cont1 = ['ROI Correlation','T', ['ROI'],[1]]
+    cont1 = ['ROI Correlation','T', ['PPI'],[1]]
 
     modelfit.inputs.inputspec.contrasts = [cont1]
 
