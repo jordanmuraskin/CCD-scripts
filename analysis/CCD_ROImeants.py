@@ -36,7 +36,7 @@ for ccd in CCD_numbers:
 # scan_order2=list(SubjInfo.loc[subject_list]['V1_NSI_005'])
 
 
-globalSR=0
+globalSR=1
 if globalSR:
     GSR='GSR1'
 else:
@@ -48,14 +48,14 @@ else:
 data_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1')
 
 
-ROI_file='/home/jmuraskin/Projects/CCD/working_v1/ROIs/R_AI.nii.gz'
+ROI_file='/home/jmuraskin/Projects/CCD/working_v1/ROIs/SMG.nii.gz'
 
 for feedbackRun in range(2):
 
     workflow = pe.Workflow(name= "ROI_ts")
     workflow.base_dir = os.path.abspath('/home/jmuraskin/Projects/CCD/')
     workflow.config = {"execution": {"crashdump_dir":os.path.abspath('%s/crashdumps' % workflow.base_dir)}}
-    working_dir = os.path.abspath('%s/working_v1/AI_ROI_ts_%s' % (workflow.base_dir,GSR))
+    working_dir = os.path.abspath('%s/working_v1/SMG_ROI_ts_%s' % (workflow.base_dir,GSR))
 
 
 
@@ -166,7 +166,7 @@ for feedbackRun in range(2):
     workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
-    workflow.run(plugin='MultiProc',plugin_args={'n_procs':15})
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':20})
 
 
     # def createOperandFileName(infoDict):
