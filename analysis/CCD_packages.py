@@ -4,7 +4,7 @@ from numpy import unique
 from scipy.stats import zscore,spearmanr,pearsonr
 import seaborn as sns
 import matplotlib.pylab as plt
-import os.path
+import os
 from scipy.signal import butter,filtfilt
 import matplotlib as mpl
 from matplotlib import cm
@@ -20,6 +20,8 @@ from plotly.graph_objs import *
 from nilearn import plotting
 from nilearn import image
 from scipy import stats, linalg
+from surfer import Brain, io
+import glob
 
 
 class MplColorHelper:
@@ -138,7 +140,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     GroupDF.reset_index(inplace=True)
 
-    motionInfo=GroupDF.groupby(['Subject_ID','FB','scanorder']).mean()['meanFD']
+    motionInfo=GroupDF.groupby(['Subject_ID','FB','scanorder']).mean()['meanFD','Movements_gt_threshold']
     if saveMotionInfo:
         motionInfo.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
 
@@ -737,3 +739,49 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
             fig, axarr = plt.subplots(figsize=figsize)
             sm.graphics.plot_ccpr_grid(results,fig=fig)
     return results
+
+
+
+
+def getFileNamesfromFolder(folder,suffix):
+    #File loader for randomise TFCE folders
+
+    TFCEposImg=glob.glob('%s/%s_tfce_corrp_tstat1.nii.gz' % (folder,suffix))
+    posImg=glob.glob('%s/%s_tstat1.nii.gz' % (folder,suffix))
+    TFCEnegImg=glob.glob('%s/%s_tfce_corrp_tstat2.nii.gz' % (folder,suffix))
+    negImg=glob.glob('%s/%s_tstat2.nii.gz' % (folder,suffix))
+
+    return TFCEposImg,posImg,TFCEnegImg,negImg
+
+
+def make_pysurfer_images(folder,cope='cope1',threshold=0.9499):
+
+    TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
+
+    pos=image.math_img("np.multiply(img1,img2)",
+                         img1=image.threshold_img(TFCEposImg,threshold=threshold),img2=posImg)
+    neg=image.math_img("np.multiply(img1,img2)",
+                         img1=image.threshold_img(TFCEnegImg,threshold=threshold),img2=negImg)
+    fw=image.math_img("img1-img2",img1=pos,img2=neg)
+
+    mri_file = "%s/thresholded_posneg.nii.gz" % folder
+    fw.to_filename(mri_file)
+
+    """Bring up the visualization"""
+    brain = Brain("fsaverage", "split", "inflated",views=['lat', 'med'], offscreen=True , background="white")
+
+    """Project the volume file and return as an array"""
+
+    reg_file = os.path.join("/opt/freesurfer","average/mni152.register.dat")
+    surf_data_lh = io.project_volume_data(mri_file, "lh", reg_file,smooth_fwhm=1.5)
+    surf_data_rh = io.project_volume_data(mri_file, "rh", reg_file,smooth_fwhm=1.5)
+
+    """
+    You can pass this array to the add_overlay method for a typical activation
+    overlay (with thresholding, etc.).
+    """
+    brain.add_overlay(surf_data_lh, min=2, max=5, name="ang_corr_lh", hemi='lh')
+    brain.add_overlay(surf_data_rh, min=2, max=5, name="ang_corr_rh", hemi='rh')
+
+    brain.save_image('%s/surfaceplot.jpg' % folder)
+    brain.close()
