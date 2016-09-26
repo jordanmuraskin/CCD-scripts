@@ -194,8 +194,8 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
 
     r_scramble=np.mean(get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05),axis=0)
 
-    plt.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'k--')
-    plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'k')
+    plt.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--')
+    plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--')
 
     if savefig:
         f.savefig('Subject_ModelCorrelations.pdf', dpi=600)
