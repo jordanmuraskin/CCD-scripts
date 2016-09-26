@@ -2,10 +2,11 @@ import pandas as pd
 import numpy as np
 from numpy import unique
 from scipy.stats import zscore,spearmanr,pearsonr
+from scipy.fftpack import fft, ifft
+from scipy.signal import butter,filtfilt
 import seaborn as sns
 import matplotlib.pylab as plt
 import os
-from scipy.signal import butter,filtfilt
 import matplotlib as mpl
 from matplotlib import cm
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -181,7 +182,7 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
         f.savefig('%s_timeseries.pdf' % DMN_name, dpi=600)
 
 
-def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),savefig=True):
+def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True,savefig=True):
 
     f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
     sns.set(style="white")
@@ -190,6 +191,11 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),savefig=True):
     sortedOrder=maxModel.index
 
     sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder)
+
+    r_scramble=np.mean(get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05),axis=0)
+
+    plt.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'k--')
+    plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'k')
 
     if savefig:
         f.savefig('Subject_ModelCorrelations.pdf', dpi=600)
@@ -200,6 +206,8 @@ def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,savefig=True):
         sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
     else:
         sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile')
+
+
     if savefig:
         plt.savefig('ScanOrder_ModelCorrelations.pdf',dpi=600)
 
@@ -785,3 +793,38 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499):
 
     brain.save_image('%s/surfaceplot.jpg' % folder)
     brain.close()
+
+def phaseScrambleTS(ts):
+    """Returns a TS: original TS power is preserved; TS phase is shuffled."""
+    fs = fft(ts)
+    pow_fs = np.abs(fs) ** 2.
+    phase_fs = np.angle(fs)
+    phase_fsr = phase_fs.copy()
+    phase_fsr_lh = phase_fsr[1:len(phase_fsr)/2]
+    np.random.shuffle(phase_fsr_lh)
+    phase_fsr_rh = -phase_fsr_lh[::-1]
+    phase_fsr = np.append(phase_fsr[0],
+                          np.append(phase_fsr_lh,
+                                    np.append(phase_fsr[len(phase_fsr)/2],
+                                              phase_fsr_rh)))
+    fsrp = np.sqrt(pow_fs) * (np.cos(phase_fsr) + 1j * np.sin(phase_fsr))
+    tsr = ifft(fsrp)
+    return np.real(tsr)
+
+def get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05):
+    dmnIdeal=pd.read_csv('/home/jmuraskin/Projects/NFB/analysis/DMN_ideal_2.csv')
+    r_scram=np.zeros((len(goodsubj),2))
+    #get pvalue spot
+    val=-1*nperms*p
+    for fb_indx,fb in enumerate(['FEEDBACK','NOFEEDBACK']):
+        for s_indx,subj in enumerate(goodsubj):
+    #         print 'Running subject %s #%d' % (fb,s_indx)
+            ts=GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]['RSN3']
+            rs=np.zeros((nperms,))
+            for n in range(nperms):
+                ts_scram=phaseScrambleTS(ts)
+                rs[n]=pearsonr(ts_scram,dmnIdeal['Wander']-dmnIdeal['Focus'])[0]
+            flat=rs.flatten()
+            flat.sort()
+            r_scram[s_indx,fb_indx]=flat[val]
+    return r_scram
