@@ -47,7 +47,7 @@ surface=args.surface
 RSN=args.RSN
 
 if RSN>0:
-    rsn_name='RSN%d' % RSN-1
+    rsn_name='RSN%d' % (RSN-1)
     rsn=RSN-1
     copesToRun=[0]
 else:
