@@ -121,13 +121,11 @@ secondlevel_folder_names=['noFeedback','Feedback']
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
-    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
+    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + rsn_name
     if not os.path.exists(foldername):
         os.mkdir(foldername)
-    if RSN>0:
-        foldername= foldername + '/' + rsn_name + '/' + pheno_measure_name
-    else:
-        foldername= foldername + '/' + pheno_measure_name
+
+    foldername= foldername + '/' + pheno_measure_name
     if not os.path.exists(foldername):
         os.mkdir(foldername)
 
