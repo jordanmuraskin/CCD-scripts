@@ -26,6 +26,7 @@ parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,re
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
+parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
 
 args = parser.parse_args()
 
@@ -43,6 +44,15 @@ copesToRun=args.copes
 age=args.a
 gender=args.g
 surface=args.surface
+RSN=args.RSN
+
+if RSN>0:
+    rsn_name='RSN%d' % RSN-1
+    rsn=RSN-1
+    copesToRun=[0]
+else:
+    rsn_name=''
+
 if surface:
     from CCD_packages import make_pysurfer_images
 
@@ -114,12 +124,18 @@ for runType in ['randomise','flame']:
     foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
     if not os.path.exists(foldername):
         os.mkdir(foldername)
-    foldername= foldername + '/' + pheno_measure_name
+    if RSN>0:
+        foldername= foldername + '/' + rsn_name + '/' + pheno_measure_name
+    else:
+        foldername= foldername + '/' + pheno_measure_name
     if not os.path.exists(foldername):
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
+        if RSN>0:
+            foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + rsn_name
+        else:
+            foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
         if not os.path.exists(foldername):
             os.mkdir(foldername)
         foldername= foldername + '/' + pheno_measure_name
@@ -136,7 +152,10 @@ if run1Sample:
                 x=[]
                 for subj in subject_list:
                     fbLoc=subjectinfo(subj,fb)
-                    fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                    if t=='cope' and RSN>0:
+                        fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc,rsn,rsn)
+                    else:
+                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
@@ -185,8 +204,10 @@ if run1Sample:
                 # shutil.move('./design.*','cope%d' % i)
                 randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d -D' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
-
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
+                if RSN>0:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name + '/' + pheno_measure_name
+                else:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
 
                 if not os.path.exists(foldername):
                     os.mkdir(foldername)
