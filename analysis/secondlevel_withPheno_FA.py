@@ -160,6 +160,7 @@ if run1Sample:
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
+                merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
                 merger.run()
             #get meanFD values for each subject and add as covariate
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
