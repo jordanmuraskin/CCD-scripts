@@ -93,7 +93,7 @@ pheno_measure_name='Factor_Analysis'
 
 FA_file='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/FA_subjectloadings.csv'
 
-FA=pd.read_csv(FA_file)
+FA=pd.read_csv(FA_file,index_col=0)
 #
 
 # # pheno_measure = zscore(pheno.loc[subject_list][pheno_measure_name])
