@@ -141,7 +141,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     GroupDF.reset_index(inplace=True)
 
-    motionInfo=GroupDF.groupby(['Subject_ID','FB','scanorder']).mean()['meanFD','Movements_gt_threshold']
+    motionInfo=GroupDF.groupby(['Subject_ID','FB','scanorder']).mean()['meanFD']
     if saveMotionInfo:
         motionInfo.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
 
