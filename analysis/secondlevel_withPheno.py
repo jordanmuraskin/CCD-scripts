@@ -141,7 +141,7 @@ if run1Sample:
 
     for i in copesToRun:
         for fb in [0,1]:
-            for t in ['cope', 'varcope']:
+            for t in ['cope']:
                 x=[]
                 for subj in subject_list:
                     fbLoc=subjectinfo(subj,fb)
