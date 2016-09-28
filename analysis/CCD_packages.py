@@ -151,11 +151,14 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     return GroupDF,motionInfo
 
-def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2):
+def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
 
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
-    motionReject=unique((GroupDF[GroupDF.meanFD>motionThresh]['Subject_ID']))
+    if motionType=='FD':
+        motionReject=unique((GroupDF[GroupDF.meanFD>motionThresh]['Subject_ID']))
+    else:
+        motionReject=unique((GroupDF[GroupDF.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
     if RejectMotion:
         goodsubj=np.setdiff1d(allsubj,motionReject)
     else:
