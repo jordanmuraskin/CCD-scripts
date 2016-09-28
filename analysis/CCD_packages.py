@@ -216,7 +216,7 @@ def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,savefig=True):
 
 
     if savefig:
-        plt.savefig('ScanOrder_ModelCorrelations.pdf',dpi=600)
+        plt.savefig('%s/ScanOrder_ModelCorrelations.pdf' % saveFigureLocation,dpi=600)
 
 def printModelCorrelations(GroupDF,goodsubj,DMN_name='RSN3'):
     dmnIdeal=pd.read_csv('/home/jmuraskin/Projects/NFB/analysis/DMN_ideal_2.csv')
