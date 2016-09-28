@@ -25,6 +25,9 @@ from surfer import Brain, io
 import glob
 
 
+
+saveFigureLocation='/home/jmuraskin/Projects/CCD/Figures'
+
 class MplColorHelper:
 
   def __init__(self, cmap_name, start_val, stop_val):
@@ -182,7 +185,7 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
     dmnPlot.set_xlabel('TR')
     dmnPlot.set_title(title,{'fontsize':24})
     if savefig:
-        f.savefig('%s_timeseries.pdf' % DMN_name, dpi=600)
+        f.savefig('%s/%s_timeseries.pdf' % (saveFigureLocation,DMN_name), dpi=600)
 
 
 def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True,savefig=True):
@@ -201,7 +204,8 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
     plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--')
 
     if savefig:
-        f.savefig('Subject_ModelCorrelations.pdf', dpi=600)
+        f.savefig('%s/Subject_ModelCorrelations.pdf' % saveFigureLocation, dpi=600)
+    return r_scramble
 
 def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,savefig=True):
     plt.figure()
@@ -528,7 +532,7 @@ def makeChordDiagram(G,cmap='coolwarm',plotName='ChordDiagram',scale=[-1.0,1.0],
     data=Data(lines+edge_info+[trace2])
     fig=Figure(data=data, layout=layout)
     if savefig:
-        py.image.save_as(fig, filename='%s.png' % plotName)
+        py.image.save_as(fig, filename='%s/%s.png' % (saveFigureLocation,plotName))
     return fig
 
 
@@ -684,7 +688,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
 
     f.tight_layout()
     if savefig:
-        f.savefig('RSN_LinearRegPrediction.pdf',dpi=300)
+        f.savefig('%s/RSN_LinearRegPrediction.pdf' % saveFigureLocation,dpi=300)
 
 
 def createTFCEfMRIOverlayImages(TFCEposImg,posImg,TFCEnegImg,negImg,title='',vmax=8,display_mode='z',slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True,tight_layout=False,draw_cross=False):
