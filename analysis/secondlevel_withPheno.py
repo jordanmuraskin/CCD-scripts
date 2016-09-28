@@ -19,13 +19,14 @@ parser.add_argument('-rwf', help='Option to run with FLAME',required=False,defau
 parser.add_argument('-n',help='Number of Permutations to Run', required=False,default=10000,type=int)
 parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=1,type=int)
 parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=0,type=int)
-parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=1,type=int)
+parser.add_argument('-rall', help='Option to run all subjects==1, option run subjects based on Max Relative RMS<1==2, option to run only Mean FD<0.2==0',required=False,default=1,type=int)
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=[1,3,4,5])
 parser.add_argument('-pheno', help='Phenotype Measure to Run', type=str,required=False,default='V1_CCDRSQ_75')
 parser.add_argument('-perf',help='Run with Performance instead of Phenotype',type=int,required=False,default=0)
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
+parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
 
 args = parser.parse_args()
 
@@ -43,8 +44,17 @@ runWithPerformance=args.perf
 age=args.a
 gender=args.g
 surface=args.surface
+RSN=args.RSN
+
 if surface:
     from CCD_packages import make_pysurfer_images
+
+if RSN>0:
+    rsn_name='RSN%d' % (RSN-1)
+    rsn=RSN-1
+    copesToRun=[0]
+else:
+    rsn_name=''
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
@@ -69,13 +79,19 @@ def subjectinfo(subject_id,getFeedback=True):
 # runAll=True
 
 #load subject list
-motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
+motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
 performance=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
-if runAll:
+if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
+elif runAll==2:
+    motionThresh=1
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(allsubj,motionReject)
+    motionDir='motionRMS-%f' % motionThresh
 else:
     motionThresh=0.2
     allsubj=np.unique(motionTest['Subject_ID'])
@@ -104,7 +120,7 @@ secondlevel_folder_names=['noFeedback','Feedback']
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
-    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
+    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + rsn_name
     if not os.path.exists(foldername):
         os.mkdir(foldername)
     foldername= foldername + '/' + pheno_measure_name
@@ -112,7 +128,7 @@ for runType in ['randomise','flame']:
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
+        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + rsn_name
         if not os.path.exists(foldername):
             os.mkdir(foldername)
         foldername= foldername + '/' + pheno_measure_name
@@ -129,7 +145,10 @@ if run1Sample:
                 x=[]
                 for subj in subject_list:
                     fbLoc=subjectinfo(subj,fb)
-                    fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                    if t=='cope' and RSN>0:
+                        fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc+1,rsn,rsn)
+                    else:
+                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
@@ -179,7 +198,10 @@ if run1Sample:
                 randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d -D' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
+                if RSN>0:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name + '/' + pheno_measure_name
+                else:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
 
                 if not os.path.exists(foldername):
                     os.mkdir(foldername)
