@@ -41,7 +41,7 @@ parser.add_argument('-rwf', help='Option to run with FLAME',required=False,defau
 parser.add_argument('-n',help='Number of Permutations to Run', required=False,default=10000,type=int)
 parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=1,type=int)
 parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=1,type=int)
-parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=1,type=int)
+parser.add_argument('-rall', help='Option to run all subjects==1, option run subjects based on Max Relative RMS<1==2, option to run only Mean FD<0.2==0',required=False,default=1,type=int)
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=range(5))
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
@@ -90,15 +90,21 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #load subject list
-motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
+motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
 # scanorderInfo=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_scanorder.csv',names=['Subject_ID','FB','meanFD'])
 performance=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 
 fbNames=['NOFEEDBACK','FEEDBACK']
 
-if runAll:
+if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
+elif runAll==2:
+    motionThresh=1
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(allsubj,motionReject)
+    motionDir='motionRMS-%f' % motionThresh
 else:
     motionThresh=0.2
     allsubj=np.unique(motionTest['Subject_ID'])
@@ -131,17 +137,8 @@ if age:
     ages=zscore(pheno.loc[subject_list]['V1_DEM_001'])
 if gender:
     mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
-# pheno_measure = zscore(pheno.loc[subject_list][pheno_measure_name])
 
-# #Create subject list
-# CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,42,51,
-# 53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
-# 90,91,93,95,97,98,99]
 
-# subject_list=[]
-# for ccd in CCD_numbers:
-#     subject_list.append('CCD0%s' % ccd)
-#
 secondlevel_folder_names=['noFeedback','Feedback']
 
 #create second level folders
