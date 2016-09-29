@@ -24,7 +24,7 @@ numpy array, corresponding to the data inside the mask.
 # from nilearn import datasets
 
 # adhd_dataset = datasets.fetch_adhd(n_subjects=1)
-func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/CCD014_data_/functional_mni_other_resolutions_smooth/_scan_feedback_1/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global1.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz'
+func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/CCD014_data_/functional_mni_other_resolutions_smooth/_scan_feedback_1/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz'
 # confound_filename = adhd_dataset.confounds[0]
 
 ##########################################################################
@@ -57,8 +57,7 @@ ai_coords = [(42, 21, -3)]
 from nilearn import input_data
 
 seed_masker = input_data.NiftiSpheresMasker(
-    ai_coords, radius=6,
-    detrend=True, standardize=True,t_r=2.,memory='nilearn_cache', memory_level=1, verbose=0)
+    ai_coords, radius=6, standardize=True,t_r=2.,memory='nilearn_cache', memory_level=1, verbose=0)
 
 ##########################################################################
 # Then we extract the mean time series within the seed region while
@@ -70,7 +69,7 @@ seed_time_series = seed_masker.fit_transform(func_filename)
 # Next, we can proceed similarly for the **brain-wide voxel-wise time
 # series**, using :class:`nilearn.input_data.NiftiMasker` with the same input
 # arguments as in the seed_masker in addition to smoothing with a 6 mm kernel
-brain_masker = input_data.NiftiMasker(detrend=True, standardize=True, t_r=2.,
+brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,
     memory='nilearn_cache', memory_level=1, verbose=0)
 
 ##########################################################################
