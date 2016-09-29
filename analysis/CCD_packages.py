@@ -756,7 +756,7 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
 
         else:
             fig, axarr = plt.subplots(figsize=figsize)
-            sm.graphics.plot_ccpr_grid(results,fig=fig)
+            fig=sm.graphics.plot_ccpr_grid(results,fig=fig)
     return results
 
 
