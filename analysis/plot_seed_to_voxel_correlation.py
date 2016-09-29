@@ -79,7 +79,7 @@ if not os.path.exists(topDir):
 
 for indx,fb in enumerate(['noFeedback','Feedback']):
 
-    baseDir=topDir + fb
+    baseDir=topDir + '/' + fb
     if not os.path.exists(baseDir):
         os.mkdir(baseDir)
 
