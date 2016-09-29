@@ -237,8 +237,18 @@ if runPair:
         model.inputs.regressors = regressors
         model.run()
 
-        x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz',\
-        '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + '/cope' + str(i) + '_merged.nii.gz']
+        if age:
+            ages='_age'
+        else:
+            ages=''
+
+        if gender:
+            genders='_gender'
+        else:
+            genders=''
+
+        x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz',\
+        '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz']
 
 
         fslMathsCommand='fslmaths %s -sub %s cope%d_merged' % (x[0],x[1],i)
