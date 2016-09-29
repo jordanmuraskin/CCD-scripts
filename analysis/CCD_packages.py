@@ -839,6 +839,3 @@ def get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05):
             flat.sort()
             r_scram[s_indx,fb_indx]=flat[val]
     return r_scram
-
-
-def sharedVariance(dataset1,dataset2):
