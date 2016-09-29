@@ -173,6 +173,44 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
 
     return goodsubj
 
+
+def getBlockedPerformance(GroupDF,goodsubj):
+    # Setup Block design analysis Up-Regulation (wander) and Down-Regulation (focus)
+    WanderBlocks=[[14,29],[78,108],[127,172],[206,236],[285,300],[334,379]]
+    FocusBlocks=[[31,76],[110,125],[174,204],[238,283],[302,332],[381,396]]
+
+    blockedDF=[]
+    for rsn in ['RSN3']:
+        #enumerate(unique(GroupDF[(GroupDF['feedback_sleep']+GroupDF['train_sleep'])==0]['Subject']))
+        for fb in ['FEEDBACK','NOFEEDBACK']:
+            for subjNo,subj in enumerate(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])):
+                WanderBlockAve=[]
+                FocusBlockAve=[]
+                tmpDF=GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]
+                for indx,wblock in enumerate(WanderBlocks):
+                    if indx==0:
+                        WanderBlockAve=tmpDF[np.all([tmpDF['TR']>=wblock[0],tmpDF['TR']<=wblock[1]],axis=0)][rsn]
+                    else:
+                        WanderBlockAve=pd.concat((WanderBlockAve,tmpDF[np.all([tmpDF['TR']>=wblock[0],tmpDF['TR']<=wblock[1]],axis=0)][rsn]))
+                for indx,fblock in enumerate(FocusBlocks):
+                    if indx==0:
+                        FocusBlockAve=tmpDF[np.all([tmpDF['TR']>=fblock[0],tmpDF['TR']<=fblock[1]],axis=0)][rsn]
+                    else:
+                        FocusBlockAve=pd.concat((FocusBlockAve,tmpDF[np.all([tmpDF['TR']>=fblock[0],tmpDF['TR']<=fblock[1]],axis=0)][rsn]))
+                average=[WanderBlockAve.mean(),FocusBlockAve.mean()]
+                std=[WanderBlockAve.std(),FocusBlockAve.std()]
+    #             indxs=np.concatenate((WanderBlockNumber,FocusBlockNumber))
+                wf=['Wander','Focus']
+                tmpDF=pd.DataFrame({'average':average,'Condition':wf,'FB':[fb]*2,'std':std})
+                tmpDF['subj']=subj
+                tmpDF['RSN']=rsn
+
+                if len(blockedDF)<1:
+                    blockedDF=tmpDF
+                else:
+                    blockedDF=pd.concat((blockedDF,tmpDF))
+    return blockedDF
+
 def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',ylabel='',figsize=(18,9),savefig=True):
 
     sns.set_context("paper")
