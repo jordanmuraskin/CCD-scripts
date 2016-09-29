@@ -118,7 +118,11 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                         df['flip']=1
                     df['FB'] = 'FEEDBACK' if row['SCAN_%d_FEEDBACK' % scan]==1 else 'NOFEEDBACK'
                     df['scanorder']=scan
+
                     df['modelcorr']=pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],df['RSN3'])[0]
+
+                    for rsn in columnNames:
+                        df['%s_modelcorr' % rsn]=pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],df[rsn])[0]
     #                 df['DMN']=pd.Series(zscore(nuisanceRegression(df[list(set(columnNames)-set(['RSN3']))],df['RSN3'])))
                     #load meanFD scores
                     fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_feedback_%d/FD.1D' % (drFileLocation,subj,scan)
@@ -835,3 +839,6 @@ def get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05):
             flat.sort()
             r_scram[s_indx,fb_indx]=flat[val]
     return r_scram
+
+
+def sharedVariance(dataset1,dataset2):
