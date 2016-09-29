@@ -121,7 +121,7 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
 
 
         seed_masker = input_data.NiftiSpheresMasker(
-            coords, radius=args.sphere, standardize=True,t_r=2.,memory='nilearn_cache', memory_level=1, verbose=0)
+            coords, radius=args.sphere, standardize=True,t_r=2., verbose=1)
 
         ##########################################################################
         # Then we extract the mean time series within the seed region while
@@ -133,8 +133,7 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # Next, we can proceed similarly for the **brain-wide voxel-wise time
         # series**, using :class:`nilearn.input_data.NiftiMasker` with the same input
         # arguments as in the seed_masker in addition to smoothing with a 6 mm kernel
-        brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,
-            memory='nilearn_cache', memory_level=1, verbose=0)
+        brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,verbose=1)
 
         ##########################################################################
         # Then we extract the brain-wide voxel-wise time series while regressing
