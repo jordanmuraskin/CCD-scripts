@@ -58,7 +58,7 @@ from nilearn import input_data
 
 seed_masker = input_data.NiftiSpheresMasker(
     ai_coords, radius=6,
-    detrend=True, standardize=True,t_r=2.)
+    detrend=True, standardize=True,t_r=2.,memory='nilearn_cache', memory_level=1, verbose=0)
 
 ##########################################################################
 # Then we extract the mean time series within the seed region while
@@ -164,7 +164,7 @@ from nilearn import plotting
 
 display = plotting.plot_stat_map(seed_based_correlation_img, threshold=0.3,
                                  cut_coords=ai_coords[0])
-display.add_markers(marker_coords=pcc_coords, marker_color='g',
+display.add_markers(marker_coords=ai_coords, marker_color='g',
                     marker_size=300)
 # At last, we save the plot as pdf.
 display.savefig('sbc_z.pdf')
