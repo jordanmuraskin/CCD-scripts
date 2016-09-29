@@ -121,7 +121,7 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
 
 
         seed_masker = input_data.NiftiSpheresMasker(
-            acoords, radius=args.sphere, standardize=True,t_r=2.,memory='nilearn_cache', memory_level=1, verbose=0)
+            coords, radius=args.sphere, standardize=True,t_r=2.,memory='nilearn_cache', memory_level=1, verbose=0)
 
         ##########################################################################
         # Then we extract the mean time series within the seed region while
