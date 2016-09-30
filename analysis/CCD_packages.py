@@ -821,6 +821,11 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
                          img1=image.threshold_img(TFCEnegImg,threshold=threshold),img2=negImg)
     fw=image.math_img("img1-img2",img1=pos,img2=neg)
 
+    if fwhm==0:
+        smin=np.min(np.abs(fw.get_data()[fw>0]))
+    else:
+        smin=2
+
     mri_file = "%s/thresholded_posneg.nii.gz" % folder
     fw.to_filename(mri_file)
 
@@ -833,10 +838,7 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
     surf_data_lh = io.project_volume_data(mri_file, "lh", reg_file,smooth_fwhm=fwhm)
     surf_data_rh = io.project_volume_data(mri_file, "rh", reg_file,smooth_fwhm=fwhm)
 
-    if fwhm==0:
-        smin=np.min([np.abs(surf_data_lh[surf_data_lh!=0]).min(),np.abs(surf_data_rh[surf_data_rh!=0]).min()])
-    else:
-        smin=2
+
     """
     You can pass this array to the add_overlay method for a typical activation
     overlay (with thresholding, etc.).
