@@ -833,12 +833,14 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
     surf_data_lh = io.project_volume_data(mri_file, "lh", reg_file,smooth_fwhm=1.5)
     surf_data_rh = io.project_volume_data(mri_file, "rh", reg_file,smooth_fwhm=1.5)
 
+    smin=np.min([np.abs(surf_data_lh[surf_data_lh!=0]).min(),np.abs(surf_data_rh[surf_data_rh!=0]).min()])
+
     """
     You can pass this array to the add_overlay method for a typical activation
     overlay (with thresholding, etc.).
     """
-    brain.add_overlay(surf_data_lh, min=2, max=5, name="ang_corr_lh", hemi='lh')
-    brain.add_overlay(surf_data_rh, min=2, max=5, name="ang_corr_rh", hemi='rh')
+    brain.add_overlay(surf_data_lh, min=smin, max=5, name="ang_corr_lh", hemi='lh')
+    brain.add_overlay(surf_data_rh, min=smin, max=5, name="ang_corr_rh", hemi='rh')
 
     if len(coords)>0:
         if coords[0]>0:
