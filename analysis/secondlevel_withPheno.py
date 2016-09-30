@@ -27,6 +27,8 @@ parser.add_argument('-a', help='Option to add subject age to model',required=Fal
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
 parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
+parser.add_argument('-runFC',help='Optiom to run FC instead of Cope', default=0,required=False,type=int)
+parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='R_AI',type=str)
 
 args = parser.parse_args()
 
@@ -45,6 +47,15 @@ age=args.a
 gender=args.g
 surface=args.surface
 RSN=args.RSN
+fc=args.fc
+runFC=args.runFC
+
+if runFC:
+    copesToRun=[0]
+    rsn_name=''
+else:
+    fc=''
+
 
 if surface:
     from CCD_packages import make_pysurfer_images
@@ -53,6 +64,7 @@ if RSN>0:
     rsn_name='RSN%d' % (RSN-1)
     rsn=RSN-1
     copesToRun=[0]
+    fc=''
 else:
     rsn_name=''
 
@@ -120,7 +132,7 @@ secondlevel_folder_names=['noFeedback','Feedback']
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
-    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + rsn_name
+    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + rsn_name + fc
     if not os.path.exists(foldername):
         os.mkdir(foldername)
     foldername= foldername + '/' + pheno_measure_name
@@ -128,7 +140,7 @@ for runType in ['randomise','flame']:
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + rsn_name
+        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + rsn_name + fc
         if not os.path.exists(foldername):
             os.mkdir(foldername)
         foldername= foldername + '/' + pheno_measure_name
@@ -147,6 +159,8 @@ if run1Sample:
                     fbLoc=subjectinfo(subj,fb)
                     if t=='cope' and RSN>0:
                         fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc+1,rsn,rsn)
+                    elif len(fc)>0:
+                        fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
                     else:
                         fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                     x.append(fname)
@@ -200,7 +214,10 @@ if run1Sample:
                 os.system(randomiseCommand)
 
                 if RSN>0:
-                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name + '/' + pheno_measure_name
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name  + '/' + pheno_measure_name
+                elif runFC:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc + '/' + pheno_measure_name
+
                 else:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
 
@@ -247,8 +264,15 @@ if runPair:
         else:
             genders=''
 
-        x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz',\
-        '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz']
+        if runFC:
+            feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + fc + '/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz'
+
+            nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir + '/' + fc + '/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz'
+
+            x=[feedbackFile,nofeedbackFile]
+        else:
+            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz',\
+            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz']
 
 
         fslMathsCommand='fslmaths %s -sub %s cope%d_merged' % (x[0],x[1],i)
@@ -270,7 +294,7 @@ if runPair:
             randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d -D' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
             os.system(randomiseCommand)
 
-            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + pheno_measure_name
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + fc + '/' + pheno_measure_name
             print 'Making folder: %s' % foldername
             if not os.path.exists(foldername):
                 os.mkdir(foldername)
