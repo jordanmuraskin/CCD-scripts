@@ -822,7 +822,7 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
     fw=image.math_img("img1-img2",img1=pos,img2=neg)
 
     if fwhm==0:
-        smin=np.min(np.abs(fw.get_data()[fw>0]))
+        smin=np.min(np.abs(fw.get_data()[fw.get_data()!=0]))
     else:
         smin=2
 
