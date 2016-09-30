@@ -25,7 +25,7 @@ parser.add_argument('-a', help='Option to add subject age to model',required=Fal
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-perfSplit', help='Option run by performance split (0-No Split,1-Top Tier,2-Middle Tier,3-Lowest Tier)',required=False,default=0,type=int)
 parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
-parser.add_arument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='',type=str)
+parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='',type=str)
 args = parser.parse_args()
 
 #Decide if running all subjects or just good subjects
