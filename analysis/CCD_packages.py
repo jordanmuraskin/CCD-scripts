@@ -811,7 +811,7 @@ def getFileNamesfromFolder(folder,suffix):
     return TFCEposImg,posImg,TFCEnegImg,negImg
 
 
-def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499):
+def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=[]):
 
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
@@ -839,6 +839,14 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499):
     """
     brain.add_overlay(surf_data_lh, min=2, max=5, name="ang_corr_lh", hemi='lh')
     brain.add_overlay(surf_data_rh, min=2, max=5, name="ang_corr_rh", hemi='rh')
+
+    if len(coords)>0:
+        if coords[0]>0:
+            hemi='rh'
+        else:
+            hemi='lh'
+        brain.add_foci(coords, map_surface="white", color="gold",hemi=hemi)
+
 
     brain.save_image('%s/surfaceplot.jpg' % folder)
     brain.close()
