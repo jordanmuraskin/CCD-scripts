@@ -811,7 +811,7 @@ def getFileNamesfromFolder(folder,suffix):
     return TFCEposImg,posImg,TFCEnegImg,negImg
 
 
-def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=()):
+def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surface='inflated'):
 
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
@@ -825,7 +825,7 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=()):
     fw.to_filename(mri_file)
 
     """Bring up the visualization"""
-    brain = Brain("fsaverage", "split", "inflated",views=['lat', 'med'], offscreen=True , background="white")
+    brain = Brain("fsaverage", "split", surface ,views=['lat', 'med'], offscreen=True , background="white")
 
     """Project the volume file and return as an array"""
 
