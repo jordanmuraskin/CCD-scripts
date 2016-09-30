@@ -811,7 +811,7 @@ def getFileNamesfromFolder(folder,suffix):
     return TFCEposImg,posImg,TFCEnegImg,negImg
 
 
-def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surface='inflated'):
+def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surface='inflated',fwhm=0):
 
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
@@ -830,8 +830,8 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
     """Project the volume file and return as an array"""
 
     reg_file = os.path.join("/opt/freesurfer","average/mni152.register.dat")
-    surf_data_lh = io.project_volume_data(mri_file, "lh", reg_file,smooth_fwhm=1.5)
-    surf_data_rh = io.project_volume_data(mri_file, "rh", reg_file,smooth_fwhm=1.5)
+    surf_data_lh = io.project_volume_data(mri_file, "lh", reg_file,smooth_fwhm=fwhm)
+    surf_data_rh = io.project_volume_data(mri_file, "rh", reg_file,smooth_fwhm=fwhm)
 
     """
     You can pass this array to the add_overlay method for a typical activation
