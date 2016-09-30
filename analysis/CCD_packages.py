@@ -845,7 +845,7 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=()):
             hemi='rh'
         else:
             hemi='lh'
-        brain.add_foci(coords, map_surface="white", color="gold",hemi=hemi)
+        brain.add_foci(coords, map_surface="pial", color="gold",hemi=hemi)
 
 
     brain.save_image('%s/surfaceplot.jpg' % folder)
