@@ -47,7 +47,7 @@ runFC=args.runFC
 
 
 if runFC:
-    copesToRun=0
+    copesToRun=[0]
 else:
     fc=''
 
