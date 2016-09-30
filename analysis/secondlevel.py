@@ -13,28 +13,6 @@ import argparse
 
 
 
-
-# class Usage(Exception):
-#     def __init__(self, msg):
-#         self.msg = msg
-#
-# def main(argv=None):
-#     if argv is None:
-#         argv = sys.argv
-#     try:
-#         try:
-#             opts, args = getopt.getopt(argv[1:], "h", ["help"])
-#         except getopt.error, msg:
-#              raise Usage(msg)
-#         # more code, unchanged
-#     except Usage, err:
-#         print >>sys.stderr, err.msg
-#         print >>sys.stderr, "for help use --help"
-#         return 2
-#
-# if __name__ == "__main__":
-#     sys.exit(main())
-
 parser = argparse.ArgumentParser(description='Run Second Level Results for CCD')
 parser.add_argument('-rwr', help='Option to run with Randomise',required=False,default=1,type=int)
 parser.add_argument('-rwf', help='Option to run with FLAME',required=False,default=0,type=int)
@@ -47,7 +25,7 @@ parser.add_argument('-a', help='Option to add subject age to model',required=Fal
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-perfSplit', help='Option run by performance split (0-No Split,1-Top Tier,2-Middle Tier,3-Lowest Tier)',required=False,default=0,type=int)
 parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
-
+parser.add_arument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='',type=str)
 args = parser.parse_args()
 
 #Decide if running all subjects or just good subjects
@@ -63,7 +41,11 @@ age=args.a
 gender=args.g
 perfSplit=args.perfSplit
 surface=args.surface
+fc=args.fc
 
+
+if len(fc)>0:
+    copesToRun=0
 
 if surface:
     from CCD_packages import make_pysurfer_images
@@ -95,7 +77,7 @@ motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_me
 performance=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 
 fbNames=['NOFEEDBACK','FEEDBACK']
-
+]
 if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
@@ -144,12 +126,12 @@ secondlevel_folder_names=['noFeedback','Feedback']
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
-    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir
+    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + fc
     if not os.path.exists(foldername):
         os.mkdir(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir
+        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + fc
         if not os.path.exists(foldername):
             os.mkdir(foldername)
 
@@ -160,17 +142,21 @@ if run1Sample:
 
     for i in copesToRun:
         for fb in [0,1]:
-            for t in ['cope', 'varcope']:
+            for t in ['cope']:
                 x=[]
                 for subj in subject_list:
                     fbLoc=subjectinfo(subj,fb)
-                    fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                    if len(fc)>0:
+                        fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
+                    else:
+                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
                 merger.inputs.in_files = x
                 merger.inputs.dimension = 't'
                 merger.inputs.output_type = 'NIFTI_GZ'
+                merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
                 merger.run()
             #get meanFD values for each subject and add as covariate
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
@@ -215,7 +201,7 @@ if run1Sample:
                 randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,'/home/jmuraskin/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc
 
                 # if age:
                 #     foldername+='_age'
@@ -271,9 +257,9 @@ if runPair:
 
 
 
-        for t in ['cope', 'varcope']:
+        for t in ['cope']:
             try:
-                feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i)
+                feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + fc + '/cope' + str(i)
                 if age:
                     feedbackFile+='_age'
                 if gender:
@@ -281,7 +267,7 @@ if runPair:
                 if perfSplit>0:
                     feedbackFile+=perf_split_name
                 feedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
-                nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i)
+                nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir + '/' + fc + '/cope' + str(i)
                 if age:
                     nofeedbackFile+='_age'
                 if gender:
@@ -333,7 +319,7 @@ if runPair:
             if addScanOrder:
                 foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/so_cope' + str(i)
             else:
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/paired-Ttest/' + motionDir + '/' + fc
 
             # if age:
             #     foldername+='_age'
