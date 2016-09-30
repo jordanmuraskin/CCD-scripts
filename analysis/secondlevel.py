@@ -77,7 +77,7 @@ motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_me
 performance=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 
 fbNames=['NOFEEDBACK','FEEDBACK']
-]
+
 if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
