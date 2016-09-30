@@ -811,7 +811,7 @@ def getFileNamesfromFolder(folder,suffix):
     return TFCEposImg,posImg,TFCEnegImg,negImg
 
 
-def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=[]):
+def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=()):
 
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
