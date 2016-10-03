@@ -157,5 +157,5 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # # out the confounds as before
         # brain_time_series = brain_masker.fit_transform(func_filename)
 
-        df=DataFrame(data=seed_time_series.T,columns=labels,index=range(408))
+        df=DataFrame(data=seed_time_series,columns=labels,index=range(408))
         df.to_csv('%s/%s.csv' % (baseDir,subject_id))
