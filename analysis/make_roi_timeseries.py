@@ -158,4 +158,4 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # brain_time_series = brain_masker.fit_transform(func_filename)
 
         df=DataFrame(data=seed_time_series,columns=labels,index=range(408))
-        df.to_csv('%s/%s.csv' % (baseDir,subject_id))
+        df.to_csv('%s/%s.csv' % (baseDir,subject_id),index=False)
