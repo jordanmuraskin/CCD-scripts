@@ -18,7 +18,7 @@ import argparse
 import numpy as np
 from nilearn import input_data
 import os
-from pandas import DataFrame
+from pandas import DataFrame,read_csv
 
 
 parser = argparse.ArgumentParser(description='Run First Level Functional Connectivity for Neurofeedback Data')
@@ -50,8 +50,7 @@ for ccd in CCD_numbers:
 
 
 def subjectinfo(subject_id,getFeedback=True):
-    #Get whether scan is a feedback scan or not
-    from pandas import read_csv
+
 
     SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
     SubjInfo.set_index('JM_INTERNAL',inplace=True)
