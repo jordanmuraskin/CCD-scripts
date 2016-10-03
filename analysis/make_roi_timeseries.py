@@ -144,7 +144,7 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # Then we extract the mean time series within the seed region while
         # regressing out the confounds that
         # can be found in the dataset's csv file
-        seed_time_series = seed_masker.fit_transform(func_filename)
+        seed_time_series = signFlip*seed_masker.fit_transform(func_filename)
 
         ##########################################################################
         # Next, we can proceed similarly for the **brain-wide voxel-wise time
