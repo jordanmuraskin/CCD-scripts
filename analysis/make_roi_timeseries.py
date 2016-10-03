@@ -150,12 +150,12 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # Next, we can proceed similarly for the **brain-wide voxel-wise time
         # series**, using :class:`nilearn.input_data.NiftiMasker` with the same input
         # arguments as in the seed_masker in addition to smoothing with a 6 mm kernel
-        brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,verbose=1)
+        # brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,verbose=1)
+        #
+        # ##########################################################################
+        # # Then we extract the brain-wide voxel-wise time series while regressing
+        # # out the confounds as before
+        # brain_time_series = brain_masker.fit_transform(func_filename)
 
-        ##########################################################################
-        # Then we extract the brain-wide voxel-wise time series while regressing
-        # out the confounds as before
-        brain_time_series = brain_masker.fit_transform(func_filename)
-
-        df=DataFrame(data=brain_time_series,columns=labels)
+        df=DataFrame(data=seed_time_series,columns=labels)
         df.to_csv('%s/%s.csv' % (baseDir,subject_id))
