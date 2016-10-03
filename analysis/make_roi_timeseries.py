@@ -80,7 +80,7 @@ def signFlipInfo(subject_id,r):
     elif paradigmType==1 or paradigmType == 3:
         signFlip=-1
 
-    retrun signFlip
+    return signFlip
 
 topDir='/home/jmuraskin/Projects/CCD/working_v1/ROI-timeseries/'
 if not os.path.exists(topDir):
