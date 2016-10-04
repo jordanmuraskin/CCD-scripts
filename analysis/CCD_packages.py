@@ -120,7 +120,8 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df['scanorder']=scan
 
                     df['modelcorr']=pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],df['RSN3'])[0]
-
+                    df['first_half_corr']=pearsonr(dmnIdeal['Wander'][0:203]-dmnIdeal['Focus'][0:203],df['RSN3'][0:203])[0]
+                    df['second_half_corr']=pearsonr(dmnIdeal['Wander'][204:]-dmnIdeal['Focus'][204:],df['RSN3'][204:])[0]
                     for rsn in columnNames:
                         df['%s_modelcorr' % rsn]=pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],df[rsn])[0]
     #                 df['DMN']=pd.Series(zscore(nuisanceRegression(df[list(set(columnNames)-set(['RSN3']))],df['RSN3'])))
