@@ -171,7 +171,7 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
     else:
         goodsubj=allsubj
 
-    return goodsubj
+    return goodsubj,motionReject
 
 
 def getBlockedPerformance(GroupDF,goodsubj):
