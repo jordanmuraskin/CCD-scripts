@@ -88,6 +88,15 @@ else:
     subject_list=np.setdiff1d(allsubj,motionReject)
     motionDir='motionThresh-%f' % motionThresh
 
+#load phenotypic data
+phenoFile='/home/jmuraskin/Projects/CCD/Pheno/narsad+vt_new.csv'
+pheno=pd.read_csv(phenoFile)
+pheno=pheno.set_index('participant')
+if age:
+    ages=zscore(pheno.loc[subject_list]['V1_DEM_001'])
+if gender:
+    mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
+
 
 
 for RSN in rsn:
