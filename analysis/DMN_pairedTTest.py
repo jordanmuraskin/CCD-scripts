@@ -17,7 +17,7 @@ parser.add_argument('-rwf', help='Option to run with FLAME',required=False,defau
 parser.add_argument('-n',help='Number of Permutations to Run', required=False,default=10000,type=int)
 parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=False,default=True,type=bool)
 parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=True,type=bool)
-parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=True,type=bool)
+parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=1,type=int)
 parser.add_argument('-rsn', help='List of Resting-State netorks to run',nargs='+', type=int,required=False,default=[3])
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
