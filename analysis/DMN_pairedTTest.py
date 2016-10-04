@@ -19,6 +19,9 @@ parser.add_argument('-r1samp', help='Option to run 1 sample t-test',required=Fal
 parser.add_argument('-rpair', help='Option to run paired t-test',required=False,default=True,type=bool)
 parser.add_argument('-rall', help='Option to run all subjects or good motion subjects',required=False,default=True,type=bool)
 parser.add_argument('-rsn', help='List of Resting-State netorks to run',nargs='+', type=int,required=False,default=[3])
+parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
+parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
+
 args = parser.parse_args()
 
 
@@ -38,7 +41,8 @@ rsn=args.rsn
 runPairNew=False
 # #Decide if running all subjects or just good subjects
 # runAll=True
-
+age=args.a
+gender=args.g
 #if run with performance
 runWithPerformance=False
 
@@ -64,13 +68,19 @@ def subjectinfo(subject_id,getFeedback=True):
 
 
 #load subject list
-motionTest=pd.read_csv('CCD_meanFD.csv',names=['Subject_ID','FB','scanorder','meanFD'])
+motionTest=pd.read_csv('CCD_meanFD.csv')
 performance=pd.read_csv('CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 fbNames=['NOFEEDBACK','FEEDBACK']
 
-if runAll:
+if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
     motionDir='all'
+elif runAll==2:
+    motionThresh=1
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(allsubj,motionReject)
+    motionDir='motionRMS-%f' % motionThresh
 else:
     motionThresh=0.2
     allsubj=np.unique(motionTest['Subject_ID'])
@@ -147,17 +157,18 @@ for RSN in rsn:
             merger.run()
             #get meanFD values for each subject and add as covariate
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-
-            model = MultipleRegressDesign()
             if runWithPerformance:
-                perf=zscore(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R'])
-                model.inputs.contrasts = [['group mean', 'T',['R'],[1]],['group neg mean', 'T',['R'],[-1]]]
-                model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD),R=list(perf))
-
-            else:
-                model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
-                model.inputs.regressors = dict(reg1=[1]*len(subject_list),FD=list(meanFD))
+                pheno_measure = zscore(np.arctan(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
+            model = MultipleRegressDesign()
+            model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
+            regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
+            if age:
+                regressors['age']=list(ages)
+            if gender:
+                regressors['mf']=list(mf)
+            model.inputs.regressors = regressors
             model.run()
+
 
             if runWithRandomise:
                 os.mkdir(fbNames[fb])
@@ -173,55 +184,30 @@ for RSN in rsn:
 
 
     if runPair:
-        pairedmodel = MultipleRegressDesign()
-        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
-        pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
-        #make paired ttest model
-        modelX=[-1]*2*len(subject_list)
-        modelXAB=modelX
-        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
-        modelDict=dict(reg1=modelXAB)
-        for indx,subj in enumerate(subject_list):
-            modeltmp=[0]*2*len(subject_list)
-            modeltmp[indx]=1
-            modeltmp[indx+len(subject_list)]=1
-            modelDict['s%d' % indx]= modeltmp
-        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
-        pairedmodel.inputs.regressors = modelDict
-        pairedmodel.run()
-
+        meanFD=zscore(np.array(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])+np.array(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
+        model = MultipleRegressDesign()
+        model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
+        if runWithPerformance:
+            pheno_measure = zscore(np.array(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])))
+        regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
+        if age:
+            regressors['age']=list(ages)
+        if gender:
+            regressors['mf']=list(mf)
+        model.inputs.regressors = regressors
+        model.run()
 
         x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
         meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz']
-        merger = Merge()
-        merger.inputs.in_files = x
-        merger.inputs.dimension = 't'
-        merger.inputs.output_type = 'NIFTI_GZ'
-        merger.inputs.merged_file='./DMN_pair_merged.nii.gz'
-        merger.run()
+        fslMathsCommand='fslmaths %s -sub %s DMN_pair_merged' % (x[0],x[1])
+        os.system(fslMathsCommand)
+
         if not os.path.exists('RSN_pair'):
             os.mkdir('RSN_pair')
         os.system('mv ./design.* ./RSN_pair')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair/paired -d ./RSN_pair/design.mat -t ./RSN_pair/design.con -e ./RSN_pair/design.grp -m %s -T -n %d' % ('DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair')
+        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair/paired -d ./RSN_pair/design.mat -t ./RSN_pair/design.con -e ./RSN_pair/design.grp -m %s -T -n %d' % ('./RSN_pair/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
 
         shutil.move('RSN_pair',pairedFolder + '/RSN_pair')
-        shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')
-
-
-    if runPairNew:
-
-        x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
-        meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz']
-        fslMathsCommand='fslmaths %s -sub %s DMN_pair_diff' % (x[0],x[1])
-        os.system(fslMathsCommand)
-
-        os.mkdir('DMN_pairNew')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./DMN_pairNew/paired -1 -m %s -T -n %d' % ('DMN_pair_diff.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
-        os.system(randomiseCommand)
-
-
-        shutil.move('DMN_pairNew',pairedFolder + '/DMN_pairNew')
-        shutil.move('DMN_pair_merged.nii.gz',pairedFolder + '/DMN_pair_merged.nii.gz')
