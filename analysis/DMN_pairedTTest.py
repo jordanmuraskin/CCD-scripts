@@ -157,11 +157,9 @@ for RSN in rsn:
             merger.run()
             #get meanFD values for each subject and add as covariate
             meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-            if runWithPerformance:
-                pheno_measure = zscore(np.arctan(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
             model = MultipleRegressDesign()
-            model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
-            regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
+            model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
+            regressors=dict(reg1=[1]*len(subject_list),FD=list(meanFD))
             if age:
                 regressors['age']=list(ages)
             if gender:
@@ -184,22 +182,37 @@ for RSN in rsn:
 
 
     if runPair:
-        meanFD=zscore(np.array(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])+np.array(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
-        model = MultipleRegressDesign()
-        model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
-        if runWithPerformance:
-            pheno_measure = zscore(np.array(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])))
-        regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
+        pairedmodel = MultipleRegressDesign()
+        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
+        if runFlame:
+            pairedmodel.inputs.groups = [1]*len(subject_list)*2
+        else:
+            pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
+        #make paired ttest model
+        modelX=[0]*2*len(subject_list)
+        modelXAB=modelX
+        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
+        modelDict=dict(reg1=modelXAB)
+        for indx,subj in enumerate(subject_list):
+            modeltmp=[0]*2*len(subject_list)
+            modeltmp[indx]=1
+            modeltmp[indx+len(subject_list)]=1
+            modelDict['s%d' % indx]= modeltmp
+        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
+        if addScanOrder:
+            modelDict['scanorder']= list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])
+        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])))
         if age:
-            regressors['age']=list(ages)
+            modelDict['age']=list(ages)+list(ages)
         if gender:
-            regressors['mf']=list(mf)
-        model.inputs.regressors = regressors
-        model.run()
+            modelDict['mf']=list(mf)+list(mf)
+        pairedmodel.inputs.regressors = modelDict
+        pairedmodel.run()
 
         x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
         meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz']
-        fslMathsCommand='fslmaths %s -sub %s DMN_pair_merged' % (x[0],x[1])
+        fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
 
         if not os.path.exists('RSN_pair'):
