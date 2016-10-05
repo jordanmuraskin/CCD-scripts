@@ -203,7 +203,7 @@ for RSN in rsn:
                     os.mkdir(fbNames[fb])
                 os.system('mv ./design.* ./%s' % fbNames[fb])
                 shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],'./%s' % fbNames[fb])
-                randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('DMN_merged_%s.nii.gz' % fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('./%s/DMN_merged_%s.nii.gz' % (fbNames[fb],fbNames[fb]),fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
                 shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb else meanTrainFolder + '/' + fbNames[fb] if fb==2 else meanNFBFolder + '/' + fbNames[fb])
 
