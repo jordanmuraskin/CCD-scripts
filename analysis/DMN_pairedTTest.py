@@ -224,11 +224,6 @@ for RSN in rsn:
 
                 shutil.move(filename,os.path.join(foldername,filename))
 
-                shutil.move(fbNames[fb],)
-
-
-
-
     if runPair:
 
         # First Run Paired Difference between FB-NoFB
