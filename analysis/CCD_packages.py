@@ -160,6 +160,8 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
     return GroupDF,motionInfo
 
 def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
+    #Reject Depressed subjects
+    depressed=['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087']
 
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
@@ -171,6 +173,9 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
         goodsubj=np.setdiff1d(allsubj,motionReject)
     else:
         goodsubj=allsubj
+
+    #remove depressed
+    goodsubj=np.setdiff1d(goodsubj,depressed)
 
     return goodsubj,motionReject
 
