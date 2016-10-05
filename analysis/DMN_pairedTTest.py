@@ -205,7 +205,26 @@ for RSN in rsn:
                 shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],'./%s' % fbNames[fb])
                 randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('./%s/DMN_merged_%s.nii.gz' % (fbNames[fb],fbNames[fb]),fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
-                shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb else meanTrainFolder + '/' + fbNames[fb] if fb==2 else meanNFBFolder + '/' + fbNames[fb])
+
+                if fb == 1:
+                    foldername=meanFBFolder
+                elif fb == 2:
+                    foldername=meanTrainFolder
+                else:
+                    foldername=meanNFBFolder
+
+                filename=fbNames[fb]
+
+                print 'Making folder: %s' % foldername
+                if not os.path.exists(foldername):
+                    os.mkdir(foldername)
+
+                if os.path.exists(os.path.join(foldername,filename)):
+                    shutil.rmtree(os.path.join(foldername,filename))
+
+                shutil.move(filename,os.path.join(foldername,filename))
+
+                shutil.move(fbNames[fb],)
 
 
 
