@@ -159,6 +159,55 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
     return GroupDF,motionInfo
 
+
+
+
+def getCCDSubjectTrainData(zscoreOn=True,globalNR=0,verbose=False):
+
+
+    SubjInfo = pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+
+    drFileLocation='/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1'
+
+    GroupDF=[]
+    numberOfICs=10
+    columnNames=[]
+    for rsnNumber in range(numberOfICs):
+        columnNames.append('RSN%d' % rsnNumber)
+
+    for indx,row in SubjInfo.iterrows():
+
+        subj = row['JM_INTERNAL']
+        if verbose:
+            print 'Collecting Subject %s' % subj
+            drFilePath = '%s/%s_data_/spatial_map_timeseries_for_DR/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/spatial_map_timeseries.txt' % (drFileLocation,subj,globalNR)
+            df=[]
+            if drFilePath:
+                try:
+                    df = pd.read_csv(drFilePath,header=None,names=columnNames,delim_whitespace=True)
+                    df['Subject_ID'] = subj
+                    df['Subject'] = indx
+                    df.index.name = 'TR'
+                    df.reset_index(level=0,inplace=True)
+                    for rsn in columnNames:
+                        if zscoreOn:
+                            df[rsn]=pd.Series(zscore(df[rsn][:]))
+
+                    if len(GroupDF)==0:
+                        GroupDF=df
+                    else:
+                        GroupDF=pd.concat((GroupDF,df),ignore_index=True)
+                except:
+                    print 'No DR .txt file found or error for subject : %s' % subj
+
+    GroupDF.reset_index(inplace=True)
+
+
+    return GroupDF
+
+
+
+
 def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
     #Reject Depressed subjects
     depressed=['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087']
