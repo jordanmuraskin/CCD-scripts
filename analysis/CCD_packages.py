@@ -175,7 +175,7 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
         goodsubj=allsubj
 
     #remove depressed
-    goodsubj=np.setdiff1d(goodsubj,depressed)
+    goodsubj=np.setdiff1d(goodsubj,np.array(depressed))
 
     return goodsubj,motionReject
 
