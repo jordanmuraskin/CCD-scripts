@@ -715,9 +715,9 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
     t,p = ttest_1samp(np.array(performance[performance.fb=='FEEDBACK']['R'])-np.array(performance[performance.fb=='NOFEEDBACK']['R']),0)
     ax2.set_title('Mean Subject Time Series Correlations-p=%0.2f' % p)
 
-    t,p = ttest_1samp(np.array(fb_coefs['Coef'].reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe']))),0))
+    t,p = ttest_1samp(np.array(fb_coefs['Coef'].reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe'])))),0)
     p05_FB,padj=fdr_correction(p,0.05)
-    t,p = ttest_1samp(np.array(nfb_coefs['Coef'].reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe']))),0))
+    t,p = ttest_1samp(np.array(nfb_coefs['Coef'].reshape(len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])),len(unique(coefs['pe'])))),0)
     p05_NFB,padj=fdr_correction(p,0.05)
     for idx,(pFDR_FB,pFDR_NFB) in enumerate(zip(p05_FB,p05_NFB)):
         if pFDR_FB:
