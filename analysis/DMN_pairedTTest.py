@@ -256,8 +256,8 @@ for RSN in rsn:
         pairedmodel.inputs.regressors = modelDict
         pairedmodel.run()
 
-        x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
-        meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz']
+        x=[meanFBFolder + fbNames[1] + '/DMN_merged_FEEDBACK.nii.gz',\
+        meanNFBFolder + fbNames[0] + '/DMN_merged_NOFEEDBACK.nii.gz']
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
 
@@ -300,8 +300,8 @@ for RSN in rsn:
         pairedmodel.inputs.regressors = modelDict
         pairedmodel.run()
 
-        x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
-        meanTrainFolder + '/DMN_merged_TRAIN.nii.gz']
+        x=[meanFBFolder + fbNames[1] + '/DMN_merged_FEEDBACK.nii.gz',\
+        meanTrainFolder + fbNames[2] + '/DMN_merged_TRAIN.nii.gz']
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
 
@@ -344,8 +344,8 @@ for RSN in rsn:
         pairedmodel.inputs.regressors = modelDict
         pairedmodel.run()
 
-        x=[meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz',\
-        meanTrainFolder + '/DMN_merged_TRAIN.nii.gz']
+        x=[meanNFBFolder + fbNames[0] + '/DMN_merged_NOFEEDBACK.nii.gz',\
+        meanTrainFolder + fbNames[2] + '/DMN_merged_TRAIN.nii.gz']
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
 
