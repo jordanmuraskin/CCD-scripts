@@ -180,24 +180,24 @@ def getCCDSubjectTrainData(zscoreOn=True,globalNR=0,verbose=False):
         subj = row['JM_INTERNAL']
         if verbose:
             print 'Collecting Subject %s' % subj
-            drFilePath = '%s/%s_data_/spatial_map_timeseries_for_DR/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/spatial_map_timeseries.txt' % (drFileLocation,subj,globalNR)
-            df=[]
-            if os.path.exists(drFilePath):
-                df = pd.read_csv(drFilePath,header=None,names=columnNames,delim_whitespace=True)
-                df['Subject_ID'] = subj
-                df['Subject'] = indx
-                df.index.name = 'TR'
-                df.reset_index(level=0,inplace=True)
-                for rsn in columnNames:
-                    if zscoreOn:
-                        df[rsn]=pd.Series(zscore(df[rsn][:]))
+        drFilePath = '%s/%s_data_/spatial_map_timeseries_for_DR/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/spatial_map_timeseries.txt' % (drFileLocation,subj,globalNR)
+        df=[]
+        if os.path.exists(drFilePath):
+            df = pd.read_csv(drFilePath,header=None,names=columnNames,delim_whitespace=True)
+            df['Subject_ID'] = subj
+            df['Subject'] = indx
+            df.index.name = 'TR'
+            df.reset_index(level=0,inplace=True)
+            for rsn in columnNames:
+                if zscoreOn:
+                    df[rsn]=pd.Series(zscore(df[rsn][:]))
 
-                if len(GroupDF)==0:
-                    GroupDF=df
-                else:
-                    GroupDF=pd.concat((GroupDF,df),ignore_index=True)
+            if len(GroupDF)==0:
+                GroupDF=df
             else:
-                print 'Subject %s has no file' % subj
+                GroupDF=pd.concat((GroupDF,df),ignore_index=True)
+        else:
+            print 'Subject %s has no file' % subj
 
     GroupDF.reset_index(inplace=True)
 
