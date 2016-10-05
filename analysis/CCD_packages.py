@@ -324,24 +324,37 @@ def printModelCorrelations(GroupDF,goodsubj,DMN_name='RSN3'):
     print 'Feedback Overall Correlation= %0.2f' % GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['FB','TR']).mean()[DMN_name].loc['FEEDBACK'].corr(dmnIdeal['Wander']-dmnIdeal['Focus'])
 
 
-def generateHeatMaps(GroupDF,goodsubj):
+def generateHeatMaps(GroupDF,goodsubj,GroupTrain=[]):
 
     numberOfICs=10
     columnNames=[]
     for rsnNumber in range(numberOfICs):
             columnNames.append('RSN%d' % rsnNumber)
 
+
     heatmapDF=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject_ID','FB','TR']).mean()
     hmDiff=np.zeros((10,10,len(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID']))))
     hmFB=hmDiff.copy()
     hmNFB=hmDiff.copy()
+    if len(GroupTrain)>0:
+        heatmapTrainDF=GroupTrain[GroupTrain.Subject_ID.isin(goodsubj)].groupby(['Subject_ID','TR']).mean()
+        hmTrain=hmDiff.copy()
+        hmFB_Train=hmDiff.copy()
+        hmNFB_Train=hmDiff.copy()
 
     for indx,subj in enumerate(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])):
         hmFB[:,:,indx]=heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr()
         hmNFB[:,:,indx]=heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr()
-        hmDiff[:,:,indx]=np.arctan(heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr())*np.sqrt(405)-np.arctan(heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr())*np.sqrt(405)
+        hmDiff[:,:,indx]=np.arctanh(heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr())*np.sqrt(405)-np.arctanh(heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr())*np.sqrt(405)
+        if len(GroupTrain)>0:
+            hmTrain[:,:,indx]=heatmapTrainDF.loc[subj][columnNames].corr()
+            hmFB_Train[:,:,indx]=np.arctanh(heatmapDF.loc[subj,'FEEDBACK'][columnNames].corr())*np.sqrt(405)-np.arctanh(heatmapTrainDF.loc[subj][columnNames].corr())*np.sqrt(175)
+            hmNFB_Train[:,:,indx]=np.arctanh(heatmapDF.loc[subj,'NOFEEDBACK'][columnNames].corr())*np.sqrt(405)-np.arctanh(heatmapTrainDF.loc[subj][columnNames].corr())*np.sqrt(175)
 
-    return hmFB,hmNFB,hmDiff
+    if len(GroupTrain)>0:
+        return hmFB,hmNFB,hmDiff,hmTrain,hmFB_Train,hmNFB_Train
+    else:
+        return hmFB,hmNFB,hmDiff
 
 
 def partial_corr(C):
