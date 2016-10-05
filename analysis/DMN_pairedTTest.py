@@ -70,7 +70,7 @@ def subjectinfo(subject_id,getFeedback=True):
 #load subject list
 motionTest=pd.read_csv('CCD_meanFD.csv')
 performance=pd.read_csv('CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
-fbNames=['NOFEEDBACK','FEEDBACK']
+fbNames=['NOFEEDBACK','FEEDBACK','TRAIN']
 
 if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
@@ -128,14 +128,22 @@ for RSN in rsn:
     if not os.path.exists(meanNFBFolder):
         os.mkdir(meanNFBFolder)
 
+    meanTrainFolder=folderbase + 'train'
+    if not os.path.exists(meanNFBFolder):
+        os.mkdir(meanTrainFolder)
+
     meanFBFolder=meanFBFolder + '/' + motionDir
     meanNFBFolder=meanNFBFolder + '/' + motionDir
+    meanTrainFolder=meanTrainFolder + '/' + motionDir
 
     if not os.path.exists(meanFBFolder):
         os.mkdir(meanFBFolder)
 
     if not os.path.exists(meanNFBFolder):
         os.mkdir(meanNFBFolder)
+
+    if not os.path.exists(meanTrainFolder):
+        os.mkdir(meanTrainFolder)
 
     if runWithPerformance:
         meanFBFolder=meanFBFolder+'/performance'
@@ -148,14 +156,22 @@ for RSN in rsn:
         if not os.path.exists(meanNFBFolder):
             os.mkdir(meanNFBFolder)
 
+        meanTrainFolder=meanTrainFolder+'/performance'
+
+        if not os.path.exists(meanTrainFolder):
+            os.mkdir(meanTrainFolder)
+
 
 
     if run1Sample:
-        for fb in [0,1]:
+        for fb in [0,1,2]:
             x=[]
             for subj in subject_list:
-                fbLoc=subjectinfo(subj,fb)
-                fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc,RSN,RSN)
+                if fb<2:
+                    fbLoc=subjectinfo(subj,fb)
+                    fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc,RSN,RSN)
+                else:
+                    fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,RSN,RSN)
                 # fname = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/%s%d.nii.gz' % (fbLoc,subj,t,i)
                 x.append(fname)
             subjs = len(x)
@@ -166,7 +182,10 @@ for RSN in rsn:
             merger.inputs.merged_file = './DMN_merged_%s.nii.gz' % fbNames[fb]
             merger.run()
             #get meanFD values for each subject and add as covariate
-            meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+            if fb<2:
+                meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+            else:
+                meanFD=zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['train_meanFD'])
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
             regressors=dict(reg1=[1]*len(subject_list),FD=list(meanFD))
@@ -183,15 +202,17 @@ for RSN in rsn:
                 if not os.path.exists(fbNames[fb]):
                     os.mkdir(fbNames[fb])
                 os.system('mv ./design.* ./%s' % fbNames[fb])
+                shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],'./%s' % fbNames[fb])
                 randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('DMN_merged_%s.nii.gz' % fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
-                shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb else meanNFBFolder + '/' + fbNames[fb])
-                shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],meanFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb] if fb else meanNFBFolder + '/DMN_merged_%s.nii.gz' % fbNames[fb])
+                shutil.move(fbNames[fb],meanFBFolder + '/' + fbNames[fb] if fb elif meanTrainFolder + '/' fbNames[fb] else meanNFBFolder + '/' + fbNames[fb])
 
 
 
 
     if runPair:
+
+        # First Run Paired Difference between FB-NoFB
         pairedmodel = MultipleRegressDesign()
         pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
         if runFlame:
@@ -208,6 +229,7 @@ for RSN in rsn:
             modeltmp[indx]=1
             modeltmp[indx+len(subject_list)]=1
             modelDict['s%d' % indx]= modeltmp
+
         modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
         + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
         if addScanOrder:
@@ -225,12 +247,100 @@ for RSN in rsn:
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
 
-        if not os.path.exists('RSN_pair'):
-            os.mkdir('RSN_pair')
-        os.system('mv ./design.* ./RSN_pair')
-        os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair/paired -d ./RSN_pair/design.mat -t ./RSN_pair/design.con -e ./RSN_pair/design.grp -m %s -T -n %d' % ('./RSN_pair/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        if not os.path.exists('RSN_pair_FB_NFB'):
+            os.mkdir('RSN_pair_FB_NFB')
+        os.system('mv ./design.* ./RSN_pair_FB_NFB')
+        os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_FB_NFB')
+        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_FB_NFB/paired -d ./RSN_pair_FB_NFB/design.mat -t ./RSN_pair_FB_NFB/design.con -e ./RSN_pair_FB_NFB/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_NFB/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
 
-        shutil.move('RSN_pair',pairedFolder + '/RSN_pair')
+        shutil.move('RSN_pair_FB_NFB',pairedFolder + '/RSN_pair_FB_NFB')
+
+
+        # Second Run Paired Difference between FB-Rest
+        pairedmodel = MultipleRegressDesign()
+        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
+        if runFlame:
+            pairedmodel.inputs.groups = [1]*len(subject_list)*2
+        else:
+            pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
+        #make paired ttest model
+        modelX=[0]*2*len(subject_list)
+        modelXAB=modelX
+        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
+        modelDict=dict(reg1=modelXAB)
+        for indx,subj in enumerate(subject_list):
+            modeltmp=[0]*2*len(subject_list)
+            modeltmp[indx]=1
+            modeltmp[indx+len(subject_list)]=1
+            modelDict['s%d' % indx]= modeltmp
+
+        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['train_meanFD'])))
+
+        if age:
+            modelDict['age']=list(ages)+list(ages)
+        if gender:
+            modelDict['mf']=list(mf)+list(mf)
+        pairedmodel.inputs.regressors = modelDict
+        pairedmodel.run()
+
+        x=[meanFBFolder + '/DMN_merged_FEEDBACK.nii.gz',\
+        meanTrainFolder + '/DMN_merged_TRAIN.nii.gz']
+        fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
+        os.system(fslMathsCommand)
+
+        if not os.path.exists('RSN_pair_FB_TRAIN'):
+            os.mkdir('RSN_pair_FB_TRAIN')
+        os.system('mv ./design.* ./RSN_pair_FB_TRAIN')
+        os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_FB_TRAIN')
+        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_FB_TRAIN/paired -d ./RSN_pair_FB_TRAIN/design.mat -t ./RSN_pair_FB_TRAIN/design.con -e ./RSN_pair_FB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        os.system(randomiseCommand)
+
+
+        shutil.move('RSN_pair_FB_TRAIN',pairedFolder + '/RSN_pair_FB_TRAIN')
+
+
+        # Second Run Paired Difference between FB-Rest
+        pairedmodel = MultipleRegressDesign()
+        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
+        if runFlame:
+            pairedmodel.inputs.groups = [1]*len(subject_list)*2
+        else:
+            pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
+        #make paired ttest model
+        modelX=[0]*2*len(subject_list)
+        modelXAB=modelX
+        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
+        modelDict=dict(reg1=modelXAB)
+        for indx,subj in enumerate(subject_list):
+            modeltmp=[0]*2*len(subject_list)
+            modeltmp[indx]=1
+            modeltmp[indx+len(subject_list)]=1
+            modelDict['s%d' % indx]= modeltmp
+
+        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['train_meanFD'])))
+
+        if age:
+            modelDict['age']=list(ages)+list(ages)
+        if gender:
+            modelDict['mf']=list(mf)+list(mf)
+        pairedmodel.inputs.regressors = modelDict
+        pairedmodel.run()
+
+        x=[meanNFBFolder + '/DMN_merged_NOFEEDBACK.nii.gz',\
+        meanTrainFolder + '/DMN_merged_TRAIN.nii.gz']
+        fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
+        os.system(fslMathsCommand)
+
+        if not os.path.exists('RSN_pair_NFB_TRAIN'):
+            os.mkdir('RSN_pair_NFB_TRAIN')
+        os.system('mv ./design.* ./RSN_pair_NFB_TRAIN')
+        os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_NFB_TRAIN')
+        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_NFB_TRAIN/paired -d ./RSN_pair_NFB_TRAIN/design.mat -t ./RSN_pair_NFB_TRAIN/design.con -e ./RSN_pair_NFB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_NFB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        os.system(randomiseCommand)
+
+
+        shutil.move('RSN_pair_NFB_TRAIN',pairedFolder + '/RSN_pair_NFB_TRAIN')
