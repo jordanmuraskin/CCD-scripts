@@ -129,7 +129,7 @@ for RSN in rsn:
         os.mkdir(meanNFBFolder)
 
     meanTrainFolder=folderbase + 'train'
-    if not os.path.exists(meanNFBFolder):
+    if not os.path.exists(meanTrainFolder):
         os.mkdir(meanTrainFolder)
 
     meanFBFolder=meanFBFolder + '/' + motionDir
