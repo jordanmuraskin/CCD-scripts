@@ -274,8 +274,8 @@ if runPair:
 
             x=[feedbackFile,nofeedbackFile]
         else:
-            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz',\
-            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir +'/cope' + str(i) + ages + genders + '/cope' + str(i) + '_merged.nii.gz']
+            x=['/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir '/' + pheno_measure_name +'/cope' + str(i) + '_' + pheno_measure_name + ages + genders + '/cope' + str(i) + '_merged.nii.gz',\
+            '/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir '/' + pheno_measure_name +'/cope' + str(i) + '_' + pheno_measure_name + ages + genders + '/cope' + str(i) + '_merged.nii.gz']
 
 
         fslMathsCommand='fslmaths %s -sub %s cope%d_merged' % (x[0],x[1],i)
