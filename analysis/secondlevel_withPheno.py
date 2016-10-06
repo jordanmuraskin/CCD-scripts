@@ -29,6 +29,8 @@ parser.add_argument('-surface', help='Option to make surface plot (need to be on
 parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
 parser.add_argument('-runFC',help='Optiom to run FC instead of Cope', default=0,required=False,type=int)
 parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='R_AI',type=str)
+parser.add_argument('-train', help = 'Run RSN on train data not FB or NoFB',required=False,default=0,type=int)
+parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
 
 args = parser.parse_args()
 
@@ -49,6 +51,8 @@ surface=args.surface
 RSN=args.RSN
 fc=args.fc
 runFC=args.runFC
+fbtorun=args.fbtorun
+train=args.train
 
 if runFC:
     copesToRun=[0]
@@ -68,6 +72,8 @@ if RSN>0:
 else:
     rsn_name=''
 
+if train:
+    fbtorun=[2]
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
     from pandas import read_csv
@@ -130,7 +136,7 @@ if gender:
     mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
 
 
-secondlevel_folder_names=['noFeedback','Feedback']
+secondlevel_folder_names=['noFeedback','Feedback','train']
 
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
@@ -155,17 +161,20 @@ if run1Sample:
 
 
     for i in copesToRun:
-        for fb in [0,1]:
+        for fb in fbtorun:
             for t in ['cope']:
                 x=[]
                 for subj in subject_list:
-                    fbLoc=subjectinfo(subj,fb)
-                    if t=='cope' and RSN>0:
+                    if t=='cope' and RSN>0 and fb==2:
                         fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc+1,rsn,rsn)
-                    elif len(fc)>0:
-                        fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
                     else:
-                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                        fbLoc=subjectinfo(subj,fb)
+                        if t=='cope' and RSN>0:
+                            fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc+1,rsn,rsn)
+                        elif len(fc)>0:
+                            fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
+                        else:
+                            fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
@@ -175,7 +184,10 @@ if run1Sample:
                 merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
                 merger.run()
             #get meanFD values for each subject and add as covariate
-            meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+            if train:
+                meanFD=zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['train_meanFD'])
+            else:
+                meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             if runWithPerformance:
                 pheno_measure = zscore(np.arctan(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
             model = MultipleRegressDesign()
