@@ -81,15 +81,15 @@ def main():
     from multiprocessing import Pool
 
     parser = argparse.ArgumentParser()
- 
+
     parser.add_argument("cpac_output_directory", type=str, \
                             help="the path to the CPAC run's output " \
                                  "directory")
- 
+
     parser.add_argument("reference_image", type=str, \
                             help="the filepath to the template image you " \
                                  "want to use for applying the transforms")
- 
+
     parser.add_argument('--output_folder', type=str, \
                             help="the directory to write the warped files to")
 
@@ -107,7 +107,7 @@ def main():
     parser.add_argument("--num_cores", type=int, \
                             help="number of cores to use (number of warps " \
                                  "to calculate in parallel - default: 1")
- 
+
     args = parser.parse_args()
 
     # defaults
@@ -138,7 +138,7 @@ def main():
     # per file per subject!
     args_list = []
     for sub_id in file_dict.keys():
-
+        print sub_id
         # reverse order for ANTS
         warps_list = [file_dict[sub_id]["anatomical_to_mni_nonlinear_xfm"],
                       file_dict[sub_id]["ants_affine_xfm"],
@@ -150,7 +150,7 @@ def main():
             filepath = file_dict[sub_id][resource]
 
             outname = "_".join([resource, "to_template"])
-            outdir = os.path.join(output_folder, "warp_outputs", sub_id, 
+            outdir = os.path.join(output_folder, "warp_outputs", sub_id,
                 outname)
             outfile = os.path.join(outdir, "".join([outname, ".nii.gz"]))
 
@@ -158,7 +158,7 @@ def main():
                 os.makedirs(outdir)
 
             args_list.append((filepath, warps_list, args.reference_image, outfile, args.interpolation))
-    
+
     #for args_tuple in args_list:
     #    antswarp_output_to_template(args_list)
     pool.map(antswarp_output_to_template, args_list)
