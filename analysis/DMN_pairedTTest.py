@@ -260,16 +260,20 @@ for RSN in rsn:
         meanNFBFolder + '/' + fbNames[0] + '/DMN_merged_NOFEEDBACK.nii.gz']
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
-
-        if not os.path.exists('RSN_pair_FB_NFB'):
-            os.mkdir('RSN_pair_FB_NFB')
+        filename='RSN_pair_FB_NFB'
+        if not os.path.exists(filename):
+            os.mkdir(filename)
         os.system('mv ./design.* ./RSN_pair_FB_NFB')
         os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_FB_NFB')
         randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_FB_NFB/paired -d ./RSN_pair_FB_NFB/design.mat -t ./RSN_pair_FB_NFB/design.con -e ./RSN_pair_FB_NFB/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_NFB/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
+        foldername=pairedFolder
+        if os.path.exists(os.path.join(foldername,filename)):
+            shutil.rmtree(os.path.join(foldername,filename))
 
-        shutil.move('RSN_pair_FB_NFB',pairedFolder + '/RSN_pair_FB_NFB')
+        shutil.move(filename,os.path.join(foldername,filename))
+        # shutil.move('RSN_pair_FB_NFB',pairedFolder + '/RSN_pair_FB_NFB')
 
 
         # Second Run Paired Difference between FB-Rest
@@ -304,16 +308,19 @@ for RSN in rsn:
         meanTrainFolder + '/' + fbNames[2] + '/DMN_merged_TRAIN.nii.gz']
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
-
-        if not os.path.exists('RSN_pair_FB_TRAIN'):
-            os.mkdir('RSN_pair_FB_TRAIN')
+        filename='RSN_pair_FB_TRAIN'
+        if not os.path.exists(filename):
+            os.mkdir(filename)
         os.system('mv ./design.* ./RSN_pair_FB_TRAIN')
         os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_FB_TRAIN')
         randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_FB_TRAIN/paired -d ./RSN_pair_FB_TRAIN/design.mat -t ./RSN_pair_FB_TRAIN/design.con -e ./RSN_pair_FB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
+        foldername=pairedFolder
+        if os.path.exists(os.path.join(foldername,filename)):
+            shutil.rmtree(os.path.join(foldername,filename))
 
-        shutil.move('RSN_pair_FB_TRAIN',pairedFolder + '/RSN_pair_FB_TRAIN')
+        shutil.move(filename,os.path.join(foldername,filename))
 
 
         # Second Run Paired Difference between FB-Rest
@@ -349,12 +356,17 @@ for RSN in rsn:
         fslMathsCommand='fslmerge -t DMN_pair_merged %s %s' % (x[0],x[1])
         os.system(fslMathsCommand)
 
-        if not os.path.exists('RSN_pair_NFB_TRAIN'):
-            os.mkdir('RSN_pair_NFB_TRAIN')
+        filename='RSN_pair_NFB_TRAIN'
+        if not os.path.exists(filename):
+            os.mkdir(filename)
         os.system('mv ./design.* ./RSN_pair_NFB_TRAIN')
         os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_NFB_TRAIN')
         randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_NFB_TRAIN/paired -d ./RSN_pair_NFB_TRAIN/design.mat -t ./RSN_pair_NFB_TRAIN/design.con -e ./RSN_pair_NFB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_NFB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
 
-        shutil.move('RSN_pair_NFB_TRAIN',pairedFolder + '/RSN_pair_NFB_TRAIN')
+        foldername=pairedFolder
+        if os.path.exists(os.path.join(foldername,filename)):
+            shutil.rmtree(os.path.join(foldername,filename))
+
+        shutil.move(filename,os.path.join(foldername,filename))
