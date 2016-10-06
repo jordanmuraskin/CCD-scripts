@@ -32,6 +32,7 @@ parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second lev
 parser.add_argument('-train', help = 'Run RSN on train data not FB or NoFB',required=False,default=0,type=int)
 parser.add_argument('-train_vs',help='Run train performance with FB or No FB',required=False,default=0,type=int)
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
+parser.add_argument('-traindiff',help='Run Train performance difference-overrides train_vs',default=0,type=int)
 
 args = parser.parse_args()
 
@@ -55,6 +56,7 @@ runFC=args.runFC
 fbtorun=args.fbtorun
 train=args.train
 train_vs=args.train_vs
+traindiff=args.traindiff
 
 if runFC:
     copesToRun=[0]
@@ -197,6 +199,8 @@ if run1Sample:
             if runWithPerformance:
                 if train:
                     pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[train_vs]][performance.Subject_ID.isin(subject_list)]['R']))
+                elif train and trainDiff:
+                    pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[1]][performance.Subject_ID.isin(subject_list)]['R'])-np.arctanh(performance[performance.FB==fbNames[0]][performance.Subject_ID.isin(subject_list)]['R']))
                 else:
                     pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
 
