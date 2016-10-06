@@ -39,7 +39,7 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 # CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
 CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,41,42,51,52,
-53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
+53,59,60,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
 90,91,92,93,94,95,96,97,98,99]
 # CCD_numbers=[16]
 # Specify the subject directories
@@ -77,7 +77,7 @@ topDir=topDir + args.name
 if not os.path.exists(topDir):
     os.mkdir(topDir)
 
-for indx,fb in enumerate(['noFeedback','Feedback']):
+for indx,fb in enumerate(['noFeedback','Feedback','train']):
 
     baseDir=topDir + '/' + fb
     if not os.path.exists(baseDir):
@@ -93,10 +93,11 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # adhd_dataset.func is a list of filenames. We select the 1st (0-based)
         # subject by indexing with [0]).
         # from nilearn import datasets
-        scan=subjectinfo(subject_id,getFeedback=indx)
-
-        func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,scan,globalSR)
-
+        if indx<2:
+            scan=subjectinfo(subject_id,getFeedback=indx)
+            func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,scan,globalSR)
+        else:
+            func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,globalSR)
 
         ##########################################################################
         # Time series extraction
@@ -161,12 +162,12 @@ for indx,fb in enumerate(['noFeedback','Feedback']):
         # --------------------------------------
         # Now we can Fisher-z transform the data to achieve a normal distribution.
         # The transformed array can now have values more extreme than +/- 1.
-        seed_based_correlations_fisher_z = np.arctanh(seed_based_correlations)
+        seed_based_correlations_fisher_z = np.arctanh(seed_based_correlations)*np.sqrt(seed_time_series.shape[0]-3)
 
         # Finally, we can tranform the correlation array back to a Nifti image
         # object, that we can save.
         seed_based_correlation_img = brain_masker.inverse_transform(
             seed_based_correlations.T)
         seed_based_correlation_img.to_filename('%s/%s_%s.nii.gz' % (baseDir,args.name,subject_id))
-    mergeCommand='fslmerge -t %s/%s_merged %s/%s_*.nii.gz' % (baseDir,fb,baseDir,args.name)
-    os.system(mergeCommand)
+    # mergeCommand='fslmerge -t %s/%s_merged %s/%s_*.nii.gz' % (baseDir,fb,baseDir,args.name)
+    # os.system(mergeCommand)
