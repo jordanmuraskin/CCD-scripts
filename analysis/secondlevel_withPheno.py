@@ -148,13 +148,17 @@ for runType in ['randomise','flame']:
     if not os.path.exists(foldername):
         os.mkdir(foldername)
 
+
+
     for fb in secondlevel_folder_names:
+
+
         foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + rsn_name + fc
         if not os.path.exists(foldername):
-            os.mkdir(foldername)
+            os.makedirs(foldername)
         foldername= foldername + '/' + pheno_measure_name
         if not os.path.exists(foldername):
-            os.mkdir(foldername)
+            os.makedirs(foldername)
 
 
 if run1Sample:
