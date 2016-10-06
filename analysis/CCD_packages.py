@@ -888,7 +888,7 @@ def getFileNamesfromFolder(folder,suffix):
     return TFCEposImg,posImg,TFCEnegImg,negImg
 
 
-def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surface='inflated',fwhm=0):
+def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surface='inflated',fwhm=0,filename='',saveFolder=[]):
 
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
@@ -930,8 +930,11 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
             hemi='lh'
         brain.add_foci(coords, map_surface="pial", color="gold",hemi=hemi)
 
-
-    brain.save_image('%s/surfaceplot.jpg' % folder)
+    if len(saveFolder)>0:
+        folder=saveFolder
+        brain.save_image('%s/%s.png' % (folder,filename))
+    else:
+        brain.save_image('%s/surfaceplot.jpg' % folder)
     brain.close()
 
 def phaseScrambleTS(ts):
