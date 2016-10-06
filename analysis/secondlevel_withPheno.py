@@ -244,7 +244,9 @@ if run1Sample:
 
                 if RSN>0:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name  + '/' + pheno_measure_name
-                    if train:
+                    if train and traindiff:
+                        foldername=foldername + '/' + 'Difference'
+                    elif train:
                         foldername=foldername + '/' + fbNames[train_vs]
                 elif runFC:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc + '/' + pheno_measure_name
