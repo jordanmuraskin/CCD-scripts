@@ -30,6 +30,7 @@ parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)
 parser.add_argument('-runFC',help='Optiom to run FC instead of Cope', default=0,required=False,type=int)
 parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='R_AI',type=str)
 parser.add_argument('-train', help = 'Run RSN on train data not FB or NoFB',required=False,default=0,type=int)
+parser.add_argument('-train_vs',help='Run train performance with FB or No FB',required=False,default=0,type=int)
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
 
 args = parser.parse_args()
@@ -53,6 +54,7 @@ fc=args.fc
 runFC=args.runFC
 fbtorun=args.fbtorun
 train=args.train
+train_vs=args.train_vs
 
 if runFC:
     copesToRun=[0]
@@ -193,7 +195,11 @@ if run1Sample:
             else:
                 meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             if runWithPerformance:
-                pheno_measure = zscore(np.arctan(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
+                if train:
+                    pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[train_vs]][performance.Subject_ID.isin(subject_list)]['R']))
+                else:
+                    pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
+
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
             regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
@@ -234,6 +240,8 @@ if run1Sample:
 
                 if RSN>0:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name  + '/' + pheno_measure_name
+                    if train:
+                        foldername=foldername + '/' + fbNames[train_vs]
                 elif runFC:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc + '/' + pheno_measure_name
 
@@ -241,7 +249,7 @@ if run1Sample:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
 
                 if not os.path.exists(foldername):
-                    os.mkdir(foldername)
+                    os.makedirs(foldername)
 
                 if os.path.exists(os.path.join(foldername,filename)):
                     shutil.rmtree(os.path.join(foldername,filename))
