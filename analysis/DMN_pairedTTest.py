@@ -203,7 +203,7 @@ for RSN in rsn:
                     os.mkdir(fbNames[fb])
                 os.system('mv ./design.* ./%s' % fbNames[fb])
                 shutil.move('DMN_merged_%s.nii.gz' % fbNames[fb],'./%s' % fbNames[fb])
-                randomiseCommand='./randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('./%s/DMN_merged_%s.nii.gz' % (fbNames[fb],fbNames[fb]),fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+                randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./%s/fb -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % ('./%s/DMN_merged_%s.nii.gz' % (fbNames[fb],fbNames[fb]),fbNames[fb],fbNames[fb],fbNames[fb],fbNames[fb],'/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
                 os.system(randomiseCommand)
 
                 if fb == 1:
@@ -265,7 +265,7 @@ for RSN in rsn:
             os.mkdir(filename)
         os.system('mv ./design.* ./RSN_pair_FB_NFB')
         os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_FB_NFB')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_FB_NFB/paired -d ./RSN_pair_FB_NFB/design.mat -t ./RSN_pair_FB_NFB/design.con -e ./RSN_pair_FB_NFB/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_NFB/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./RSN_pair_FB_NFB/paired -d ./RSN_pair_FB_NFB/design.mat -t ./RSN_pair_FB_NFB/design.con -e ./RSN_pair_FB_NFB/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_NFB/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
         foldername=pairedFolder
@@ -313,7 +313,7 @@ for RSN in rsn:
             os.mkdir(filename)
         os.system('mv ./design.* ./RSN_pair_FB_TRAIN')
         os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_FB_TRAIN')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_FB_TRAIN/paired -d ./RSN_pair_FB_TRAIN/design.mat -t ./RSN_pair_FB_TRAIN/design.con -e ./RSN_pair_FB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./RSN_pair_FB_TRAIN/paired -d ./RSN_pair_FB_TRAIN/design.mat -t ./RSN_pair_FB_TRAIN/design.con -e ./RSN_pair_FB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_FB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
         foldername=pairedFolder
@@ -361,7 +361,7 @@ for RSN in rsn:
             os.mkdir(filename)
         os.system('mv ./design.* ./RSN_pair_NFB_TRAIN')
         os.system('mv ./DMN_pair_merged.nii.gz ./RSN_pair_NFB_TRAIN')
-        randomiseCommand='./randomise_forpython.sh -i %s -o ./RSN_pair_NFB_TRAIN/paired -d ./RSN_pair_NFB_TRAIN/design.mat -t ./RSN_pair_NFB_TRAIN/design.con -e ./RSN_pair_NFB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_NFB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
+        randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s -o ./RSN_pair_NFB_TRAIN/paired -d ./RSN_pair_NFB_TRAIN/design.mat -t ./RSN_pair_NFB_TRAIN/design.con -e ./RSN_pair_NFB_TRAIN/design.grp -m %s -T -n %d' % ('./RSN_pair_NFB_TRAIN/DMN_pair_merged.nii.gz','/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain_mask.nii.gz',nperms)
         os.system(randomiseCommand)
 
 
