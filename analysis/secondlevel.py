@@ -48,12 +48,14 @@ fc=args.fc
 runFC=args.runFC
 gmThresh=args.gmThresh
 
-
-
-
-mask_img=threshold_img('/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask.nii.gz',threshold=gmThresh)
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
-mask_img.to_filename(mask_name)
+
+if not os.path.exists(mask_name):
+    mask_img=threshold_img('/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask.nii.gz',threshold=gmThresh)
+    mask_img_data=mask_img.get_data()
+    mask_img_data[mask_img_data>0]=1
+    mask_img=new_img_like(mask_img,mask_img_data)
+    mask_img.to_filename(mask_name)
 
 if runFC:
     copesToRun=[0]
