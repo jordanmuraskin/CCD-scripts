@@ -7,7 +7,6 @@ from nipype.interfaces.fsl import Merge
 from nipype.interfaces import fsl
 from subprocess import call
 from nipype.interfaces.fsl import MultipleRegressDesign
-from nilearn.image import threshold_img
 from scipy.stats import zscore
 import sys
 import argparse
@@ -51,6 +50,7 @@ gmThresh=args.gmThresh
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 
 if not os.path.exists(mask_name):
+    from nilearn.image import threshold_img
     mask_img=threshold_img('/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask.nii.gz',threshold=gmThresh)
     mask_img_data=mask_img.get_data()
     mask_img_data[mask_img_data>0]=1
