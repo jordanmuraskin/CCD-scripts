@@ -8,7 +8,6 @@ def gather_filepaths(output_folder_path, outputs_list=None):
     for root, dirs, files in os.walk(output_folder_path):
         # loops through every file in the directory
         for filename in files:
-            # checks if the file is a nifti (.nii.gz)
             if outputs_list:
                 for output in outputs_list:
                     if output in os.path.join(root, filename):
@@ -33,6 +32,9 @@ def filepath_list_to_dict(filepaths_list, output_folder):
         sub_id = dir_levels[0]
         output_name = dir_levels[1]
 
+        if "seg_probability_maps" in output_name:
+            output_name = dir_levels[-1].replace(".gz","").replace(".nii","")
+
         try:
             filepath_dict[sub_id].update({output_name: filepath})
         except KeyError:
@@ -41,7 +43,7 @@ def filepath_list_to_dict(filepaths_list, output_folder):
     return filepath_dict
 
 
-def antswarp_output_to_template(args_tuple): #filepath, warps_list, ref_image, outfile, interp="Linear"):
+def antswarp_output_to_template(args_tuple):
 
     import subprocess
 
@@ -56,9 +58,9 @@ def antswarp_output_to_template(args_tuple): #filepath, warps_list, ref_image, o
     if not interp:
         interp = "Linear"
 
-    ants_cmd = ["antsApplyTransforms", "--default-value 0", \
-                "--dimensionality 3", "--input", filepath, \
-                "--input-image-type 0", "--interpolation", interp, \
+    ants_cmd = ["antsApplyTransforms", "--default-value", "0", \
+                "--dimensionality", "3", "--input", filepath, \
+                "--input-image-type", "0", "--interpolation", interp, \
                 "--output", outfile, "--reference-image", ref_image]
 
     for warp in warps_list:
@@ -81,15 +83,15 @@ def main():
     from multiprocessing import Pool
 
     parser = argparse.ArgumentParser()
-
+ 
     parser.add_argument("cpac_output_directory", type=str, \
                             help="the path to the CPAC run's output " \
                                  "directory")
-
+ 
     parser.add_argument("reference_image", type=str, \
                             help="the filepath to the template image you " \
                                  "want to use for applying the transforms")
-
+ 
     parser.add_argument('--output_folder', type=str, \
                             help="the directory to write the warped files to")
 
@@ -107,7 +109,7 @@ def main():
     parser.add_argument("--num_cores", type=int, \
                             help="number of cores to use (number of warps " \
                                  "to calculate in parallel - default: 1")
-
+ 
     args = parser.parse_args()
 
     # defaults
@@ -122,12 +124,17 @@ def main():
         num_cores = args.num_cores
 
     # run it!
-    outputs_list = ["anatomical_gm_mask", "anatomical_csf_mask", \
-                    "anatomical_wm_mask", "anatomical_to_mni_nonlinear_xfm", \
+    #outputs_list = ["anatomical_gm_mask", "anatomical_csf_mask", \
+    #                "anatomical_wm_mask", "anatomical_to_mni_nonlinear_xfm", \
+    #                "ants_affine_xfm", "ants_initial_xfm", "ants_rigid_xfm"]
+
+    #to_warp_list = ["anatomical_gm_mask", "anatomical_csf_mask", \
+    #                "anatomical_wm_mask"]
+
+    outputs_list = ["seg_probability_maps", "anatomical_to_mni_nonlinear_xfm", \
                     "ants_affine_xfm", "ants_initial_xfm", "ants_rigid_xfm"]
 
-    to_warp_list = ["anatomical_gm_mask", "anatomical_csf_mask", \
-                    "anatomical_wm_mask"]
+    to_warp_list = ["segment_prob_0", "segment_prob_1", "segment_prob_2"]
 
     filepaths = gather_filepaths(args.cpac_output_directory, outputs_list)
 
@@ -138,7 +145,7 @@ def main():
     # per file per subject!
     args_list = []
     for sub_id in file_dict.keys():
-        print sub_id
+
         # reverse order for ANTS
         warps_list = [file_dict[sub_id]["anatomical_to_mni_nonlinear_xfm"],
                       file_dict[sub_id]["ants_affine_xfm"],
@@ -150,17 +157,16 @@ def main():
             filepath = file_dict[sub_id][resource]
 
             outname = "_".join([resource, "to_template"])
-            outdir = os.path.join(output_folder, "warp_outputs", sub_id,
+            outdir = os.path.join(output_folder, "warp_outputs", sub_id, 
                 outname)
             outfile = os.path.join(outdir, "".join([outname, ".nii.gz"]))
 
             if not os.path.exists(outdir):
                 os.makedirs(outdir)
 
-            args_list.append((filepath, warps_list, args.reference_image, outfile, args.interpolation))
-
-    #for args_tuple in args_list:
-    #    antswarp_output_to_template(args_list)
+            args_list.append((filepath, warps_list, args.reference_image, 
+                outfile, args.interpolation))
+    
     pool.map(antswarp_output_to_template, args_list)
 
 
