@@ -265,7 +265,10 @@ if run1Sample:
                         foldername=foldername + '/' + fbNames[train_vs]
                 elif runFC:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc + '/' + pheno_measure_name
-
+                    if train and traindiff:
+                        foldername=foldername + '/' + 'Difference'
+                    elif train:
+                        foldername=foldername + '/' + fbNames[train_vs]
                 else:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + pheno_measure_name
 
