@@ -161,6 +161,37 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
 
 
+def fb_subjectinfo(subject_id,getFeedback=True):
+    #Get whether scan is a feedback scan or not
+    from pandas import read_csv
+
+    SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+    SubjInfo.set_index('JM_INTERNAL',inplace=True)
+    scan1=SubjInfo.loc[subject_id]['SCAN_1_FEEDBACK']
+    if scan1:
+        feedback=0
+        noFeedback=1
+    else:
+        feedback=1
+        noFeedback=0
+    if getFeedback:
+        return feedback
+    if not getFeedback:
+        return noFeedback
+
+def subjectinfo_scan(subject_id,scan):
+    #Get whether scan is a feedback scan or not
+    from pandas import read_csv
+
+    SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+    SubjInfo.set_index('JM_INTERNAL',inplace=True)
+    scan1=SubjInfo.loc[subject_id]['SCAN_%d_FEEDBACK' % scan]
+    if scan1==1:
+        feedback='Feedback'
+    else:
+        feedback='NoFeedback'
+    return feedback
+
 
 def getCCDSubjectTrainData(zscoreOn=True,globalNR=0,verbose=False):
 
