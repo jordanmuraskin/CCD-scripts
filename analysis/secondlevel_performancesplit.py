@@ -147,7 +147,7 @@ if perfSplit==1:
     topRegressor=[0]*len(subject_list)
     topRegressor[0:len(top)]=[1]*len(top)
     botRegressor=[0]*len(subject_list)
-    botRegressor[len(top)+1:]=[1]*len(bottom)
+    botRegressor[len(top):]=[1]*len(bottom)
     perf_split_name ='performance_grouping_TopvBottom'
 
 
