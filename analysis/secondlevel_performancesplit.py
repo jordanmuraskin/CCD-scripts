@@ -55,6 +55,7 @@ gmThresh=args.gmThresh
 fbtorun=args.fbtorun
 train=args.train
 RSN=args.RSN
+traindiff=0
 
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 
