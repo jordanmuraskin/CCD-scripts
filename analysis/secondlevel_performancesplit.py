@@ -31,6 +31,8 @@ parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,t
 parser.add_argument('-train', help = 'Run RSN on train data not FB or NoFB',required=False,default=0,type=int)
 parser.add_argument('-train_vs',help='Run train performance with FB or No FB',required=False,default=0,type=int)
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
+parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
+
 
 args = parser.parse_args()
 
@@ -52,6 +54,7 @@ runFC=args.runFC
 gmThresh=args.gmThresh
 fbtorun=args.fbtorun
 train=args.train
+RSN=args.RSN
 
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 
