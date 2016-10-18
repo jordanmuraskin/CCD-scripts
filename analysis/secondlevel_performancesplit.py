@@ -203,8 +203,11 @@ if run1Sample:
                 merger.inputs.output_type = 'NIFTI_GZ'
                 merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
                 merger.run()
-            #get meanFD values for each subject and add as covariate
-            meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+                
+            if train:
+                meanFD=zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['train_meanFD'])
+            else:
+                meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bottom'],[-1,1]]]
             regressors=dict(top=topRegressor,bot=botRegressor,FD=list(meanFD))
