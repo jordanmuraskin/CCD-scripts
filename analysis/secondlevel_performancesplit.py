@@ -137,10 +137,11 @@ else:
 if perfSplit==1:
     #  sort by performance
 
-    modelInfo=np.arctanh(np.arctanh(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))
-    NOFB=np.arctanh(np.arctanh(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))
-    top=modelInfo[np.all([zscore(modelInfo)>0,zscore(NOFB)>0],axis=0)].index[:]
-    bottom=modelInfo[np.all([zscore(modelInfo)<0,zscore(NOFB)<0],axis=0)].index[:]
+    modelInfo=np.arctanh(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])
+    NOFB=np.arctanh(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])
+    top=performance.iloc[modelInfo[np.all([zscore(modelInfo)>0,zscore(NOFB)>0],axis=0)].index[:]]['Subject_ID']
+    bottom=performance.iloc[modelInfo[np.all([zscore(modelInfo)<0,zscore(NOFB)<0],axis=0)].index[:]]['Subject_ID']
+
 
     subject_list=np.array(list(top) + list(bottom))
     topRegressor=[0]*len(subject_list)
