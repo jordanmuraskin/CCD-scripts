@@ -144,9 +144,9 @@ if perfSplit==1:
 
     subject_list=np.array(list(top) + list(bottom))
     topRegressor=[0]*len(subject_list)
-    topRegressor[range(len(top))]=1
+    topRegressor[0:len(top)]=1
     botRegressor=[0]*len(subject_list)
-    botRegressor[range(len(top))+1:]=1
+    botRegressor[len(top)+1:]=1
     perf_split_name ='performance_grouping_TopvBottom'
 
 
