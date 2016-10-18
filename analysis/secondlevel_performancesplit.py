@@ -249,7 +249,20 @@ if run1Sample:
                 randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,mask_name,nperms)
                 os.system(randomiseCommand)
 
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc
+                if RSN>0:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name  + '/' + perf_split_name
+                    if train and traindiff:
+                        foldername=foldername + '/' + 'Difference'
+                    elif train:
+                        foldername=foldername + '/' + fbNames[train_vs]
+                elif runFC:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc + '/' + perf_split_name
+                    if train and traindiff:
+                        foldername=foldername + '/' + 'Difference'
+                    elif train:
+                        foldername=foldername + '/' + fbNames[train_vs]
+                else:
+                    foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + perf_split_name
 
                 # if age:
                 #     foldername+='_age'
@@ -259,7 +272,7 @@ if run1Sample:
                 #     foldername+=perf_split_name
 
                 if not os.path.exists(foldername):
-                    os.mkdir(foldername)
+                    os.makedirs(foldername)
 
                 if os.path.exists(os.path.join(foldername,filename)):
                     shutil.rmtree(os.path.join(foldername,filename))
