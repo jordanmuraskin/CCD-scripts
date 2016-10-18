@@ -68,11 +68,24 @@ if not os.path.exists(mask_name):
 
 if runFC:
     copesToRun=[0]
+    rsn_name=''
 else:
     fc=''
 
+
 if surface:
     from CCD_packages import make_pysurfer_images
+
+if RSN>0:
+    rsn_name='RSN%d' % (RSN-1)
+    rsn=RSN-1
+    copesToRun=[0]
+    fc=''
+else:
+    rsn_name=''
+
+if train:
+    fbtorun=[2]
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
@@ -124,8 +137,8 @@ else:
 if perfSplit==1:
     #  sort by performance
 
-    modelInfo=np.arctanh(GroupDF[np.all([GroupDF.Subject_ID.isin(subject_list),GroupDF.FB=='FEEDBACK'],axis=0)].groupby('Subject_ID').mean()['modelcorr'])
-    NOFB=np.arctanh(GroupDF[np.all([GroupDF.Subject_ID.isin(subject_list),GroupDF.FB=='NOFEEDBACK'],axis=0)].groupby('Subject_ID').mean()['modelcorr'])
+    modelInfo=np.arctanh(np.arctanh(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))
+    NOFB=np.arctanh(np.arctanh(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))
     top=modelInfo[np.all([zscore(modelInfo)>0,zscore(NOFB)>0],axis=0)].index[:]
     bottom=modelInfo[np.all([zscore(modelInfo)<0,zscore(NOFB)<0],axis=0)].index[:]
 
@@ -152,12 +165,12 @@ secondlevel_folder_names=['noFeedback','Feedback','train']
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise']:
-    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/'+ fc
+    foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + rsn_name + fc
     if not os.path.exists(foldername):
         os.makedirs(foldername)
 
     for fb in secondlevel_folder_names:
-        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + fc
+        foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + rsn_name + fc
         if not os.path.exists(foldername):
             os.makedirs(foldername)
 
