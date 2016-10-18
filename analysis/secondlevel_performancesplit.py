@@ -115,7 +115,7 @@ motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_me
 # scanorderInfo=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_scanorder.csv',names=['Subject_ID','FB','meanFD'])
 performance=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_performance.csv',names=['Subject_ID','FB','scanorder','R'])
 
-fbNames=['NOFEEDBACK','FEEDBACK']
+fbNames=['NOFEEDBACK','FEEDBACK','TRAIN']
 
 if runAll==1:
     subject_list=np.unique(motionTest.Subject_ID)
