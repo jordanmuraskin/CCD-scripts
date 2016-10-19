@@ -57,7 +57,8 @@ for feedbackRun in range(2):
     # Workflow base directory
     if not os.path.isdir(working_dir):
         os.makedirs(working_dir)
-    workflow = pe.Workflow(name='feedback_run-%d' % feedbackRun, base_dir=working_dir)
+        
+    workflow = pe.Workflow(name='onset_feedback_run-%d' % feedbackRun, base_dir=working_dir)
 
 
     # Map field names to individual subject runs.
