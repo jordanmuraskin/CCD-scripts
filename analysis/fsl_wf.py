@@ -110,11 +110,11 @@ for feedbackRun in range(2):
         Order1_durations = [30,60,90,60,30,90]
         Order2_onsets = [56,214,342,470,598,756]
         Order2_durations = [90,30,60,90,60,30]
-        # button_onsets = [52,144,206,238,330,392,454,546,578,640,732]
-        # button_duration =[2]
+        task_onsets = [22,56,150,214,248,343,406,470,564,598,662,756]
+        task_duration =[.1]
         #Make subject specific EVs given feedback ordering
         output=[]
-        names=['Focus','Wander']
+        names=['Focus','Wander','TaskOnset']
         SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
         SubjInfo.set_index('JM_INTERNAL',inplace=True)
         if r==0:
@@ -131,8 +131,8 @@ for feedbackRun in range(2):
             focus_durations = Order1_durations
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
-        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset],
-                              durations=[focus_durations, wander_durations], regressors=None))
+        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,task_onsets],
+                              durations=[focus_durations, wander_durations,task_duration], regressors=None))
         return output
     ## end moral dilemma
 
@@ -145,15 +145,17 @@ for feedbackRun in range(2):
     modelfit = create_modelfit_workflow(name='feedback')
     modelfit.inputs.inputspec.interscan_interval = TR
     modelfit.inputs.inputspec.model_serial_correlations = True
-    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': True}}
+    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
     cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
     cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
     cont3 = ['Mean Focus','T',['Focus'],[1]]
     cont4 = ['Mean Wander','T',['Wander'],[1]]
     cont5 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
+    cont6 = ['TaskOnset', 'T', ['TaskOnset'],[1]]
+
     # cont3 = ['Task','F', [cont1,cont2]]
 
-    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5]
+    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5,cont6]
 
     workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun),'subject_info')])])
 
@@ -163,4 +165,4 @@ for feedbackRun in range(2):
     workflow.connect(addMeanImage,'out_file', modelfit, 'inputspec.functional_data')
 
 
-    workflow.run(plugin='MultiProc',plugin_args={'n_procs':10})
+    workflow.run(plugin='MultiProc',plugin_args={'n_procs':15})
