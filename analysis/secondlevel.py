@@ -28,6 +28,7 @@ parser.add_argument('-surface', help='Option to make surface plot (need to be on
 parser.add_argument('-runFC',help='Optiom to run FC instead of Cope', default=0,required=False,type=int)
 parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='R_AI',type=str)
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float)
+parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
 args = parser.parse_args()
 
 #Decide if running all subjects or just good subjects
@@ -46,6 +47,7 @@ surface=args.surface
 fc=args.fc
 runFC=args.runFC
 gmThresh=args.gmThresh
+onsetData=args.onsetData
 
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 
@@ -151,7 +153,8 @@ for runType in ['randomise','flame']:
         if not os.path.exists(foldername):
             os.mkdir(foldername)
 
-
+if onsetData:
+    prefix='onset_'
 
 
 if run1Sample:
@@ -165,7 +168,7 @@ if run1Sample:
                     if len(fc)>0:
                         fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
                     else:
-                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                        fname = '/home/jmuraskin/Projects/CCD/working_v1/%sfeedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (prefix,fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
@@ -200,7 +203,7 @@ if run1Sample:
                 shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
                 shutil.move('stats',foldername + '/stats')
             if runWithRandomise:
-                filename='cope%d' % i
+                filename='%scope%d' % (prefix,i)
                 if age:
                     filename+='_age'
                 if gender:
@@ -234,7 +237,7 @@ if run1Sample:
 
                 shutil.move(filename, os.path.join(foldername, filename))
                 if surface:
-                    make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+                    make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='%scope%d' % (prefix,i))
 
 
 
