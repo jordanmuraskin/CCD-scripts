@@ -168,10 +168,11 @@ for feedbackRun in range(2):
     cont5 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
     cont6 = ['TaskOnset', 'T', ['FocusOnset','WanderOnset'],[1,1]]
     cont7 = ['Onset FvW', 'T', ['FocusOnset','WanderOnset'],[1,-1]]
+    cont8 = ['Response Time','T',['RT'],[1]]
 
     # cont3 = ['Task','F', [cont1,cont2]]
 
-    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5,cont6]
+    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5,cont6,cont7,cont8]
 
     workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun),'subject_info')])])
 
