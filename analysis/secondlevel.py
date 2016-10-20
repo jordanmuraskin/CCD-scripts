@@ -155,6 +155,8 @@ for runType in ['randomise','flame']:
 
 if onsetData:
     prefix='onset_'
+else:
+    prefix=''
 
 
 if run1Sample:
@@ -278,7 +280,7 @@ if runPair:
 
         for t in ['cope']:
             try:
-                feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + fc + '/cope' + str(i)
+                feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + fc + '/' + prefix +  'cope' + str(i)
                 if age:
                     feedbackFile+='_age'
                 if gender:
@@ -286,7 +288,7 @@ if runPair:
                 if perfSplit>0:
                     feedbackFile+=perf_split_name
                 feedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
-                nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir + '/' + fc + '/cope' + str(i)
+                nofeedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/noFeedback/' + motionDir + '/' + fc + '/' + prefix + 'cope' + str(i)
                 if age:
                     nofeedbackFile+='_age'
                 if gender:
@@ -318,7 +320,7 @@ if runPair:
             shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
             shutil.move('stats',foldername)
         if runWithRandomise:
-            filename='cope%d' % i
+            filename='%scope%d' % (prefix,i)
             if age:
                 filename+='_age'
             if gender:
