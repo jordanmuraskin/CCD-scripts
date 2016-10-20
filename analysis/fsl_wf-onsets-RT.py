@@ -126,10 +126,10 @@ for feedbackRun in range(2):
             TR=config[config[' STIM']==' KEYPRESS'][' Left Text']
             TimeStamp=config[config[' STIM']==' KEYPRESS']['Time Stamp']
             buttonpress=map(int,TR[1:].values)
-            RT=list(np.array(map(float,TimeStamp[np.array(buttonpress)!=53]))-secRemove)
+            RT=list(array(map(float,TimeStamp[array(buttonpress)!=53]))-secRemove)
         else:
             TimeStamp=config[config[' STIM']==' LUMINA']['Time Stamp']
-            RT=list(np.array(map(float,TimeStamp.values))-secRemove)
+            RT=list(array(map(float,TimeStamp.values))-secRemove)
 
         if r==0:
             paradigmType=SubjInfo.loc[subject_id]['SCAN_1_PARADIGM']
