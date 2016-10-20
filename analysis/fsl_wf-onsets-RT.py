@@ -106,6 +106,7 @@ for feedbackRun in range(2):
     def subjectinfo(subject_id,r):
         from pandas import read_csv,read_table
         from nipype.interfaces.base import Bunch
+        from numpy import array
 
         #number of seconds to remove
         secRemove=8.0
