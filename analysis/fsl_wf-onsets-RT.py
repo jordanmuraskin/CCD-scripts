@@ -129,8 +129,8 @@ for feedbackRun in range(2):
             RT=list(np.array(map(float,TimeStamp[np.array(buttonpress)!=53]))-secRemove)
         else:
             TimeStamp=config[config[' STIM']==' LUMINA']['Time Stamp']
-            RT=list(TimeStamp.values-secRemove)
-        
+            RT=list(np.array(map(float,TimeStamp.values))-secRemove)
+
         if r==0:
             paradigmType=SubjInfo.loc[subject_id]['SCAN_1_PARADIGM']
         else:
