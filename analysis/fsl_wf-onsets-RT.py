@@ -147,9 +147,9 @@ for feedbackRun in range(2):
             focus_durations = Order1_durations
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
-        if len(RT>0):
-            output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,focus_onset,wander_onset,RT],
-                                  durations=[focus_durations, wander_durations,task_duration,task_duration,[.05]], regressors=None))
+
+        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,focus_onset,wander_onset,RT],
+                              durations=[focus_durations, wander_durations,task_duration,task_duration,[.05]], regressors=None))
         return output
     ## end moral dilemma
 
