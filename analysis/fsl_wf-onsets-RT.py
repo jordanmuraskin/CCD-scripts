@@ -20,13 +20,14 @@ template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
 
 # CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
-CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,41,42,51,52,
-53,59,60,61,62,63,64,65,66,67,71,72,73,74,75,76,80,81,82,83,84,85,86,87,88,89,
-90,91,92,93,94,95,96,97,98,99]
+CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,40,41,42,51,52,
+53,59,60,61,62,63,64,66,67,71,72,73,74,81,82,83,84,85,87,88,89,
+90,91,92,93,95,96,97,98,99]
 # Specify the subject directories
 
 # subject_list = ['CCD060','CCD066','CCD089']
 # subject_list = ['CCD015','CCD015','CCD017','CCD066','CCD089','CCD052','CCD076','CCD059','CCD064','CCD083']
+poor_performers=['CCD094','CCD075','CCD086','CCD080','CCD076','CCD065','CCD034']
 subject_list=[]
 for ccd in CCD_numbers:
     subject_list.append('CCD0%s' % ccd)
@@ -146,8 +147,9 @@ for feedbackRun in range(2):
             focus_durations = Order1_durations
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
-        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,focus_onset,wander_onset,RT],
-                              durations=[focus_durations, wander_durations,task_duration,task_duration,[.05]], regressors=None))
+        if len(RT>0):
+            output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,focus_onset,wander_onset,RT],
+                                  durations=[focus_durations, wander_durations,task_duration,task_duration,[.05]], regressors=None))
         return output
     ## end moral dilemma
 
