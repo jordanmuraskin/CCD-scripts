@@ -125,11 +125,13 @@ if runAll==1:
 elif runAll==2:
     #Reject Depressed subjects
     depressed=np.array(['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087'])
+    poor_performers=np.array(['CCD094','CCD075','CCD086','CCD080','CCD076','CCD065','CCD034'])
+
 
     motionThresh=1
     allsubj=np.unique(motionTest['Subject_ID'])
     motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
-    subject_list=np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed)
+    subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
     motionDir='motionRMS-%f' % motionThresh
 else:
     motionThresh=0.2
