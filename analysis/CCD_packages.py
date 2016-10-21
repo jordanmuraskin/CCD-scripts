@@ -242,6 +242,8 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
     #Reject Depressed subjects
     depressed=['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087']
 
+    poor_performers=['CCD094','CCD075','CCD086','CCD080','CCD076','CCD065','CCD034']
+
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
     if motionType=='FD':
@@ -255,6 +257,9 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
 
     #remove depressed
     goodsubj=np.setdiff1d(goodsubj,np.array(depressed))
+
+    #remove poor performers
+    goodsubj=np.setdiff1d(goodsubj,np.array(poor_performers))
 
     return goodsubj,motionReject
 
