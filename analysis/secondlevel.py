@@ -29,6 +29,8 @@ parser.add_argument('-runFC',help='Optiom to run FC instead of Cope', default=0,
 parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='R_AI',type=str)
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float)
 parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
+parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
+
 args = parser.parse_args()
 
 #Decide if running all subjects or just good subjects
@@ -48,6 +50,7 @@ fc=args.fc
 runFC=args.runFC
 gmThresh=args.gmThresh
 onsetData=args.onsetData
+fbtorun=args.fbtorun
 
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 
@@ -166,7 +169,7 @@ else:
 if run1Sample:
 
     for i in copesToRun:
-        for fb in [0,1]:
+        for fb in fbtorun:
             for t in ['cope']:
                 x=[]
                 for subj in subject_list:
