@@ -9,6 +9,8 @@ from subprocess import call
 from nipype.interfaces.fsl import MultipleRegressDesign
 from scipy.stats import zscore
 import argparse
+from CCD_packages import getSubjectButtonResponses
+
 
 
 parser = argparse.ArgumentParser(description='Run Second Level Results for DR Resting State Networks')
@@ -97,6 +99,22 @@ elif runAll==2:
     motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
     motionDir='motionRMS-%f' % motionThresh
+
+elif runAll==3:
+    #Reject Depressed subjects
+    depressed=np.array(['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087'])
+
+    df=getSubjectButtonResponses()
+    tmp=df.groupby('subject')['number'].sum()
+    poorperformers=np.array(tmp[tmp<21].index[:])
+
+
+    motionThresh=1
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
+    motionDir='motionRMS-%f-subjperf' % motionThresh
+
 else:
     motionThresh=0.2
     allsubj=np.unique(motionTest['Subject_ID'])
