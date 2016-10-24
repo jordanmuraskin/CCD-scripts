@@ -34,6 +34,8 @@ parser.add_argument('-train_vs',help='Run train performance with FB or No FB',re
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
 parser.add_argument('-traindiff',help='Run Train performance difference-overrides train_vs',default=0,type=int)
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float,required=False)
+parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
+
 args = parser.parse_args()
 
 
@@ -57,6 +59,7 @@ fbtorun=args.fbtorun
 train=args.train
 train_vs=args.train_vs
 traindiff=args.traindiff
+onsetData=args.onsetData
 
 
 def getSubjectButtonResponses():
@@ -212,6 +215,10 @@ if age:
 if gender:
     mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
 
+if onsetData:
+    prefix='onset_'
+else:
+    prefix=''
 
 secondlevel_folder_names=['noFeedback','Feedback','train']
 
@@ -255,7 +262,7 @@ if run1Sample:
                         elif len(fc)>0:
                             fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
                         else:
-                            fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                            fname = '/home/jmuraskin/Projects/CCD/working_v1/%sfeedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (prefix,fbLoc,subj,t,i)
                     x.append(fname)
                 subjs = len(x)
                 merger = Merge()
@@ -301,7 +308,7 @@ if run1Sample:
                     shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
                 shutil.move('stats',foldername + '/stats')
             if runWithRandomise:
-                filename='cope%d' % i
+                filename='%scope%d' % (prefix,i)
                 filename+='_%s' % pheno_measure_name
                 if age:
                     filename+='_age'
@@ -389,7 +396,7 @@ if runPair:
         os.system(fslMathsCommand)
 
         if runWithRandomise:
-            filename='cope%d' % i
+            filename='%scope%d' % (prefix,i)
             filename+='_%s' % pheno_measure_name
             if age:
                 filename+='_age'
