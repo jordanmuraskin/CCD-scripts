@@ -279,11 +279,11 @@ def getSubjectButtonPressScore(filename,luminaFlag):
 
 
 
-def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
+def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS',poor_performer=20):
     #Reject Depressed subjects
     depressed=['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087']
 
-    poor_performers=['CCD094','CCD075','CCD086','CCD080','CCD076','CCD065','CCD034']
+    # poor_performers=['CCD094','CCD075','CCD086','CCD080','CCD076','CCD065','CCD034']
 
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
@@ -299,8 +299,11 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
     #remove depressed
     goodsubj=np.setdiff1d(goodsubj,np.array(depressed))
 
+    df=getSubjectButtonResponses()
+    tmp=df.groupby('subject')['number'].sum()
+    goodperformers=np.array(tmp[tmp>poor_performer].index[:])
     #remove poor performers
-    goodsubj=np.setdiff1d(goodsubj,np.array(poor_performers))
+    goodsubj=np.intersect1D(goodsubj,good_performers)
 
     return goodsubj,motionReject
 
