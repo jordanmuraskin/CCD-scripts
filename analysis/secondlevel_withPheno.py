@@ -182,7 +182,7 @@ elif runAll==3:
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
-    poorperformers=np.array(tmp[tmp<21].index[:])
+    poor_performers=np.array(tmp[tmp<21].index[:])
 
 
     motionThresh=1
