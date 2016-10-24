@@ -303,7 +303,7 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS',p
     tmp=df.groupby('subject')['number'].sum()
     goodperformers=np.array(tmp[tmp>poor_performer].index[:])
     #remove poor performers
-    goodsubj=np.intersect1D(goodsubj,goodperformers)
+    goodsubj=np.intersect1d(goodsubj,goodperformers)
 
     return goodsubj,motionReject
 
