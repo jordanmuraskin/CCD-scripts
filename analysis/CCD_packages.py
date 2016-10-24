@@ -236,6 +236,46 @@ def getCCDSubjectTrainData(zscoreOn=True,globalNR=0,verbose=False):
     return GroupDF
 
 
+def getSubjectButtonResponses():
+    filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+
+    for indx,f in enumerate(filelist['JM_INTERNAL']):
+        for r in range(1,3):
+            if int(f[-2:])<30:
+                luminaFlag=0
+            else:
+                luminaFlag=1
+            numberofbuttonPresses=getSubjectButtonPressScore('/home/jmuraskin/Projects/CCD/NARSAD-DMN-clean/%s_run%d.txt' % (f,r),luminaFlag)
+            out={'number':numberofbuttonPresses,'filename':f}
+            out['filename']=f
+            if (indx+r)==1:
+                df=pandas.DataFrame(out,index=[0])
+                df['subject']=f
+                df['run']=r
+            else:
+                tmp=pandas.DataFrame(out,index=[0])
+                tmp['subject']=f
+                tmp['run']=r
+                df=pandas.concat((df,tmp),ignore_index=0)
+
+
+def getSubjectButtonPressScore(filename,luminaFlag):
+    config=pd.read_table(filename,delimiter=';',comment='#')
+    numButton=0
+    for indx in config[config[' Stim Text']==' Push Button'].index[:]:
+        numTmp=0
+        for n in range(5):
+            if luminaFlag:
+                if config.iloc[indx+n][' STIM']==' LUMINA' and numTmp==0:
+                    numButton+=1
+                    numTmp+=1
+            else:
+                if config.iloc[indx+n][' STIM']!='53' and numTmp==0:
+                    numButton+=1
+                    numTmp+=1
+    return numButton
+
+
 
 
 def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS'):
