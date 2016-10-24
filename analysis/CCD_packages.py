@@ -249,14 +249,15 @@ def getSubjectButtonResponses():
             out={'number':numberofbuttonPresses,'filename':f}
             out['filename']=f
             if (indx+r)==1:
-                df=pandas.DataFrame(out,index=[0])
+                df=pd.DataFrame(out,index=[0])
                 df['subject']=f
                 df['run']=r
             else:
-                tmp=pandas.DataFrame(out,index=[0])
+                tmp=pd.DataFrame(out,index=[0])
                 tmp['subject']=f
                 tmp['run']=r
-                df=pandas.concat((df,tmp),ignore_index=0)
+                df=pd.concat((df,tmp),ignore_index=0)
+    return df
 
 
 def getSubjectButtonPressScore(filename,luminaFlag):
