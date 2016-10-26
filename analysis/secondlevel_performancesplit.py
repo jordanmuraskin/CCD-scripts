@@ -212,7 +212,7 @@ else:
     NOFB=np.arctanh(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])
     # top=performance.iloc[modelInfo[np.all([zscore(modelInfo)>0,zscore(NOFB)>0],axis=0)].index[:]]['Subject_ID']
     # bottom=performance.iloc[modelInfo[np.all([zscore(modelInfo)<0,zscore(NOFB)<0],axis=0)].index[:]]['Subject_ID']
-    perf_split_name ='performance'
+    perf_split_name ='_performance'
 
 
 #load phenotypic data
@@ -458,7 +458,7 @@ if combine:
             regressors=dict(top=topRegressor+topRegressor,bot=botRegressor+botRegressor,FD=meanFD)
             model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
         else:
-            regressors=dict(top=list(NOFB)+list(FB),FD=meanFD)
+            regressors=dict(top=list(zscore(list(NOFB)+list(FB))),FD=meanFD)
             model.inputs.contrasts = [['top>bottom', 'T',['top'],[1]],['bottom>top', 'T',['top'],[-1]]]
         if age:
             regressors['age']=list(ages)+list(ages)
@@ -474,8 +474,8 @@ if combine:
             if gender:
                 filename+='_gender'
 
-            if perfSplit>0:
-                filename+=perf_split_name
+            # if perfSplit>0:
+            filename+=perf_split_name
 
             filename+='_Grouped'
 
