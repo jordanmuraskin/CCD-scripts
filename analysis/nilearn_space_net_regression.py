@@ -41,6 +41,6 @@ from nilearn.decoding import SpaceNetRegressor
 
 decoder = SpaceNetRegressor(mask=mask_filename, penalty="tv-l1",
                             eps=1e-1,  # prefer large alphas
-                            memory="nilearn_cache")
+                            memory="nilearn_cache",n_jobs=30)
 
 decoder.fit(clean_imgs, behavioral_target)
