@@ -32,6 +32,7 @@ parser.add_argument('-train', help = 'Run RSN on train data not FB or NoFB',requ
 parser.add_argument('-train_vs',help='Run train performance with FB or No FB',required=False,default=0,type=int)
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
 parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
+parser.add_argument('-combine', help='Option to Combine FB and NFB)',required=False,default=0,type=int)
 
 
 args = parser.parse_args()
@@ -55,6 +56,7 @@ gmThresh=args.gmThresh
 fbtorun=args.fbtorun
 train=args.train
 RSN=args.RSN
+combine=args.combine
 traindiff=0
 train_vs=2
 
@@ -108,6 +110,45 @@ def subjectinfo(subject_id,getFeedback=True):
         return noFeedback
 
 
+def getSubjectButtonResponses():
+    filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+
+    for indx,f in enumerate(filelist['JM_INTERNAL']):
+        for r in range(1,3):
+            if int(f[-2:])<30:
+                luminaFlag=0
+            else:
+                luminaFlag=1
+            numberofbuttonPresses=getSubjectButtonPressScore('/home/jmuraskin/Projects/CCD/NARSAD-DMN-clean/%s_run%d.txt' % (f,r),luminaFlag)
+            out={'number':numberofbuttonPresses,'filename':f}
+            out['filename']=f
+            if (indx+r)==1:
+                df=pd.DataFrame(out,index=[0])
+                df['subject']=f
+                df['run']=r
+            else:
+                tmp=pd.DataFrame(out,index=[0])
+                tmp['subject']=f
+                tmp['run']=r
+                df=pd.concat((df,tmp),ignore_index=0)
+    return df
+
+
+def getSubjectButtonPressScore(filename,luminaFlag):
+    config=pd.read_table(filename,delimiter=';',comment='#')
+    numButton=0
+    for indx in config[config[' Stim Text']==' Push Button'].index[:]:
+        numTmp=0
+        for n in range(5):
+            if luminaFlag:
+                if config.iloc[indx+n][' STIM']==' LUMINA' and numTmp==0:
+                    numButton+=1
+                    numTmp+=1
+            else:
+                if config.iloc[indx+n][' STIM']!='53' and numTmp==0:
+                    numButton+=1
+                    numTmp+=1
+    return numButton
 
 
 #load subject list
@@ -127,6 +168,21 @@ elif runAll==2:
     motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed)
     motionDir='motionRMS-%f' % motionThresh
+
+elif runAll==3:
+    #Reject Depressed subjects
+    depressed=np.array(['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087'])
+
+    df=getSubjectButtonResponses()
+    tmp=df.groupby('subject')['number'].sum()
+    poor_performers=np.array(tmp[tmp<14].index[:])
+
+    motionThresh=1
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
+    motionDir='motionRMS-%f-subjperf' % motionThresh
+
 
 else:
     motionThresh=0.2
@@ -163,7 +219,7 @@ if gender:
     mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
 
 
-secondlevel_folder_names=['noFeedback','Feedback','train']
+secondlevel_folder_names=['noFeedback','Feedback','train','Combine']
 
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
@@ -220,19 +276,6 @@ if run1Sample:
             model.inputs.regressors = regressors
             model.run()
 
-            if runFlame:
-                flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file=mask_name,design_file='design.mat',t_con_file='design.con', run_mode='flame1')
-                flameo.run()
-                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
-                if os.path.exists(foldername):
-                    shutil.rmtree(foldername)
-                    os.mkdir(foldername)
-                else:
-                    os.mkdir(foldername)
-                if not runWithRandomise:
-                    shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
-                shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
-                shutil.move('stats',foldername + '/stats')
             if runWithRandomise:
                 filename='cope%d' % i
                 if age:
@@ -266,13 +309,6 @@ if run1Sample:
                 else:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + perf_split_name
 
-                # if age:
-                #     foldername+='_age'
-                # if gender:
-                #     foldername+='_gender'
-                # if perfSplit>0:
-                #     foldername+=perf_split_name
-
                 if not os.path.exists(foldername):
                     os.makedirs(foldername)
 
@@ -290,38 +326,26 @@ if runPair:
 
     for i in copesToRun:
 
-        pairedmodel = MultipleRegressDesign()
-        pairedmodel.inputs.contrasts = [['A>B', 'T',['reg1'],[1]],['B>A', 'T',['reg1'],[-1]]]
-        if runFlame:
-            pairedmodel.inputs.groups = [1]*len(subject_list)*2
+        if train:
+            meanFD=zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['train_meanFD'])
         else:
-            pairedmodel.inputs.groups = range(1,len(subject_list)+1) + range(1,len(subject_list)+1)
-        #make paired ttest model
-        modelX=[0]*2*len(subject_list)
-        modelXAB=modelX
-        modelXAB[0:len(subject_list)]=[1]*len(subject_list)
-        modelDict=dict(reg1=modelXAB)
-        for indx,subj in enumerate(subject_list):
-            modeltmp=[0]*2*len(subject_list)
-            modeltmp[indx]=1
-            modeltmp[indx+len(subject_list)]=1
-            modelDict['s%d' % indx]= modeltmp
-        modelDict['FD'] = list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
-        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
-        if addScanOrder:
-            modelDict['scanorder']= list(zscore(list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])
-        + list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['scanorder'])))
+            meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        model = MultipleRegressDesign()
+        model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
+        regressors=dict(top=topRegressor,bot=botRegressor,FD=list(meanFD))
         if age:
-            modelDict['age']=list(ages)+list(ages)
+            regressors['age']=list(ages)
         if gender:
-            modelDict['mf']=list(mf)+list(mf)
-        pairedmodel.inputs.regressors = modelDict
-        pairedmodel.run()
+            regressors['mf']=list(mf)
+        model.inputs.regressors = regressors
+        model.run()
 
 
 
         for t in ['cope']:
             try:
+
+
                 feedbackFile='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/Feedback/' + motionDir + '/' + fc + '/cope' + str(i)
                 if age:
                     feedbackFile+='_age'
@@ -339,12 +363,8 @@ if runPair:
                     nofeedbackFile+=perf_split_name
                 nofeedbackFile+= '/' + t + str(i) + '_merged.nii.gz'
                 x=[feedbackFile,nofeedbackFile]
-                merger = Merge()
-                merger.inputs.in_files = x
-                merger.inputs.dimension = 't'
-                merger.inputs.output_type = 'NIFTI_GZ'
-                merger.inputs.merged_file='./' + t + str(i)+'_merged.nii.gz'
-                merger.run()
+                fslMathsCommand='fslmerge -t cope%d_merged %s %s' % (i,x[0],x[1])
+                os.system(fslMathsCommand)
             except:
                 print 'No Varcope'
 
@@ -393,6 +413,87 @@ if runPair:
 
             if not os.path.exists(foldername):
                 os.mkdir(foldername)
+
+            if os.path.exists(os.path.join(foldername,filename)):
+                shutil.rmtree(os.path.join(foldername,filename))
+
+            shutil.move(filename, os.path.join(foldername, filename))
+            if surface:
+                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+
+
+if combine:
+
+    for i in copesToRun:
+        for t in ['cope']:
+            x=[]
+            for subj in subject_list:
+                for fb in [0,1]:
+                    fbLoc=subjectinfo(subj,fb)
+                    if t=='cope' and RSN>0:
+                        fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,fbLoc+1,rsn,rsn)
+                    elif len(fc)>0:
+                        fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
+                    else:
+                        fname = '/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (fbLoc,subj,t,i)
+                    x.append(fname)
+            subjs = len(x)
+            merger = Merge()
+            merger.inputs.in_files = x
+            merger.inputs.dimension = 't'
+            merger.inputs.output_type = 'NIFTI_GZ'
+            merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
+            merger.run()
+
+        meanFD=list[zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])]+\
+        list[zscore(motionTest[motionTest.FB==fbNames[1]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])]
+        model = MultipleRegressDesign()
+        model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
+        regressors=dict(top=topRegressor,bot=botRegressor,FD=list(meanFD))
+        if age:
+            regressors['age']=list(ages)+list(ages)
+        if gender:
+            regressors['mf']=list(mf)+list(mf)
+        model.inputs.regressors = regressors
+        model.run()
+
+        if runWithRandomise:
+            filename='cope%d' % i
+            if age:
+                filename+='_age'
+            if gender:
+                filename+='_gender'
+
+            if perfSplit>0:
+                filename+=perf_split_name
+
+            filename+='_Grouped'
+
+            if not os.path.exists(filename):
+                os.makedirs(filename)
+            os.system('mv ./design.* ./%s' % filename)
+            os.system('mv cope%d_merged.nii.gz ./%s' % (i,filename))
+            # shutil.move('./design.*','cope%d' % i)
+            randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,mask_name,nperms)
+            os.system(randomiseCommand)
+
+            if RSN>0:
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[3] + '/' + motionDir + '/' + rsn_name  + '/' + perf_split_name
+                if train and traindiff:
+                    foldername=foldername + '/' + 'Difference'
+                elif train:
+                    foldername=foldername + '/' + fbNames[train_vs]
+            elif runFC:
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[3] + '/' + motionDir + '/' + fc + '/' + perf_split_name
+                if train and traindiff:
+                    foldername=foldername + '/' + 'Difference'
+                elif train:
+                    foldername=foldername + '/' + fbNames[train_vs]
+            else:
+                foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[3] + '/' + motionDir + '/' + perf_split_name
+
+            if not os.path.exists(foldername):
+                os.makedirs(foldername)
 
             if os.path.exists(os.path.join(foldername,filename)):
                 shutil.rmtree(os.path.join(foldername,filename))
