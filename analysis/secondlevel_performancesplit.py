@@ -448,7 +448,7 @@ if combine:
         meanFD=list(zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['meanFD']))+list(zscore(motionTest[motionTest.FB==fbNames[1]][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
-        regressors=dict(top=topRegressor,bot=botRegressor,FD=meanFD)
+        regressors=dict(top=topRegressor+topRegressor,bot=botRegressor+botRegressor,FD=meanFD)
         if age:
             regressors['age']=list(ages)+list(ages)
         if gender:
