@@ -445,8 +445,7 @@ if combine:
             merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
             merger.run()
 
-        meanFD=list[zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])]+\
-        list[zscore(motionTest[motionTest.FB==fbNames[1]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])]
+        meanFD=list[zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])]+list[zscore(motionTest[motionTest.FB==fbNames[1]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])]
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
         regressors=dict(top=topRegressor,bot=botRegressor,FD=list(meanFD))
