@@ -21,7 +21,6 @@ from plotly.graph_objs import *
 from nilearn import plotting
 from nilearn import image
 from scipy import stats, linalg
-from surfer import Brain, io
 import glob
 
 
@@ -158,6 +157,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
     #     motionInfo_train.to_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_train_meanFD.csv')
 
     return GroupDF,motionInfo
+
 
 
 
@@ -969,7 +969,7 @@ def getFileNamesfromFolder(folder,suffix):
 
 
 def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surface='inflated',fwhm=0,filename='',saveFolder=[]):
-
+    from surfer import Brain, io
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
     pos=image.math_img("np.multiply(img1,img2)",
@@ -1051,3 +1051,44 @@ def get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05):
             flat.sort()
             r_scram[s_indx,fb_indx]=flat[val]
     return r_scram
+
+
+
+
+def get_FB_scores(filename,signflip=1):
+    from scipy.interpolate import interp1d
+
+    TRs=range(6,824,2)
+
+    #first get the header information
+    cfg_details=pandas.read_table(filename,sep=':', nrows=8,header=None,names=['variables','values'])
+
+    #check if run completed Num Stim should be 412
+    if int(cfg_details[cfg_details.variables=='#NUM STIM   ']['values'].values[0])!=412:
+        return []
+
+
+    #get feedback information
+    fb=int(cfg_details[cfg_details.variables=='#FEEDBACK   ']['values'])
+
+    #get rest of table
+    config=pandas.read_table(filename, delimiter=';',comment='#')
+    # get focus outputs
+    focus=config[np.all([config[' STIM']==' STIM',config[' Show']==fb,config[' Stim Text']==' Focus'],axis=0)][' Classifier Output'].sum()
+    # get wander outputs
+    wander=config[np.all([config[' STIM']==' STIM',config[' Show']==fb,config[' Stim Text']==' Wander'],axis=0)][' Classifier Output'].sum()
+
+    #get timeseries of outputs
+    clf_output=config[config[' STIM']==' STIM'][' Detrended Output'].values
+    #get time of classifier
+    time=config[config[' STIM']==' STIM']['Time Stamp'].values
+    #find where classifier outputs are high (in the begininning)
+    clf_output[clf_output>10]=np.mean(clf_output[clf_output<10])
+    #interpolate onto normal time grid
+    f = interp1d(map(float,time),clf_output)
+    #zscore and make into dataframe
+    df=pandas.DataFrame({'time':TRs,'clf':zscore(signflip*f(TRs))})
+    df['fb']=fb
+    df['focus']=focus
+    df['wander']=wander
+    return df
