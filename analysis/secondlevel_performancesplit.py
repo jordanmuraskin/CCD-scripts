@@ -484,7 +484,7 @@ if combine:
             os.system('mv ./design.* ./%s' % filename)
             os.system('mv cope%d_merged.nii.gz ./%s' % (i,filename))
             # shutil.move('./design.*','cope%d' % i)
-            randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,mask_name,nperms)
+            randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d -D' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,mask_name,nperms)
             os.system(randomiseCommand)
 
             if RSN>0:
