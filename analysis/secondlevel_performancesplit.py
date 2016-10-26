@@ -207,6 +207,12 @@ if perfSplit==1:
     botRegressor=[0]*len(subject_list)
     botRegressor[len(top):]=[1]*len(bottom)
     perf_split_name ='performance_grouping_TopvBottom'
+else:
+    FB=np.arctanh(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])
+    NOFB=np.arctanh(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])
+    # top=performance.iloc[modelInfo[np.all([zscore(modelInfo)>0,zscore(NOFB)>0],axis=0)].index[:]]['Subject_ID']
+    # bottom=performance.iloc[modelInfo[np.all([zscore(modelInfo)<0,zscore(NOFB)<0],axis=0)].index[:]]['Subject_ID']
+    perf_split_name ='performance'
 
 
 #load phenotypic data
@@ -447,8 +453,13 @@ if combine:
 
         meanFD=list(zscore(motionTest[motionTest.FB==fbNames[0]][motionTest.Subject_ID.isin(subject_list)]['meanFD']))+list(zscore(motionTest[motionTest.FB==fbNames[1]][motionTest.Subject_ID.isin(subject_list)]['meanFD']))
         model = MultipleRegressDesign()
-        model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
-        regressors=dict(top=topRegressor+topRegressor,bot=botRegressor+botRegressor,FD=meanFD)
+
+        if perfSplit:
+            regressors=dict(top=topRegressor+topRegressor,bot=botRegressor+botRegressor,FD=meanFD)
+            model.inputs.contrasts = [['top>bottom', 'T',['top','bot'],[1,-1]],['bottom>top', 'T',['top','bot'],[-1,1]]]
+        else:
+            regressors=dict(top=list(NOFB)+list(FB),FD=meanFD)
+            model.inputs.contrasts = [['top>bottom', 'T',['top'],[1]],['bottom>top', 'T',['top'],[-1]]]
         if age:
             regressors['age']=list(ages)+list(ages)
         if gender:
