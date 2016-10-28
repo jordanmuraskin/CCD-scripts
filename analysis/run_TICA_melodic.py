@@ -65,7 +65,7 @@ gmThresh=0.20
 fnames=[]
 fb=1
 for subject in subject_list:
-    run=fb_subjectinfo(subject,fb)+1
+    run=fb_subjectinfo(subject,fb)
     fnames.append('/home/jmuraskin/Projects/CCD/working_v1/feedback_run-%d/_subject_id_%s/addMeanImage/mapflow/_addMeanImage0/residual_antswarp_maths_maths.nii.gz' % (run,subject))
 
 
