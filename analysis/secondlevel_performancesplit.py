@@ -175,7 +175,7 @@ elif runAll==3:
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
-    poor_performers=np.array(tmp[tmp<14].index[:])
+    poor_performers=np.array(tmp[tmp<22].index[:])
 
     motionThresh=1
     allsubj=np.unique(motionTest['Subject_ID'])
