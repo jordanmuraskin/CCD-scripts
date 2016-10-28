@@ -19,6 +19,9 @@ import numpy as np
 from nilearn import input_data
 import pandas as pd
 import os
+from joblib import Parallel, delayed
+import multiprocessing
+
 
 
 def getSubjectButtonResponses():
@@ -68,7 +71,7 @@ parser.add_argument('-name', help='ROI name for foldernaming',required=True,defa
 parser.add_argument('-x', help='X-MNI Coordinate',required=True,default=0,type=int)
 parser.add_argument('-y', help='Y-MNI Coordinate',required=True,default=0,type=int)
 parser.add_argument('-z', help='Z-MNI Coordinate',required=True,default=0,type=int)
-parser.add_argument('-sphere', help='Sphere size',required=False,default=6,type=int)
+parser.add_argument('-sphere', help='Sphere size',required=False,default=8,type=int)
 parser.add_argument('-selectSubjs',help='Select Subjects to Run',default=0,type=int)
 
 args = parser.parse_args()
@@ -139,97 +142,102 @@ topDir=topDir + args.name
 if not os.path.exists(topDir):
     os.mkdir(topDir)
 
+coords = [(args.x, args.y, args.z)]
+
+num_cores = 10
+
+def runFunctionalConnectivity(base_dir,subject_id,coords,fc_name):
+
+    ##########################################################################
+    # Getting the data
+    # ----------------
+
+    # We will work with the first subject of the adhd data set.
+    # adhd_dataset.func is a list of filenames. We select the 1st (0-based)
+    # subject by indexing with [0]).
+    # from nilearn import datasets
+    if indx<2:
+        scan=subjectinfo(subject_id,getFeedback=indx)
+        func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,scan,globalSR)
+    else:
+        func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,globalSR)
+
+    ##########################################################################
+    # Time series extraction
+    # ----------------------
+    #
+    # We are going to extract signals from the functional time series in two
+    # steps. First we will extract the mean signal within the **seed region of
+    # interest**. Second, we will extract the **brain-wide voxel-wise time series**.
+    #
+    # We will be working with one seed sphere in the Posterior Cingulate Cortex,
+    # considered part of the Default Mode Network.
+
+
+    ##########################################################################
+    # We use :class:`nilearn.input_data.NiftiSpheresMasker` to extract the
+    # **time series from the functional imaging within the sphere**. The
+    # sphere is centered at pcc_coords and will have the radius we pass the
+    # NiftiSpheresMasker function (here 8 mm).
+    #
+    # The extraction will also detrend, standardize, and bandpass filter the data.
+    # This will create a NiftiSpheresMasker object.
+
+
+    seed_masker = input_data.NiftiSpheresMasker(
+        coords, radius=args.sphere, standardize=True,t_r=2., verbose=1)
+
+    ##########################################################################
+    # Then we extract the mean time series within the seed region while
+    # regressing out the confounds that
+    # can be found in the dataset's csv file
+    seed_time_series = seed_masker.fit_transform(func_filename)
+
+    ##########################################################################
+    # Next, we can proceed similarly for the **brain-wide voxel-wise time
+    # series**, using :class:`nilearn.input_data.NiftiMasker` with the same input
+    # arguments as in the seed_masker in addition to smoothing with a 6 mm kernel
+    brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,verbose=1)
+
+    ##########################################################################
+    # Then we extract the brain-wide voxel-wise time series while regressing
+    # out the confounds as before
+    brain_time_series = brain_masker.fit_transform(func_filename)
+
+
+    ##########################################################################
+    # Performing the seed-based correlation analysis
+    # ----------------------------------------------
+    #
+    # Now that we have two arrays (**sphere signal**: (n_volumes, 1),
+    # **brain-wide voxel-wise signal** (n_volumes, n_voxels)), we can correlate
+    # the **seed signal** with the **signal of each voxel**. The dot product of
+    # the two arrays will give us this correlation. Note that the signals have
+    # been variance-standardized during extraction. To have them standardized to
+    # norm unit, we further have to divide the result by the length of the time
+    # series.
+
+    seed_based_correlations = np.dot(brain_time_series.T, seed_time_series) / \
+                              seed_time_series.shape[0]
+
+    ##########################################################################
+    # Fisher-z transformation and save nifti
+    # --------------------------------------
+    # Now we can Fisher-z transform the data to achieve a normal distribution.
+    # The transformed array can now have values more extreme than +/- 1.
+    seed_based_correlations_fisher_z = np.arctanh(seed_based_correlations)*np.sqrt(seed_time_series.shape[0]-3)
+
+    # Finally, we can tranform the correlation array back to a Nifti image
+    # object, that we can save.
+    seed_based_correlation_img = brain_masker.inverse_transform(
+        seed_based_correlations_fisher_z.T)
+    seed_based_correlation_img.to_filename('%s/%s_%s.nii.gz' % (baseDir,fc_name,subject_id))
+
+
 for indx,fb in enumerate(['noFeedback','Feedback','train']):
 
     baseDir=topDir + '/' + fb
     if not os.path.exists(baseDir):
         os.mkdir(baseDir)
 
-    for subject_id in subject_list:
-
-        ##########################################################################
-        # Getting the data
-        # ----------------
-
-        # We will work with the first subject of the adhd data set.
-        # adhd_dataset.func is a list of filenames. We select the 1st (0-based)
-        # subject by indexing with [0]).
-        # from nilearn import datasets
-        if indx<2:
-            scan=subjectinfo(subject_id,getFeedback=indx)
-            func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_feedback_%d/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,scan,globalSR)
-        else:
-            func_filename = '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/functional_mni_other_resolutions_smooth/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_apply_isoxfm_3.0/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global%d.motion1.quadratic1.gm0.compcor1.csf1/_fwhm_6/residual_antswarp_maths.nii.gz' % (subject_id,globalSR)
-
-        ##########################################################################
-        # Time series extraction
-        # ----------------------
-        #
-        # We are going to extract signals from the functional time series in two
-        # steps. First we will extract the mean signal within the **seed region of
-        # interest**. Second, we will extract the **brain-wide voxel-wise time series**.
-        #
-        # We will be working with one seed sphere in the Posterior Cingulate Cortex,
-        # considered part of the Default Mode Network.
-        coords = [(args.x, args.y, args.z)]
-
-        ##########################################################################
-        # We use :class:`nilearn.input_data.NiftiSpheresMasker` to extract the
-        # **time series from the functional imaging within the sphere**. The
-        # sphere is centered at pcc_coords and will have the radius we pass the
-        # NiftiSpheresMasker function (here 8 mm).
-        #
-        # The extraction will also detrend, standardize, and bandpass filter the data.
-        # This will create a NiftiSpheresMasker object.
-
-
-        seed_masker = input_data.NiftiSpheresMasker(
-            coords, radius=args.sphere, standardize=True,t_r=2., verbose=1)
-
-        ##########################################################################
-        # Then we extract the mean time series within the seed region while
-        # regressing out the confounds that
-        # can be found in the dataset's csv file
-        seed_time_series = seed_masker.fit_transform(func_filename)
-
-        ##########################################################################
-        # Next, we can proceed similarly for the **brain-wide voxel-wise time
-        # series**, using :class:`nilearn.input_data.NiftiMasker` with the same input
-        # arguments as in the seed_masker in addition to smoothing with a 6 mm kernel
-        brain_masker = input_data.NiftiMasker(standardize=True, t_r=2.,verbose=1)
-
-        ##########################################################################
-        # Then we extract the brain-wide voxel-wise time series while regressing
-        # out the confounds as before
-        brain_time_series = brain_masker.fit_transform(func_filename)
-
-
-        ##########################################################################
-        # Performing the seed-based correlation analysis
-        # ----------------------------------------------
-        #
-        # Now that we have two arrays (**sphere signal**: (n_volumes, 1),
-        # **brain-wide voxel-wise signal** (n_volumes, n_voxels)), we can correlate
-        # the **seed signal** with the **signal of each voxel**. The dot product of
-        # the two arrays will give us this correlation. Note that the signals have
-        # been variance-standardized during extraction. To have them standardized to
-        # norm unit, we further have to divide the result by the length of the time
-        # series.
-
-        seed_based_correlations = np.dot(brain_time_series.T, seed_time_series) / \
-                                  seed_time_series.shape[0]
-
-        ##########################################################################
-        # Fisher-z transformation and save nifti
-        # --------------------------------------
-        # Now we can Fisher-z transform the data to achieve a normal distribution.
-        # The transformed array can now have values more extreme than +/- 1.
-        seed_based_correlations_fisher_z = np.arctanh(seed_based_correlations)*np.sqrt(seed_time_series.shape[0]-3)
-
-        # Finally, we can tranform the correlation array back to a Nifti image
-        # object, that we can save.
-        seed_based_correlation_img = brain_masker.inverse_transform(
-            seed_based_correlations_fisher_z.T)
-        seed_based_correlation_img.to_filename('%s/%s_%s.nii.gz' % (baseDir,args.name,subject_id))
-    # mergeCommand='fslmerge -t %s/%s_merged %s/%s_*.nii.gz' % (baseDir,fb,baseDir,args.name)
-    # os.system(mergeCommand)
+    Parallel(n_jobs=num_cores)(delayed(runFunctionalConnectivity)(base_dir,subject_id,coords,fc_name) for subject_id in subject_list)
