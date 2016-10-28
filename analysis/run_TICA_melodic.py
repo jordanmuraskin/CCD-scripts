@@ -70,7 +70,7 @@ for subject in subject_list:
 
 
 melodic_setup = fsl.model.MELODIC()
-melodic_setup.inputs.approach = 'symm'
+melodic_setup.inputs.approach = 'tica'
 melodic_setup.inputs.in_files = fnames
 melodic_setup.inputs.no_bet = True
 melodic_setup.inputs.bg_threshold = 10
