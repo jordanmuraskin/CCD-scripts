@@ -74,6 +74,7 @@ melodic_setup.inputs.approach = 'tica'
 melodic_setup.inputs.in_files = fnames
 melodic_setup.inputs.no_bet = True
 melodic_setup.inputs.bg_threshold = 10
+melodic_setup.inputs.dim = 20
 melodic_setup.inputs.mask = '/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 melodic_setup.inputs.tr_sec = 2
 melodic_setup.inputs.mm_thresh = 0.5
