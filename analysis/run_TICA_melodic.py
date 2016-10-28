@@ -81,6 +81,7 @@ melodic_setup.inputs.t_des = 'TENSOR_GLM.mat'
 melodic_setup.inputs.t_con = 'TENSOR_GLM.con'
 melodic_setup.inputs.s_des = 'design-Feedback-perf.mat'
 melodic_setup.inputs.s_con = 'design-Feedback-perf.con'
-melodic_setup.inputs.out_dir = 'group_FEEDBACK_TICA.out'
+melodic_setup.inputs.out_dir = '/home/jmuraskin/Projects/CCD/working_v1/group_FEEDBACK_TICA.out'
+melodc_setup.inputs.report = True
 
 melodic_setup.run()
