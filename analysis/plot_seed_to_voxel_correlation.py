@@ -17,7 +17,49 @@ numpy array, corresponding to the data inside the mask.
 import argparse
 import numpy as np
 from nilearn import input_data
+import pandas as pd
 import os
+
+
+def getSubjectButtonResponses():
+    filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
+
+    for indx,f in enumerate(filelist['JM_INTERNAL']):
+        for r in range(1,3):
+            if int(f[-2:])<30:
+                luminaFlag=0
+            else:
+                luminaFlag=1
+            numberofbuttonPresses=getSubjectButtonPressScore('/home/jmuraskin/Projects/CCD/NARSAD-DMN-clean/%s_run%d.txt' % (f,r),luminaFlag)
+            out={'number':numberofbuttonPresses,'filename':f}
+            out['filename']=f
+            if (indx+r)==1:
+                df=pd.DataFrame(out,index=[0])
+                df['subject']=f
+                df['run']=r
+            else:
+                tmp=pd.DataFrame(out,index=[0])
+                tmp['subject']=f
+                tmp['run']=r
+                df=pd.concat((df,tmp),ignore_index=0)
+    return df
+
+
+def getSubjectButtonPressScore(filename,luminaFlag):
+    config=pd.read_table(filename,delimiter=';',comment='#')
+    numButton=0
+    for indx in config[config[' Stim Text']==' Push Button'].index[:]:
+        numTmp=0
+        for n in range(5):
+            if luminaFlag:
+                if config.iloc[indx+n][' STIM']==' LUMINA' and numTmp==0:
+                    numButton+=1
+                    numTmp+=1
+            else:
+                if config.iloc[indx+n][' STIM']!='53' and numTmp==0:
+                    numButton+=1
+                    numTmp+=1
+    return numButton
 
 
 parser = argparse.ArgumentParser(description='Run First Level Functional Connectivity for Neurofeedback Data')
@@ -27,10 +69,12 @@ parser.add_argument('-x', help='X-MNI Coordinate',required=True,default=0,type=i
 parser.add_argument('-y', help='Y-MNI Coordinate',required=True,default=0,type=int)
 parser.add_argument('-z', help='Z-MNI Coordinate',required=True,default=0,type=int)
 parser.add_argument('-sphere', help='Sphere size',required=False,default=6,type=int)
+parser.add_argument('-selectSubjs',help='Select Subjects to Run',default=0,type=int)
 
 args = parser.parse_args()
 
 globalSR=args.globalSR
+selectSubj=args.selectSubjs
 
 
 template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
@@ -49,6 +93,24 @@ CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,41,42,5
 subject_list=[]
 for ccd in CCD_numbers:
     subject_list.append('CCD0%s' % ccd)
+
+
+
+if selectSubj:
+
+    motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
+
+    depressed=np.array(['CCD072','CCD098','CCD083','CCD062','CCD061','CCD051','CCD087'])
+
+    df=getSubjectButtonResponses()
+    tmp=df.groupby('subject')['number'].sum()
+    poor_performers=np.array(tmp[tmp<22].index[:])
+
+
+    motionThresh=1
+    allsubj=np.unique(motionTest['Subject_ID'])
+    motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
+    subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
 
 
 def subjectinfo(subject_id,getFeedback=True):
@@ -167,7 +229,7 @@ for indx,fb in enumerate(['noFeedback','Feedback','train']):
         # Finally, we can tranform the correlation array back to a Nifti image
         # object, that we can save.
         seed_based_correlation_img = brain_masker.inverse_transform(
-            seed_based_correlations.T)
+            seed_based_correlations_fisher_z.T)
         seed_based_correlation_img.to_filename('%s/%s_%s.nii.gz' % (baseDir,args.name,subject_id))
     # mergeCommand='fslmerge -t %s/%s_merged %s/%s_*.nii.gz' % (baseDir,fb,baseDir,args.name)
     # os.system(mergeCommand)
