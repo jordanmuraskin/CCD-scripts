@@ -1,6 +1,7 @@
 import nipype.interfaces.fsl as fsl
 import pandas as pd
 from CCD_packages import fb_subjectinfo
+import numpy as np
 
 
 
