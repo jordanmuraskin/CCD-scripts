@@ -124,7 +124,7 @@ if selectSubj:
 #check if subject has been run with this ROI
 subjHasBeenRun=[]
 for subj in subject_list:
-    if os.path.exists(topDir + '/noFeedback/' + args.name '_' + subj) and os.path.exists(topDir + '/Feedback/' + args.name '_' + subj) and os.path.exists(topDir + '/train/' + args.name '_' + subj):
+    if os.path.exists(topDir + '/noFeedback/' + args.name + '_' + subj) and os.path.exists(topDir + '/Feedback/' + args.name + '_' + subj) and os.path.exists(topDir + '/train/' + args.name + '_' + subj):
         subjHasBeenRun.append(subj)
 
 subject_list=np.setdiff1d(subject_list,np.array(subjHasBeenRun))
