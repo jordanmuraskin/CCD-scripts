@@ -242,10 +242,26 @@ def runFunctionalConnectivity(base_dir,subject_id,coords,fc_name):
     seed_based_correlation_img.to_filename('%s/%s_%s.nii.gz' % (baseDir,fc_name,subject_id))
 
 
-for indx,fb in enumerate(['noFeedback','Feedback','train']):
+# for indx,fb in enumerate(['noFeedback','Feedback','train']):
 
-    baseDir=topDir + '/' + fb
-    if not os.path.exists(baseDir):
-        os.mkdir(baseDir)
+fb='noFeedback'
+baseDir=topDir + '/' + fb
+if not os.path.exists(baseDir):
+    os.mkdir(baseDir)
 
-    Parallel(n_jobs=num_cores)(delayed(runFunctionalConnectivity)(base_dir,subject_id,coords,fc_name) for subject_id in subject_list)
+Parallel(n_jobs=num_cores)(delayed(runFunctionalConnectivity)(base_dir,subject_id,coords,fc_name) for subject_id in subject_list)
+
+
+fb='Feedback'
+baseDir=topDir + '/' + fb
+if not os.path.exists(baseDir):
+    os.mkdir(baseDir)
+
+Parallel(n_jobs=num_cores)(delayed(runFunctionalConnectivity)(base_dir,subject_id,coords,fc_name) for subject_id in subject_list)
+
+fb='train'
+baseDir=topDir + '/' + fb
+if not os.path.exists(baseDir):
+    os.mkdir(baseDir)
+
+Parallel(n_jobs=num_cores)(delayed(runFunctionalConnectivity)(base_dir,subject_id,coords,fc_name) for subject_id in subject_list)
