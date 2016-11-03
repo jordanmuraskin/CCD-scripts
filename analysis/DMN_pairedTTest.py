@@ -155,8 +155,7 @@ elif runAll==3:
     allsubj=np.unique(motionTest['Subject_ID'])
     motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
-    motionDir='motionRMS-%f-subjperf' % motionThresh
-
+    motionDir='motionRMS-%f-subjperf-%d' % (motionThresh,perfThreshold)
 else:
     motionThresh=0.2
     allsubj=np.unique(motionTest['Subject_ID'])
