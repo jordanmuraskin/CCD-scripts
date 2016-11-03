@@ -82,7 +82,13 @@ selectSubj=args.selectSubjs
 
 template = '/usr/share/fsl/5.0/data/standard/MNI152_T1_3mm_brain.nii.gz'
 
+topDir='/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/'
+if not os.path.exists(topDir):
+    os.mkdir(topDir)
 
+topDir=topDir + args.name
+if not os.path.exists(topDir):
+    os.mkdir(topDir)
 
 # CCD_numbers=[15,17,18,21,23,33,40,52,59,64,66,74,76,83,89,95]
 CCD_numbers=[12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,31,32,33,34,40,41,42,51,52,
@@ -115,6 +121,14 @@ if selectSubj:
     motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
 
+#check if subject has been run with this ROI
+subjHasBeenRun=[]
+for subj in subject_list:
+    if os.path.exists(topDir + '/noFeedback/' + args.name '_' + subj) and os.path.exists(topDir + '/Feedback/' + args.name '_' + subj) and os.path.exists(topDir + '/train/' + args.name '_' + subj):
+        subjHasBeenRun.append(subj)
+
+subject_list=np.setdiff1d(subject_list,np.array(subjHasBeenRun))
+
 
 def subjectinfo(subject_id,getFeedback=True):
     #Get whether scan is a feedback scan or not
@@ -134,13 +148,7 @@ def subjectinfo(subject_id,getFeedback=True):
     if not getFeedback:
         return noFeedback+1
 
-topDir='/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/'
-if not os.path.exists(topDir):
-    os.mkdir(topDir)
 
-topDir=topDir + args.name
-if not os.path.exists(topDir):
-    os.mkdir(topDir)
 
 coords = [(args.x, args.y, args.z)]
 
