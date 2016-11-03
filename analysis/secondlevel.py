@@ -213,12 +213,12 @@ folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
     foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + fc
     if not os.path.exists(foldername):
-        os.mkdir(foldername)
+        os.makedirs(foldername)
 
     for fb in secondlevel_folder_names:
         foldername=folderbase + '/' + runType + '/' + fb + '/' + motionDir + '/' + fc
         if not os.path.exists(foldername):
-            os.mkdir(foldername)
+            os.makedirs(foldername)
 
 if onsetData:
     prefix='onset_'

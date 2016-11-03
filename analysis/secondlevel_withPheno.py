@@ -228,10 +228,10 @@ folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
 for runType in ['randomise','flame']:
     foldername=folderbase + '/' + runType + '/paired-Ttest/' +  motionDir + '/' + rsn_name + fc
     if not os.path.exists(foldername):
-        os.mkdir(foldername)
+        os.makedirs(foldername)
     foldername= foldername + '/' + pheno_measure_name
     if not os.path.exists(foldername):
-        os.mkdir(foldername)
+        os.makedirs(foldername)
 
 
 
