@@ -35,6 +35,7 @@ parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,na
 parser.add_argument('-traindiff',help='Run Train performance difference-overrides train_vs',default=0,type=int)
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float,required=False)
 parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
+parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
 
 args = parser.parse_args()
 
@@ -60,7 +61,7 @@ train=args.train
 train_vs=args.train_vs
 traindiff=args.traindiff
 onsetData=args.onsetData
-
+perfThreshold=args.perfThreshold
 
 def getSubjectButtonResponses():
     filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
@@ -185,7 +186,7 @@ elif runAll==3:
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
-    poor_performers=np.array(tmp[tmp<22].index[:])
+    poor_performers=np.array(tmp[tmp<perfThreshold].index[:])
 
 
     motionThresh=1

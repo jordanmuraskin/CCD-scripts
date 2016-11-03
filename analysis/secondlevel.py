@@ -30,6 +30,8 @@ parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second lev
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float)
 parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
+parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
+
 
 args = parser.parse_args()
 
@@ -51,6 +53,7 @@ runFC=args.runFC
 gmThresh=args.gmThresh
 onsetData=args.onsetData
 fbtorun=args.fbtorun
+perfThreshold=args.perfThreshold
 
 
 def getSubjectButtonResponses():
@@ -161,7 +164,7 @@ elif runAll==3:
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
-    poor_performers=np.array(tmp[tmp<22].index[:])
+    poor_performers=np.array(tmp[tmp<perfThreshold].index[:])
 
 
     motionThresh=1

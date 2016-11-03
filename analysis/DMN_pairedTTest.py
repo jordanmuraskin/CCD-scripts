@@ -23,7 +23,7 @@ parser.add_argument('-rsn', help='List of Resting-State netorks to run',nargs='+
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float,required=False)
-
+parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
 args = parser.parse_args()
 
 
@@ -47,6 +47,7 @@ age=args.a
 gender=args.g
 #if run with performance
 runWithPerformance=False
+perfThreshold=args.perfThreshold
 
 gmThresh=args.gmThresh
 
@@ -147,7 +148,7 @@ elif runAll==3:
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
-    poor_performers=np.array(tmp[tmp<22].index[:])
+    poor_performers=np.array(tmp[tmp<perfThreshold].index[:])
 
 
     motionThresh=1
