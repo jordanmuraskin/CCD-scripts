@@ -23,7 +23,7 @@ parser.add_argument('-rall', help='Option to run all subjects==1, option run sub
 parser.add_argument('-copes', help='List of copes to run',nargs='+', type=int,required=False,default=range(5))
 parser.add_argument('-a', help='Option to add subject age to model',required=False,default=0,type=int)
 parser.add_argument('-g', help='Option to add subject gender to model',required=False,default=0,type=int)
-parser.add_argument('-perfSplit', help='Option run by performance split (0-No Split,1-Top Tier,2-Middle Tier,3-Lowest Tier)',required=False,default=1,type=int)
+parser.add_argument('-perfSplit', help='Option run by performance split (0-No Split,1-Top Tier,2-Middle Tier,3-Lowest Tier)',required=False,default=0,type=int)
 parser.add_argument('-surface', help='Option to make surface plot (need to be on screen of computer running code)',required=False,default=0,type=int)
 parser.add_argument('-runFC',help='Optiom to run FC instead of Cope', default=0,required=False,type=int)
 parser.add_argument('-fc', help = 'Functional Connectivity ROI to run second level analysis on (overrides cope information)',required=False,default='R_AI',type=str)
@@ -33,6 +33,7 @@ parser.add_argument('-train_vs',help='Run train performance with FB or No FB',re
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
 parser.add_argument('-RSN', help='Option to run with RSN instead of cope, RSN>0)',required=False,default=0,type=int)
 parser.add_argument('-combine', help='Option to Combine FB and NFB)',required=False,default=0,type=int)
+parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
 
 
 args = parser.parse_args()
@@ -59,6 +60,7 @@ RSN=args.RSN
 combine=args.combine
 traindiff=0
 train_vs=2
+perfThreshold=args.perfThreshold
 
 mask_name='/home/jmuraskin/Projects/CCD/working_v1/seg_probabilities/grey_matter_mask-%d-percent.nii.gz' % int(gmThresh*100)
 
@@ -175,14 +177,13 @@ elif runAll==3:
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
-    poor_performers=np.array(tmp[tmp<22].index[:])
+    poor_performers=np.array(tmp[tmp<perfThreshold].index[:])
 
     motionThresh=1
     allsubj=np.unique(motionTest['Subject_ID'])
     motionReject=np.unique((motionTest[motionTest.Max_Relative_RMS_Displacement>motionThresh]['Subject_ID']))
     subject_list=np.setdiff1d(np.setdiff1d(np.setdiff1d(allsubj,motionReject),depressed),poor_performers)
-    motionDir='motionRMS-%f-subjperf' % motionThresh
-
+    motionDir='motionRMS-%f-subjperf-%d' % (motionThresh,perfThreshold)
 
 else:
     motionThresh=0.2
