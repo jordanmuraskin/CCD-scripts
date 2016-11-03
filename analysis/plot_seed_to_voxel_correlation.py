@@ -148,7 +148,7 @@ def subjectinfo(subject_id,getFeedback=True):
     if not getFeedback:
         return noFeedback+1
 
-
+fc_name=args.name
 
 coords = [(args.x, args.y, args.z)]
 
