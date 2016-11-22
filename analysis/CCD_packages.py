@@ -101,7 +101,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                         df['flip']=-1
                         flip=-1
                     else:
-                        for rsn in columnNames:
+                        # for rsn in columnNames:
                             # if filterOn:
                             #     if zscoreOn:
                             #         df[rsn]=pd.Series(zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
