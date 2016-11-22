@@ -14,7 +14,7 @@ import networkx as nx
 from sklearn import linear_model
 from sklearn import cross_validation
 from sklearn import metrics
-from scipy.stats import ttest_1samp
+from scipy.stats import ttest_1samp,skew
 from mne.stats.multi_comp import fdr_correction
 import plotly.plotly as py
 from plotly.graph_objs import *
@@ -117,7 +117,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                         df['flip']=1
                     df['FB'] = 'FEEDBACK' if row['SCAN_%d_FEEDBACK' % scan]==1 else 'NOFEEDBACK'
                     df['scanorder']=scan
-
+                    df['DMN_skew'] = skew(df['RSN3'])
                     df['modelcorr']=pearsonr(dmnIdeal['Wander']-dmnIdeal['Focus'],df['RSN3'])[0]
                     df['first_half_corr']=pearsonr(dmnIdeal['Wander'][0:203]-dmnIdeal['Focus'][0:203],df['RSN3'][0:203])[0]
                     df['second_half_corr']=pearsonr(dmnIdeal['Wander'][204:]-dmnIdeal['Focus'][204:],df['RSN3'][204:])[0]
