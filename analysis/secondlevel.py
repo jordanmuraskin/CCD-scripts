@@ -31,6 +31,7 @@ parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,t
 parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
 parser.add_argument('-fbtorun', help = 'Which FB scans to run',required=False,nargs='+',default=[0,1],type=int)
 parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
+parser.add_argument('-combine',help='Run with NFB and FB together',required=False,default=0,type=int)
 
 
 args = parser.parse_args()
@@ -54,6 +55,7 @@ gmThresh=args.gmThresh
 onsetData=args.onsetData
 fbtorun=args.fbtorun
 perfThreshold=args.perfThreshold
+combine=args.combine
 
 
 def getSubjectButtonResponses():
@@ -206,7 +208,9 @@ if gender:
     mf=zscore(pheno.loc[subject_list]['V1_DEM_002'])
 
 
-secondlevel_folder_names=['noFeedback','Feedback']
+secondlevel_folder_names=['noFeedback','Feedback','NFB+FB']
+
+
 
 #create second level folders
 folderbase='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis'
@@ -425,3 +429,90 @@ if runPair:
             shutil.move(filename, os.path.join(foldername, filename))
             if surface:
                 make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='cope%d' % i)
+
+
+if combine:
+
+    for i in copesToRun:
+        for t in ['cope']:
+            x=[]
+            for fb in [0,1]:
+                for subj in subject_list:
+                    fbLoc=subjectinfo(subj,fb)
+                    if len(fc)>0:
+                        fname= '/home/jmuraskin/Projects/CCD/working_v1/seed-to-voxel/%s/%s/%s_%s.nii.gz' % (fc,secondlevel_folder_names[fb],fc,subj)
+                    else:
+                        fname = '/home/jmuraskin/Projects/CCD/working_v1/%sfeedback_run-%d/feedback/_subject_id_%s/modelestimate/mapflow/_modelestimate0/results/%s%d.nii.gz' % (prefix,fbLoc,subj,t,i)
+                    x.append(fname)
+            subjs = len(x)
+            merger = Merge()
+            merger.inputs.in_files = x
+            merger.inputs.dimension = 't'
+            merger.inputs.output_type = 'NIFTI_GZ'
+            merger.inputs.merged_file = './cope%d_merged.nii.gz' % i
+            merger.run()
+        #get meanFD values for each subject and add as covariate
+        # meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        model = MultipleRegressDesign()
+        model.inputs.contrasts = [['group mean', 'T',['reg1'],[1]],['group neg mean', 'T',['reg1'],[-1]]]
+        meanFD = list(zscore(list(motionTest[motionTest.FB=='NOFEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
+        + list(motionTest[motionTest.FB=='FEEDBACK'][motionTest.Subject_ID.isin(subject_list)]['meanFD'])))
+
+        if age:
+            ageList=list(ages)+list(ages)
+        if gender:
+            sexList=list(mf)+list(mf)
+
+        regressors=dict(reg1=[1]*subjs,FD=meanFD,age=ageList,sex=sexList)
+        model.inputs.regressors = regressors
+        model.run()
+
+        if runFlame:
+            flameo = fsl.FLAMEO(cope_file='./cope'+str(i)+'_merged.nii.gz',var_cope_file='./varcope'+str(i)+'_merged.nii.gz',cov_split_file='design.grp',mask_file=mask_name,design_file='design.mat',t_con_file='design.con', run_mode='flame1')
+            flameo.run()
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/flame/' + secondlevel_folder_names[fb] + '/' + motionDir + '/cope' + str(i)
+            if os.path.exists(foldername):
+                shutil.rmtree(foldername)
+                os.mkdir(foldername)
+            else:
+                os.mkdir(foldername)
+            if not runWithRandomise:
+                shutil.move('cope' + str(i) + '_merged.nii.gz',foldername)
+            shutil.move('varcope' + str(i) + '_merged.nii.gz',foldername)
+            shutil.move('stats',foldername + '/stats')
+        if runWithRandomise:
+            filename='%scope%d' % (prefix,i)
+            if age:
+                filename+='_age'
+            if gender:
+                filename+='_gender'
+
+            if perfSplit>0:
+                filename+=perf_split_name
+
+            if not os.path.exists(filename):
+                os.mkdir(filename)
+            os.system('mv ./design.* ./%s' % filename)
+            os.system('mv cope%d_merged.nii.gz ./%s' % (i,filename))
+            # shutil.move('./design.*','cope%d' % i)
+            randomiseCommand='/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/randomise_forpython.sh -i %s/%s -o ./%s/cope%d -d ./%s/design.mat -t ./%s/design.con -e ./%s/design.grp -m %s -T -n %d' % (filename,'cope' + str(i) + '_merged.nii.gz',filename,i,filename,filename,filename,mask_name,nperms)
+            os.system(randomiseCommand)
+
+            foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[2] + '/' + motionDir + '/' + fc
+
+            # if age:
+            #     foldername+='_age'
+            # if gender:
+            #     foldername+='_gender'
+            # if perfSplit>0:
+            #     foldername+=perf_split_name
+
+            if not os.path.exists(foldername):
+                os.mkdir(foldername)
+
+            if os.path.exists(os.path.join(foldername,filename)):
+                shutil.rmtree(os.path.join(foldername,filename))
+
+            shutil.move(filename, os.path.join(foldername, filename))
+            if surface:
+                make_pysurfer_images(folder=os.path.join(foldername, filename),suffix='%scope%d' % (prefix,i))
