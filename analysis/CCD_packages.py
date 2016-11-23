@@ -324,17 +324,25 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS',p
 
 def getBlockedPerformance(GroupDF,goodsubj):
     # Setup Block design analysis Up-Regulation (wander) and Down-Regulation (focus)
-    WanderBlocks=[[14,29],[78,108],[127,172],[206,236],[285,300],[334,379]]
-    FocusBlocks=[[31,76],[110,125],[174,204],[238,283],[302,332],[381,396]]
+
 
     blockedDF=[]
     for rsn in ['RSN3']:
         #enumerate(unique(GroupDF[(GroupDF['feedback_sleep']+GroupDF['train_sleep'])==0]['Subject']))
         for fb in ['FEEDBACK','NOFEEDBACK']:
             for subjNo,subj in enumerate(unique(GroupDF[GroupDF.Subject_ID.isin(goodsubj)]['Subject_ID'])):
+
+
                 WanderBlockAve=[]
                 FocusBlockAve=[]
                 tmpDF=GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]
+                flip=GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]['flip'][0]
+                if flip==1:
+                    WanderBlocks=[[14,29],[78,108],[127,172],[206,236],[285,300],[334,379]]
+                    FocusBlocks=[[31,76],[110,125],[174,204],[238,283],[302,332],[381,396]]
+                else:
+                    FocusBlocks=[[14,29],[78,108],[127,172],[206,236],[285,300],[334,379]]
+                    WanderBlocks=[[31,76],[110,125],[174,204],[238,283],[302,332],[381,396]]
                 for indx,wblock in enumerate(WanderBlocks):
                     if indx==0:
                         WanderBlockAve=tmpDF[np.all([tmpDF['TR']>=wblock[0],tmpDF['TR']<=wblock[1]],axis=0)][rsn]
