@@ -83,6 +83,18 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df['Subject'] = indx
                     df.index.name = 'TR'
                     df.reset_index(level=0,inplace=True)
+
+                    for rsn in columnNames:
+                        if filterOn:
+                            if zscoreOn:
+                                df[rsn]=pd.Series(zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
+                            else:
+                                df[rsn]=pd.Series(butter_lowpass_filter(df[rsn][:],lowpass,0.5))
+                        else:
+                            if zscoreOn:
+                                df[rsn]=pd.Series(zscore(df[rsn][:]))
+                            else:
+                                df[rsn]=pd.Series(df[rsn][:])
                     if row['SCAN_%d_PARADIGM' % scan]==1 or row['SCAN_%d_PARADIGM' % scan]==3:
                         # for rsn in columnNames:
                         #     if filterOn:
