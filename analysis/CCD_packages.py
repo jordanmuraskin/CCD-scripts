@@ -336,7 +336,7 @@ def getBlockedPerformance(GroupDF,goodsubj):
                 WanderBlockAve=[]
                 FocusBlockAve=[]
                 tmpDF=GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]
-                flip=GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]['flip'][0]
+                flip=np.mean(GroupDF[np.all([GroupDF['Subject_ID']==subj,GroupDF['FB']==fb],axis=0)]['flip'])
                 if flip==1:
                     WanderBlocks=[[14,29],[78,108],[127,172],[206,236],[285,300],[334,379]]
                     FocusBlocks=[[31,76],[110,125],[174,204],[238,283],[302,332],[381,396]]
