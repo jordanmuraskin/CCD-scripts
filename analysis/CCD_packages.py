@@ -411,7 +411,7 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
     maxModel=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject'])['modelcorr'].max().sort_values(ascending=False)
     sortedOrder=maxModel.index
 
-    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax)
+    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax,color=['b','g'])
 
     r_scramble=np.mean(get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05),axis=0)
 
@@ -423,11 +423,12 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
     return r_scramble
 
 def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,ax=[],savefig=True):
-    plt.figure()
+    if type(ax)==list:
+        plt.figure()
     if BV:
         sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
     else:
-        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile',ax=ax)
+        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile',ax=ax,color=['b','g'])
 
 
     if savefig:
