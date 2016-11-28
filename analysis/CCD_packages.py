@@ -427,7 +427,7 @@ def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,ax=[],savefig=True):
     if BV:
         sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
     else:
-        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile',ax=ax, palette='BW')
+        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile',ax=ax, color='w')
 
 
     if savefig:
