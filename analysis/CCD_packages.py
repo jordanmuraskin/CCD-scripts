@@ -404,7 +404,7 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
 
 def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True,savefig=True,ax=[]):
 
-    if len(ax)<1:
+    if type(ax)==list:
         f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
         sns.set(style="white")
 
