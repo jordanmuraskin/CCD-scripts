@@ -84,6 +84,11 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df.index.name = 'TR'
                     df.reset_index(level=0,inplace=True)
 
+                    DMN_vals=df[DMN_name]
+                    if zscoreOn:
+                        df['DMN_skew'] = skew(pd.Series(zscore(df[DMN_name])[:]))
+                    else:
+                        df['DMN_skew'] = skew(pd.Series(df[DMN_name])[:])
                     # for rsn in columnNames:
                     #     if filterOn:
                     #         if zscoreOn:
@@ -104,12 +109,11 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                                     df[rsn]=pd.Series(-1*butter_lowpass_filter(df[rsn][:],lowpass,0.5))
 
                             else:
-                                if zscoreOn:
-                                    df['DMN_skew'] = skew(pd.Series(zscore(df['RSN3'])[:]))
+
                                     df[rsn]=pd.Series(-1*zscore(df[rsn][:]))
 
                                 else:
-                                    df['DMN_skew'] = skew(pd.Series(df['RSN3'])[:])
+
                                     df[rsn]=pd.Series(-1*df[rsn][:])
 
 
@@ -125,10 +129,8 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
                             else:
                                 if zscoreOn:
-                                    df['DMN_skew'] = skew(pd.Series(zscore(df['RSN3'])[:]))
                                     df[rsn]=pd.Series(zscore(df[rsn][:]))
                                 else:
-                                    df['DMN_skew'] = skew(pd.Series(df['RSN3'])[:])
                                     df[rsn]=pd.Series(df[rsn][:])
 
 
