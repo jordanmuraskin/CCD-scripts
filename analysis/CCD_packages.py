@@ -52,7 +52,7 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
 
 
 
-def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMotionInfo=False,verbose=False):
+def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMotionInfo=False,verbose=False,DMN_name='RSN3'):
 
 
     SubjInfo = pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
