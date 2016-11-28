@@ -402,7 +402,7 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
         f.savefig('%s/%s_timeseries.pdf' % (saveFigureLocation,DMN_name), dpi=600)
 
 
-def createSubjectModelBarPlot(GroupDF,goodsubj,r_scramble,figsize=(18,9),withThreshold=True,savefig=True,ax=[]):
+def createSubjectModelBarPlot(GroupDF,goodsubj,r_scramble,figsize=(18,9),withThreshold=True,savefig=True,ax=[],palette=['b','g']):
 
     if type(ax)==list:
         f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
@@ -411,7 +411,7 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,r_scramble,figsize=(18,9),withThr
     maxModel=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject'])['modelcorr'].max().sort_values(ascending=False)
     sortedOrder=maxModel.index
 
-    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax,palette=['b','g'])
+    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax,palette=palette)
 
 
     ax.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--',label='Feedback On Threshold')
