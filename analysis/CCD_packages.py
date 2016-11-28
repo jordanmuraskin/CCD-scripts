@@ -411,7 +411,7 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
     maxModel=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject'])['modelcorr'].max().sort_values(ascending=False)
     sortedOrder=maxModel.index
 
-    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax,color=['b','g'])
+    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax,color=['Blue','Green'])
 
     r_scramble=np.mean(get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05),axis=0)
 
