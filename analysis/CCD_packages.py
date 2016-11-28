@@ -84,59 +84,61 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df.index.name = 'TR'
                     df.reset_index(level=0,inplace=True)
 
-                    for rsn in columnNames:
-                        if filterOn:
-                            if zscoreOn:
-                                df[rsn]=pd.Series(zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
-                            else:
-                                df[rsn]=pd.Series(butter_lowpass_filter(df[rsn][:],lowpass,0.5))
-                        else:
-                            if zscoreOn:
-                                df[rsn]=pd.Series(zscore(df[rsn][:]))
-                            else:
-                                df[rsn]=pd.Series(df[rsn][:])
+                    # for rsn in columnNames:
+                    #     if filterOn:
+                    #         if zscoreOn:
+                    #             df[rsn]=pd.Series(zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
+                    #         else:
+                    #             df[rsn]=pd.Series(butter_lowpass_filter(df[rsn][:],lowpass,0.5))
+                    #     else:
+                    #         if zscoreOn:
+                    #             df[rsn]=pd.Series(zscore(df[rsn][:]))
+                    #         else:
+                    #             df[rsn]=pd.Series(df[rsn][:])
                     if row['SCAN_%d_PARADIGM' % scan]==1 or row['SCAN_%d_PARADIGM' % scan]==3:
-                        # for rsn in columnNames:
-                        #     if filterOn:
-                        #         if zscoreOn:
-                        #             df[rsn]=pd.Series(-1*zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
-                        #         else:
-                        #             df[rsn]=pd.Series(-1*butter_lowpass_filter(df[rsn][:],lowpass,0.5))
-                        #
-                        #     else:
-                        #         if zscoreOn:
-                        #             df[rsn]=pd.Series(-1*zscore(df[rsn][:]))
-                        #         else:
-                        #             df[rsn]=pd.Series(-1*df[rsn][:])
+                        for rsn in columnNames:
+                            if filterOn:
+                                if zscoreOn:
+                                    df[rsn]=pd.Series(-1*zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
+                                else:
+                                    df[rsn]=pd.Series(-1*butter_lowpass_filter(df[rsn][:],lowpass,0.5))
+
+                            else:
+                                if zscoreOn:
+                                    df[rsn]=pd.Series(-1*zscore(df[rsn][:]))
+                                else:
+                                    df[rsn]=pd.Series(-1*df[rsn][:])
 
 
                         df['flip']=-1
                         flip=-1
                     else:
-                        # for rsn in columnNames:
-                            # if filterOn:
-                            #     if zscoreOn:
-                            #         df[rsn]=pd.Series(zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
-                            #     else:
-                            #         df[rsn]=pd.Series(butter_lowpass_filter(df[rsn][:],lowpass,0.5))
-                            #
-                            # else:
-                            #     if zscoreOn:
-                            #         df[rsn]=pd.Series(zscore(df[rsn][:]))
-                            #     else:
-                            #         df[rsn]=pd.Series(df[rsn][:])
+                        for rsn in columnNames:
+                            if filterOn:
+                                if zscoreOn:
+                                    df[rsn]=pd.Series(zscore(butter_lowpass_filter(df[rsn][:],lowpass,0.5)))
+                                else:
+                                    df[rsn]=pd.Series(butter_lowpass_filter(df[rsn][:],lowpass,0.5))
+
+                            else:
+                                if zscoreOn:
+                                    df['DMN_skew'] = skew(pd.Series(zscore(df['RSN3'])[:]))
+                                    df[rsn]=pd.Series(zscore(df[rsn][:]))
+                                else:
+                                    df['DMN_skew'] = skew(pd.Series(df['RSN3'])[:])
+                                    df[rsn]=pd.Series(df[rsn][:])
 
 
                         df['flip']=1
                         flip=1
                     df['FB'] = 'FEEDBACK' if row['SCAN_%d_FEEDBACK' % scan]==1 else 'NOFEEDBACK'
                     df['scanorder']=scan
-                    df['DMN_skew'] = skew(df['RSN3'])
+
                     df['modelcorr']=pearsonr(flip*(dmnIdeal['Wander']-dmnIdeal['Focus']),df['RSN3'])[0]
                     df['first_half_corr']=pearsonr(flip*(dmnIdeal['Wander'][0:203]-dmnIdeal['Focus'][0:203]),df['RSN3'][0:203])[0]
                     df['second_half_corr']=pearsonr(flip*(dmnIdeal['Wander'][204:]-dmnIdeal['Focus'][204:]),df['RSN3'][204:])[0]
                     for rsn in columnNames:
-                        df['%s_modelcorr' % rsn]=pearsonr(flip*(dmnIdeal['Wander']-dmnIdeal['Focus']),df[rsn])[0]
+                        df['%s_modelcorr' % rsn]=pearsonr((dmnIdeal['Wander']-dmnIdeal['Focus']),df[rsn])[0]
     #                 df['DMN']=pd.Series(zscore(nuisanceRegression(df[list(set(columnNames)-set(['RSN3']))],df['RSN3'])))
                     #load meanFD scores
                     fdFilePath='%s/%s_data_/frame_wise_displacement/_scan_feedback_%d/FD.1D' % (drFileLocation,subj,scan)
