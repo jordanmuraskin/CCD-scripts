@@ -144,7 +144,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     #get partial correlations
                     pcorr=partial_corr(np.column_stack([df[DMN_name],dmnIdeal['Wander'],-1*dmnIdeal['Focus']]))
                     df['DMN_pcorrWander']=pcorr[0,1 if flip==1 else 2]
-                    df['DMN_pcorrFocus']=pcorr[0,2 if flip==-1 else 1]
+                    df['DMN_pcorrFocus']=pcorr[0,2 if flip==1 else 1]
                     df['FB'] = 'FEEDBACK' if row['SCAN_%d_FEEDBACK' % scan]==1 else 'NOFEEDBACK'
                     df['scanorder']=scan
 
