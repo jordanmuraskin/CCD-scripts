@@ -404,8 +404,9 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
 
 def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True,savefig=True,ax=[]):
 
-    f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
-    sns.set(style="white")
+    if len(ax)<1:
+        f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
+        sns.set(style="white")
 
     maxModel=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject'])['modelcorr'].max().sort_values(ascending=False)
     sortedOrder=maxModel.index
@@ -414,8 +415,8 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
 
     r_scramble=np.mean(get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05),axis=0)
 
-    plt.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--',ax=ax)
-    plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--',ax=ax)
+    ax.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--')
+    ax.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--')
 
     if savefig:
         f.savefig('%s/Subject_ModelCorrelations.pdf' % saveFigureLocation, dpi=600)
