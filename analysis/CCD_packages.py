@@ -415,7 +415,7 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,r_scramble,figsize=(18,9),withThr
 
 
     ax.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--',label='Feedback On Threshold')
-    ax.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--',,label='Feedback Off Threshold')
+    ax.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--',label='Feedback Off Threshold')
 
     if savefig:
         f.savefig('%s/Subject_ModelCorrelations.pdf' % saveFigureLocation, dpi=600)
