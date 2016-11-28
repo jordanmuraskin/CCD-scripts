@@ -402,7 +402,7 @@ def createTimeSeriesPlots(GroupDF,goodsubj,DMN_name='RSN3',title='DMN_Activity',
         f.savefig('%s/%s_timeseries.pdf' % (saveFigureLocation,DMN_name), dpi=600)
 
 
-def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True,savefig=True):
+def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True,savefig=True,ax=[]):
 
     f, axarr = plt.subplots(1, sharex=True,figsize=figsize)
     sns.set(style="white")
@@ -410,23 +410,23 @@ def createSubjectModelBarPlot(GroupDF,goodsubj,figsize=(18,9),withThreshold=True
     maxModel=GroupDF[GroupDF.Subject_ID.isin(goodsubj)].groupby(['Subject'])['modelcorr'].max().sort_values(ascending=False)
     sortedOrder=maxModel.index
 
-    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder)
+    sns.barplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='Subject',y='modelcorr',hue='FB',order=sortedOrder,ax=ax)
 
     r_scramble=np.mean(get_null_correlations(GroupDF,goodsubj,nperms=1000,p=0.05),axis=0)
 
-    plt.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--')
-    plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--')
+    plt.plot([0,len(goodsubj)],[r_scramble[0],r_scramble[0]],'g--',ax=ax)
+    plt.plot([0,len(goodsubj)],[r_scramble[1],r_scramble[1]],'b--',ax=ax)
 
     if savefig:
         f.savefig('%s/Subject_ModelCorrelations.pdf' % saveFigureLocation, dpi=600)
     return r_scramble
 
-def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,savefig=True):
+def createScanOrderBarPlot(GroupDF,goodsubj,BV=False,ax=[],savefig=True):
     plt.figure()
     if BV:
         sns.factorplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',kind='bar',units='Subject',ci=68)
     else:
-        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile')
+        sns.violinplot(data=GroupDF[GroupDF.Subject_ID.isin(goodsubj)],x='FB',y='modelcorr',hue='scanorder',split='True',bw=.4,inner='quartile',ax=ax)
 
 
     if savefig:
