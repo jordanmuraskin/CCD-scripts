@@ -105,8 +105,11 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
                             else:
                                 if zscoreOn:
+                                    df['DMN_skew'] = skew(pd.Series(zscore(df['RSN3'])[:]))
                                     df[rsn]=pd.Series(-1*zscore(df[rsn][:]))
+
                                 else:
+                                    df['DMN_skew'] = skew(pd.Series(df['RSN3'])[:])
                                     df[rsn]=pd.Series(-1*df[rsn][:])
 
 
@@ -134,7 +137,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     df['FB'] = 'FEEDBACK' if row['SCAN_%d_FEEDBACK' % scan]==1 else 'NOFEEDBACK'
                     df['scanorder']=scan
 
-                    df['modelcorr']=pearsonr(flip*(dmnIdeal['Wander']-dmnIdeal['Focus']),df['RSN3'])[0]
+                    df['modelcorr']=pearsonr((dmnIdeal['Wander']-dmnIdeal['Focus']),df['RSN3'])[0]
                     df['first_half_corr']=pearsonr(flip*(dmnIdeal['Wander'][0:203]-dmnIdeal['Focus'][0:203]),df['RSN3'][0:203])[0]
                     df['second_half_corr']=pearsonr(flip*(dmnIdeal['Wander'][204:]-dmnIdeal['Focus'][204:]),df['RSN3'][204:])[0]
                     for rsn in columnNames:
