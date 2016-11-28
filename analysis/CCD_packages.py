@@ -109,7 +109,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                                     df[rsn]=pd.Series(-1*butter_lowpass_filter(df[rsn][:],lowpass,0.5))
 
                             else:
-
+                                if zscoreOn:
                                     df[rsn]=pd.Series(-1*zscore(df[rsn][:]))
 
                                 else:
