@@ -87,6 +87,9 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
                     DMN_vals=df[DMN_name]
                     if zscoreOn:
                         df['DMN_skew'] = skew(pd.Series(zscore(df[DMN_name])[:]))
+
+
+
                     else:
                         df['DMN_skew'] = skew(pd.Series(df[DMN_name])[:])
                     # for rsn in columnNames:
@@ -110,6 +113,7 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
                             else:
                                 if zscoreOn:
+
                                     df[rsn]=pd.Series(-1*zscore(df[rsn][:]))
 
                                 else:
@@ -136,6 +140,11 @@ def getCCDSubjectData(filterOn=False,zscoreOn=True,lowpass=0.1,globalNR=0,saveMo
 
                         df['flip']=1
                         flip=1
+
+                    #get partial correlations
+                    pcorr=partial_corr(np.column_stack([df[DMN_name],dmnIdeal['Wander'],-1*dmnIdeal['Focus']]))
+                    df['DMN_pcorrWander']=pcorr[0,1 if flip==1 else 2]
+                    df['DMN_pcorrFocus']=pcorr[0,2 if flip==-1 else 1]
                     df['FB'] = 'FEEDBACK' if row['SCAN_%d_FEEDBACK' % scan]==1 else 'NOFEEDBACK'
                     df['scanorder']=scan
 
