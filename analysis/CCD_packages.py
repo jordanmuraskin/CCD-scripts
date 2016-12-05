@@ -1104,12 +1104,12 @@ def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,
 
     if len(saveFolder)>0:
         folder=saveFolder
-        image=brain.save_montage('%s/%s-%s.png' % (folder,hemi,filename),order=['l','m'],orientation='h',border_size=3,colorbar=None)
+        image_out=brain.save_montage('%s/%s-%s.png' % (folder,hemi,filename),order=['l','m'],orientation='h',border_size=3,colorbar=None)
 
     else:
-        image=brain.save_image('%s/surfaceplot.jpg' % folder)
+        image_out=brain.save_image('%s/surfaceplot.jpg' % folder)
     brain.close()
-    return image
+    return image_out
 
 def phaseScrambleTS(ts):
     """Returns a TS: original TS power is preserved; TS phase is shuffled."""
