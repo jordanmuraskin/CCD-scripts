@@ -1104,7 +1104,7 @@ def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,
 
     if len(saveFolder)>0:
         folder=saveFolder
-        brain.save_image('%s/%s-%s.png' % (folder,hemi,filename), orientation='h')
+        brain.save_image('%s/%s-%s.png' % (folder,hemi,filename))
 
     else:
         brain.save_image('%s/surfaceplot.jpg' % folder)
