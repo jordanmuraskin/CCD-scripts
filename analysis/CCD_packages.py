@@ -929,7 +929,7 @@ def createRegressionPlots(predictions,performance,coefs,fb_coefs,nfb_coefs,Group
         f.savefig('%s/RSN_LinearRegPrediction.pdf' % saveFigureLocation,dpi=300)
 
 
-def createTFCEfMRIOverlayImages(folder,suffix,title='',vmax=8,display_mode='z',slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True,tight_layout=False,draw_cross=False):
+def createTFCEfMRIOverlayImages(folder,suffix,title='',vmax=8,display_mode='z',slices=range(-20,50,10),threshold=0.94999,plotToAxis=False,f=[],axes=[],colorbar=True,tight_layout=False,draw_cross=False,annotate=False):
 
 
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
@@ -944,11 +944,14 @@ def createTFCEfMRIOverlayImages(folder,suffix,title='',vmax=8,display_mode='z',s
 
     if plotToAxis:
         display=plotting.plot_stat_map(fw,display_mode=display_mode,threshold=0,
-                                       cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,black_bg=False,title=title,dim=0,figure=f,axes=axes,draw_cross=draw_cross)
+                                       cut_coords=slices,vmax=vmax,colorbar=colorbar,
+                                       bg_img=bg_img,black_bg=False,title=title,dim=0,
+                                       figure=f,axes=axes,draw_cross=draw_cross,
+                                       annotate=annotate)
     else:
         display=plotting.plot_stat_map(fw,display_mode=display_mode,threshold=0,
         cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,
-        black_bg=False,title=title,dim=0)
+        black_bg=False,title=title,dim=0,annotate=annotate)
     if tight_layout:
         display.tight_layout()
     return display
