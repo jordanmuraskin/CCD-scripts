@@ -1078,7 +1078,7 @@ def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,
     fw.to_filename(mri_file)
 
     """Bring up the visualization"""
-    brain = Brain("fsaverage",hemi,surface, offscreen=True , background="white")
+    brain = Brain("fsaverage",hemi,surface, views=['lat', 'med'], offscreen=True , background="white")
 
     """Project the volume file and return as an array"""
 
@@ -1104,7 +1104,7 @@ def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,
 
     if len(saveFolder)>0:
         folder=saveFolder
-        brain.save_montage('%s/%s-%s.png' % (folder,hemi,filename),['l', 'm'], orientation='h')
+        brain.save_image('%s/%s-%s.png' % (folder,hemi,filename), orientation='h')
 
     else:
         brain.save_image('%s/surfaceplot.jpg' % folder)
