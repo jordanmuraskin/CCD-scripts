@@ -1059,7 +1059,7 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
         brain.save_image('%s/surfaceplot.jpg' % folder)
     brain.close()
 
-def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,coords=(),surface='inflated',fwhm=0,filename='',saveFolder=[],vmax=5.0):
+def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,coords=(),surface='inflated',fwhm=0,filename='',saveFolder=[],vmax=5.0,bsize=5):
     from surfer import Brain, io
     TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
 
@@ -1104,7 +1104,7 @@ def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,
 
     if len(saveFolder)>0:
         folder=saveFolder
-        image_out=brain.save_montage('%s/%s-%s.png' % (folder,hemi,filename),order=['l','m'],orientation='h',border_size=3,colorbar=None)
+        image_out=brain.save_montage('%s/%s-%s.png' % (folder,hemi,filename),order=['l','m'],orientation='h',border_size=bsize,colorbar=None)
 
     else:
         image_out=brain.save_image('%s/surfaceplot.jpg' % folder)
