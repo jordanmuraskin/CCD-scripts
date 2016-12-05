@@ -1059,6 +1059,57 @@ def make_pysurfer_images(folder,suffix='cope1',threshold=0.9499,coords=(),surfac
         brain.save_image('%s/surfaceplot.jpg' % folder)
     brain.close()
 
+def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,coords=(),surface='inflated',fwhm=0,filename='',saveFolder=[],vmax=5.0):
+    from surfer import Brain, io
+    TFCEposImg,posImg,TFCEnegImg,negImg=getFileNamesfromFolder(folder,suffix)
+
+    pos=image.math_img("np.multiply(img1,img2)",
+                         img1=image.threshold_img(TFCEposImg,threshold=threshold),img2=posImg)
+    neg=image.math_img("np.multiply(img1,img2)",
+                         img1=image.threshold_img(TFCEnegImg,threshold=threshold),img2=negImg)
+    fw=image.math_img("img1-img2",img1=pos,img2=neg)
+
+    if fwhm==0:
+        smin=np.min(np.abs(fw.get_data()[fw.get_data()!=0]))
+    else:
+        smin=2
+
+    mri_file = "%s/thresholded_posneg.nii.gz" % folder
+    fw.to_filename(mri_file)
+
+    """Bring up the visualization"""
+    brain = Brain("fsaverage",hemi=hemi,surface, offscreen=True , background="white")
+
+    """Project the volume file and return as an array"""
+
+    reg_file = os.path.join("/opt/freesurfer","average/mni152.register.dat")
+    surf_data = io.project_volume_data(mri_file, hemi, reg_file,smooth_fwhm=fwhm)
+    #  surf_data_rh = io.project_volume_data(mri_file, "rh", reg_file,smooth_fwhm=fwhm)
+
+
+    """
+    You can pass this array to the add_overlay method for a typical activation
+    overlay (with thresholding, etc.).
+    """
+    brain.add_overlay(surf_data, min=smin, max=vmax, name="activation", hemi=hemi)
+    # brain.overlays["activation"]
+    # brain.add_overlay(surf_data_rh, min=smin, max=5, name="ang_corr_rh", hemi='rh')
+
+    if len(coords)>0:
+        if coords[0]>0:
+            hemi2='rh'
+        else:
+            hemi2='lh'
+        brain.add_foci(coords, map_surface="pial", color="gold",hemi=hemi2)
+
+    if len(saveFolder)>0:
+        folder=saveFolder
+        brain.save_montage('%s/%s-%s.png' % (folder,hemi,filename),['l', 'm'], orientation='h')
+
+    else:
+        brain.save_image('%s/surfaceplot.jpg' % folder)
+    brain.close()
+
 def phaseScrambleTS(ts):
     """Returns a TS: original TS power is preserved; TS phase is shuffled."""
     fs = fft(ts)
