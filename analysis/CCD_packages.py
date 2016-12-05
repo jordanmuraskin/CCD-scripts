@@ -1078,7 +1078,7 @@ def make_pysurfer_images_lh_rh(folder,suffix='cope1',hemi='lh',threshold=0.9499,
     fw.to_filename(mri_file)
 
     """Bring up the visualization"""
-    brain = Brain("fsaverage",hemi=hemi,surface, offscreen=True , background="white")
+    brain = Brain("fsaverage",surface,hemi=hemi, offscreen=True , background="white")
 
     """Project the volume file and return as an array"""
 
