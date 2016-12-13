@@ -952,12 +952,14 @@ def createTFCEfMRIOverlayImages(folder,suffix,title='',vmax=8,display_mode='z',s
         display=plotting.plot_stat_map(fw,display_mode=display_mode,threshold=0,
         cut_coords=slices,vmax=vmax,colorbar=colorbar,bg_img=bg_img,
         black_bg=False,title=title,dim=0,annotate=annotate)
+
     if tight_layout:
         display.tight_layout()
+
     return display
 
 
-def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=(20,20)):
+def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=(20,20),summary=False):
     import statsmodels.api as sm
     if addconstant:
         X=sm.add_constant(X)
@@ -966,7 +968,8 @@ def runRLMR(y,X,modelNames=[],RLM=True,addconstant=True,plotFigure=True,figsize=
     else:
         model = sm.OLS(y,X)
     results = model.fit()
-    print results.summary()
+    if summary:
+        print results.summary()
 
     if plotFigure:
         if RLM:
