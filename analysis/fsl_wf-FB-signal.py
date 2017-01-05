@@ -6,7 +6,7 @@ import nipype.interfaces.io as nio           # Data i/o
 import nipype.interfaces.fsl as fsl          # fsl
 import nipype.pipeline.engine as pe          # pypeline engine
 import nipype.algorithms.modelgen as model   # model generation
-import CCD_packages
+# import CCD_packages
 from CPAC.registration import create_wf_apply_ants_warp
 from nipype.workflows.fmri.fsl import (create_featreg_preproc,
                                        create_modelfit_workflow,
@@ -139,9 +139,9 @@ for feedbackRun in range(2):
             focus_durations = Order1_durations
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
-        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,task_onsets,list(FB_signal['timeStamp'])],
+        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,task_onsets,list(FB_Signal['timeStamp'])],
                               durations=[focus_durations, wander_durations,task_duration,[2]],
-                              amplitudes=[[1],[1],[1],list(FB_signal['score'])], regressors=None))
+                              amplitudes=[[1],[1],[1],list(FB_Signal['score'])], regressors=None))
         return output
     ## end moral dilemma
 
