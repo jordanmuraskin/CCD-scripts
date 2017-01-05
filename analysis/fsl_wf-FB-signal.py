@@ -141,7 +141,7 @@ for feedbackRun in range(2):
             wander_durations = Order2_durations
         output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,task_onsets,list(FB_signal['timeStamp'])],
                               durations=[focus_durations, wander_durations,task_duration,[2]],
-                              amplitudes=[[1],[1],[1],list(FB_signal['score'])] regressors=None))
+                              amplitudes=[[1],[1],[1],list(FB_signal['score'])], regressors=None))
         return output
     ## end moral dilemma
 
