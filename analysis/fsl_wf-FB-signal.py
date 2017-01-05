@@ -161,7 +161,7 @@ for feedbackRun in range(2):
     cont4 = ['Mean Wander','T',['Wander'],[1]]
     cont5 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
     cont6 = ['TaskOnset', 'T', ['TaskOnset'],[1]]
-    cont7 = ['FB', 'T', ['FB_signal'],[1]]
+    cont7 = ['FB', 'T', ['FB_Signal'],[1]]
 
     # cont3 = ['Task','F', [cont1,cont2]]
 
