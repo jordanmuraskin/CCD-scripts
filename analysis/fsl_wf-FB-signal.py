@@ -64,7 +64,7 @@ for feedbackRun in range(2):
     if not os.path.isdir(working_dir):
         os.makedirs(working_dir)
 
-    workflow = pe.Workflow(name='onset_feedback_run-%d' % feedbackRun, base_dir=working_dir)
+    workflow = pe.Workflow(name='onset_FB-feedback_run-%d' % feedbackRun, base_dir=working_dir)
 
 
     # Map field names to individual subject runs.
@@ -155,6 +155,8 @@ for feedbackRun in range(2):
     modelfit.inputs.inputspec.interscan_interval = TR
     modelfit.inputs.inputspec.model_serial_correlations = True
     modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
+    modelfit.inputs.inputspec.orthogonalization={1: {0:0,1:0,2:0,3:0,4:0},
+    2:{0:0,1:0,2:0,3:0,4:0},3:{0:0,1:0,2:0,3:0,4:0},4:{0:1,1:0,2:0,3:1,4:0}}
     cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
     cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
     cont3 = ['Mean Focus','T',['Focus'],[1]]
