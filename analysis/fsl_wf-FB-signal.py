@@ -155,7 +155,7 @@ for feedbackRun in range(2):
     modelfit.inputs.inputspec.interscan_interval = TR
     modelfit.inputs.inputspec.model_serial_correlations = True
     modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
-    modelfit.inputs.inputspec.orthogonalization={1: {0:0,1:0,2:0,3:0,4:0},
+    modelfit.inputs.level1design.orthogonalization={1: {0:0,1:0,2:0,3:0,4:0},
     2:{0:0,1:0,2:0,3:0,4:0},3:{0:0,1:0,2:0,3:0,4:0},4:{0:1,1:0,2:0,3:1,4:0}}
     cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
     cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
