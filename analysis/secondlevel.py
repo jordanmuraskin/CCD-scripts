@@ -225,7 +225,7 @@ for runType in ['randomise','flame']:
             os.makedirs(foldername)
 
 if onsetData:
-    prefix='onset_'
+    prefix='onset_FB-'
 else:
     prefix=''
 
