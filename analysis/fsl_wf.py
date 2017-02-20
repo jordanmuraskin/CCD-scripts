@@ -6,7 +6,7 @@ import nipype.interfaces.io as nio           # Data i/o
 import nipype.interfaces.fsl as fsl          # fsl
 import nipype.pipeline.engine as pe          # pypeline engine
 import nipype.algorithms.modelgen as model   # model generation
-from CPAC.registration import create_wf_apply_ants_warp
+# from CPAC.registration import create_wf_apply_ants_warp
 from nipype.workflows.fmri.fsl import (create_featreg_preproc,
                                        create_modelfit_workflow,
                                        create_reg_workflow)
