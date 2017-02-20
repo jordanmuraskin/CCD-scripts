@@ -146,7 +146,7 @@ for feedbackRun in range(2):
     modelfit = create_modelfit_workflow(name='feedback')
     modelfit.inputs.inputspec.interscan_interval = TR
     modelfit.inputs.inputspec.model_serial_correlations = True
-    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': False}}
+    modelfit.inputs.inputspec.bases = {'dgamma': {'derivs': True}}
     cont1 = ['Focus>Wander','T', ['Focus','Wander'],[1,-1]]
     cont2 = ['Wander>Focus','T', ['Focus', 'Wander'],[-1,1]]
     cont3 = ['Mean Focus','T',['Focus'],[1]]
