@@ -57,8 +57,8 @@ for feedbackRun in range(2):
     # Workflow base directory
     if not os.path.isdir(working_dir):
         os.makedirs(working_dir)
-        
-    workflow = pe.Workflow(name='onset_feedback_run-%d' % feedbackRun, base_dir=working_dir)
+
+    workflow = pe.Workflow(name='feedback_run-%d' % feedbackRun, base_dir=working_dir)
 
 
     # Map field names to individual subject runs.
@@ -98,7 +98,7 @@ for feedbackRun in range(2):
     modelspec = pe.Node(interface=model.SpecifyModel(),name="modelspec")
     modelspec.inputs.input_units = 'secs'
     modelspec.inputs.time_repetition = TR
-    modelspec.inputs.high_pass_filter_cutoff = 100
+    modelspec.inputs.high_pass_filter_cutoff = 300
 
     workflow.connect(addMeanImage, 'out_file', modelspec,'functional_runs')
 
@@ -132,8 +132,8 @@ for feedbackRun in range(2):
             focus_durations = Order1_durations
             wander_onset = Order2_onsets
             wander_durations = Order2_durations
-        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset,task_onsets],
-                              durations=[focus_durations, wander_durations,task_duration], regressors=None))
+        output.insert(r,Bunch(conditions=names,onsets=[focus_onset, wander_onset],
+                              durations=[focus_durations, wander_durations], regressors=None))
         return output
     ## end moral dilemma
 
@@ -152,7 +152,7 @@ for feedbackRun in range(2):
     cont3 = ['Mean Focus','T',['Focus'],[1]]
     cont4 = ['Mean Wander','T',['Wander'],[1]]
     cont5 = ['Average Activation', 'T', ['Focus', 'Wander'],[.5,.5]]
-    cont6 = ['TaskOnset', 'T', ['TaskOnset'],[1]]
+    # cont6 = ['TaskOnset', 'T', ['TaskOnset'],[1]]
 
     # cont3 = ['Task','F', [cont1,cont2]]
 
