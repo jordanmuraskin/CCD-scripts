@@ -127,7 +127,7 @@ done
 chmod a+x ${DIRNAME}/${BASENAME}.generate
 # GENERATE_ID=`$FSLDIR/bin/fsl_sub -T ${REQUESTED_TIME} -N ${BASENAME}.generate -l ${DIRNAME}/${BASENAME}_logs/ -t ${DIRNAME}/${BASENAME}.generate`
 
-parallel -j 20 -a ${DIRNAME}/${BASENAME}.generate 
+parallel -j 30 -a ${DIRNAME}/${BASENAME}.generate 
 
 #stage2:
 cat <<combineScript > ${DIRNAME}/${BASENAME}.defragment
