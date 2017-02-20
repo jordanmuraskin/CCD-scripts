@@ -115,7 +115,7 @@ for feedbackRun in range(2):
         task_duration =[.1]
         #Make subject specific EVs given feedback ordering
         output=[]
-        names=['Focus','Wander','TaskOnset']
+        names=['Focus','Wander']
         SubjInfo = read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
         SubjInfo.set_index('JM_INTERNAL',inplace=True)
         if r==0:
