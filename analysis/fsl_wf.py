@@ -156,7 +156,7 @@ for feedbackRun in range(2):
 
     # cont3 = ['Task','F', [cont1,cont2]]
 
-    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5,cont6]
+    modelfit.inputs.inputspec.contrasts = [cont1, cont2, cont3,cont4,cont5]
 
     workflow.connect([(infosource,modelspec,[(('subject_id',subjectinfo,feedbackRun),'subject_info')])])
 
