@@ -262,7 +262,7 @@ if run1Sample:
             for t in ['cope']:
                 x=[]
                 for subj in subject_list:
-                    if t=='cope' and RSN>0 and fb==2::
+                    if t=='cope' and RSN>0 and fb==2:
                         fname= '/home/jmuraskin/Projects/CCD/CPAC-out/pipeline_CCD_v1/%s_data_/dr_tempreg_maps_files_to_standard_smooth/_scan_tra/_csf_threshold_0.96/_gm_threshold_0.7/_wm_threshold_0.96/_compcor_ncomponents_5_selector_pc10.linear1.wm0.global0.motion1.quadratic1.gm0.compcor1.csf1/_spatial_map_PNAS_Smith09_rsn10/_fwhm_6/_dr_tempreg_maps_files_smooth_0%d/temp_reg_map_000%d_antswarp_maths.nii.gz' % (subj,rsn,rsn)
                     else:
                         fbLoc=subjectinfo(subj,fb)
