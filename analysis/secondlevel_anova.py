@@ -290,16 +290,16 @@ if run1Sample:
             regressors=dict(FD=list(meanFD))
 
             #add each group
-            regressorInfo=np.zeros(len(subjectList),)
-            regressorInfo[np.in1d(subjectList,wander_only)]=1
+            regressorInfo=np.zeros(len(subject_list),)
+            regressorInfo[np.in1d(subject_list,wander_only)]=1
             regressors['wander_only']=regressorInfo
 
-            regressorInfo=np.zeros(len(subjectList),)
-            regressorInfo[np.in1d(subjectList,focus_only)]=1
+            regressorInfo=np.zeros(len(subject_list),)
+            regressorInfo[np.in1d(subject_list,focus_only)]=1
             regressors['focus_only']=regressorInfo
 
-            regressorInfo=np.zeros(len(subjectList),)
-            regressorInfo[np.in1d(subjectList,focus_and_wander)]=1
+            regressorInfo=np.zeros(len(subject_list),)
+            regressorInfo[np.in1d(subject_list,focus_and_wander)]=1
             regressors['focus_and_wander']=regressorInfo
 
             model.inputs.contrasts = [['W>F+W', 'T',['wander_only','focus_and_wander'],[1,-1]],
