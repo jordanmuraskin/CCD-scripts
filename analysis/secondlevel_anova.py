@@ -292,15 +292,15 @@ if run1Sample:
             #add each group
             regressorInfo=np.zeros(len(subject_list),)
             regressorInfo[np.in1d(subject_list,wander_only)]=1
-            regressors['wander_only']=regressorInfo
+            regressors['wander_only']=list(regressorInfo)
 
             regressorInfo=np.zeros(len(subject_list),)
             regressorInfo[np.in1d(subject_list,focus_only)]=1
-            regressors['focus_only']=regressorInfo
+            regressors['focus_only']=list(regressorInfo)
 
             regressorInfo=np.zeros(len(subject_list),)
             regressorInfo[np.in1d(subject_list,focus_and_wander)]=1
-            regressors['focus_and_wander']=regressorInfo
+            regressors['focus_and_wander']=list(regressorInfo)
 
             model.inputs.contrasts = [['W>F+W', 'T',['wander_only','focus_and_wander'],[1,-1]],
             ['F>F+W', 'T',['focus_only','focus_and_wander'],[1,-1]],['W>F', 'T',['wander_only','focus_only'],[1,-1]],
