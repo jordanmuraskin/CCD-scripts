@@ -304,7 +304,7 @@ if run1Sample:
 
             model.inputs.contrasts = [['W>F+W', 'T',['wander_only','focus_and_wander'],[1,-1]],
             ['F>F+W', 'T',['focus_only','focus_and_wander'],[1,-1]],['W>F', 'T',['wander_only','focus_only'],[1,-1]],
-            ['F-Test', 'F',['W>F+W','F>F+W'],[1,1]]]
+            ('F-Test', 'F',['W>F+W','F>F+W'],[1,1])]
             if age:
                 regressors['age']=list(ages)
             if gender:
