@@ -36,6 +36,8 @@ parser.add_argument('-traindiff',help='Run Train performance difference-override
 parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,type=float,required=False)
 parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
 parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
+parser.add_argument('-Spatial',help='Run with Spatial Performance instead of Phenotype',type=int,required=False,default=0)
+
 
 args = parser.parse_args()
 
@@ -62,6 +64,7 @@ train_vs=args.train_vs
 traindiff=args.traindiff
 onsetData=args.onsetData
 perfThreshold=args.perfThreshold
+runSpatial = args.runSpatial
 
 def getSubjectButtonResponses():
     filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
@@ -157,8 +160,8 @@ def subjectinfo(subject_id,getFeedback=True):
         return noFeedback
 
 #
-# #Decide if running all subjects or just good subjects
-# runAll=True
+#load DMN covariance information
+dmn_df = pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/Focus-Wander-SpatialROI.csv')
 
 #load subject list
 motionTest=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/analysis/CCD_meanFD.csv')
@@ -209,7 +212,10 @@ pheno=pheno.set_index('participant')
 pheno_measure_name=args.pheno
 pheno_measure = zscore(pheno.loc[subject_list][pheno_measure_name])
 if runWithPerformance:
-    pheno_measure_name='Performance'
+    if runSpatial:
+        pheno_measure_name='Performance_Spatial'
+    else:
+        pheno_measure_name='Performance'
 
 if age:
     ages=zscore(pheno.loc[subject_list]['V1_DEM_001'])
@@ -278,13 +284,16 @@ if run1Sample:
             else:
                 meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             if runWithPerformance:
-                if train and traindiff:
-                    pheno_measure = zscore(np.array(np.arctanh(performance[performance.FB==fbNames[1]][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctanh(performance[performance.FB==fbNames[0]][performance.Subject_ID.isin(subject_list)]['R'])))
-                elif train and not traindiff:
-                    pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[train_vs]][performance.Subject_ID.isin(subject_list)]['R']))
-
+                if runSpatial:
+                    pheno_measure = zscore(dmn_df[np.all([dmn_df.fb=='FEEDBACK',dmn_df.cope==3],axis=0)]['signal'])
                 else:
-                    pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
+                    if train and traindiff:
+                        pheno_measure = zscore(np.array(np.arctanh(performance[performance.FB==fbNames[1]][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctanh(performance[performance.FB==fbNames[0]][performance.Subject_ID.isin(subject_list)]['R'])))
+                    elif train and not traindiff:
+                        pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[train_vs]][performance.Subject_ID.isin(subject_list)]['R']))
+
+                    else:
+                        pheno_measure = zscore(np.arctanh(performance[performance.FB==fbNames[fb]][performance.Subject_ID.isin(subject_list)]['R']))
 
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
