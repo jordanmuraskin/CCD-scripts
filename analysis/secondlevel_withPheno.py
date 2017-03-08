@@ -64,7 +64,7 @@ train_vs=args.train_vs
 traindiff=args.traindiff
 onsetData=args.onsetData
 perfThreshold=args.perfThreshold
-runSpatial = args.runSpatial
+runSpatial = args.Spatial
 
 def getSubjectButtonResponses():
     filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
