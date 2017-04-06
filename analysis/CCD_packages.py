@@ -317,6 +317,9 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS',p
 
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
+    #remove depressed
+    allsubj = npsetdiff1d(allsubj,depressed)
+    
     if motionType=='FD':
         motionReject=unique((GroupDF[GroupDF.meanFD>motionThresh]['Subject_ID']))
     else:
@@ -326,16 +329,17 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS',p
     else:
         goodsubj=allsubj
 
-    #remove depressed
-    goodsubj=np.setdiff1d(goodsubj,np.array(depressed))
+#     goodsubj=np.setdiff1d(goodsubj,np.array(depressed))
 
     df=getSubjectButtonResponses()
     tmp=df.groupby('subject')['number'].sum()
     goodperformers=np.array(tmp[tmp>poor_performer].index[:])
+    
+    poorperformers = np.setdiff1d(goodsubj,goodperformers)
     #remove poor performers
     goodsubj=np.intersect1d(goodsubj,goodperformers)
 
-    return goodsubj,motionReject
+    return goodsubj,motionReject,poorperformers
 
 
 def getBlockedPerformance(GroupDF,goodsubj):
