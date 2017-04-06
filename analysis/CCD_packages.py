@@ -318,7 +318,7 @@ def getSubjectList(GroupDF,RejectMotion=True,motionThresh=0.2,motionType='RMS',p
     #reject large motion subjects
     allsubj=unique(GroupDF['Subject_ID'])
     #remove depressed
-    allsubj = npsetdiff1d(allsubj,depressed)
+    allsubj = np.setdiff1d(allsubj,depressed)
     
     if motionType=='FD':
         motionReject=unique((GroupDF[GroupDF.meanFD>motionThresh]['Subject_ID']))
