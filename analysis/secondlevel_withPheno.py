@@ -306,6 +306,7 @@ if run1Sample:
             if gender:
                 regressors['mf']=list(mf)
             model.inputs.regressors = regressors
+            print(regressors) 
             model.run()
 
             if runFlame:
