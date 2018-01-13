@@ -302,7 +302,10 @@ if run1Sample:
 
             model = MultipleRegressDesign()
             model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
-            regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
+            if RSNmean:
+                regressors=dict(pheno=[1]*len(subject_list),FD=list(meanFD))
+            else:
+                regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
             if age:
                 regressors['age']=list(ages)
             if gender:
