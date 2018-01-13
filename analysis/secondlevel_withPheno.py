@@ -372,7 +372,12 @@ if runPair:
         model = MultipleRegressDesign()
         model.inputs.contrasts = [['pheno pos', 'T',['pheno'],[1]],['pheno neg', 'T',['pheno'],[-1]]]
         if runWithPerformance:
-            pheno_measure = zscore(np.array(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])))
+            if runSpatial:
+                fb_measure = dmn_df[np.all([dmn_df.fb=='FEEDBACK',dmn_df.cope==4],axis=0)]['signal'].values-dmn_df[np.all([dmn_df.fb=='FEEDBACK',dmn_df.cope==3],axis=0)]['signal'].values
+                nofb_measure = dmn_df[np.all([dmn_df.fb=='NOFEEDBACK',dmn_df.cope==4],axis=0)]['signal'].values-dmn_df[np.all([dmn_df.fb=='NOFEEDBACK',dmn_df.cope==3],axis=0)]['signal'].values
+                pheno_measure = zscore(fb_measure-nofb_measure)
+            else:
+                pheno_measure = zscore(np.array(np.arctan(performance[performance.FB=='FEEDBACK'][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctan(performance[performance.FB=='NOFEEDBACK'][performance.Subject_ID.isin(subject_list)]['R'])))
         regressors=dict(pheno=list(pheno_measure),FD=list(meanFD))
         if age:
             regressors['age']=list(ages)
