@@ -285,7 +285,10 @@ if run1Sample:
                 meanFD=zscore(motionTest[motionTest.FB==fbNames[fb]][motionTest.Subject_ID.isin(subject_list)]['meanFD'])
             if runWithPerformance:
                 if runSpatial:
-                    pheno_measure = zscore(dmn_df[np.all([dmn_df.fb=='FEEDBACK',dmn_df.cope==3],axis=0)]['signal'])
+                    if i == 1:
+                        pheno_measure = zscore(dmn_df[np.all([dmn_df.fb==fb,dmn_df.cope==4],axis=0)]['signal'].values-dmn_df[np.all([dmn_df.fb==fb,dmn_df.cope==3],axis=0)]['signal'].values)
+                    else:
+                        pheno_measure = zscore(dmn_df[np.all([dmn_df.fb==fb,dmn_df.cope==i],axis=0)]['signal'])
                 else:
                     if train and traindiff:
                         pheno_measure = zscore(np.array(np.arctanh(performance[performance.FB==fbNames[1]][performance.Subject_ID.isin(subject_list)]['R']))-np.array(np.arctanh(performance[performance.FB==fbNames[0]][performance.Subject_ID.isin(subject_list)]['R'])))
