@@ -37,6 +37,7 @@ parser.add_argument('-gmThresh',help='Grey Matter Threshold Value',default=0.2,t
 parser.add_argument('-onsetData',help='UseOnsetData',default=0,type=int)
 parser.add_argument('-perfThreshold', help='Value for Performance Threshold)',required=False,default=15,type=int)
 parser.add_argument('-Spatial',help='Run with Spatial Performance instead of Phenotype',type=int,required=False,default=0)
+parser.add_argument('-rsnMean',help='Run RSN 1 sample mean',type=int,required=False,default=0)
 
 
 args = parser.parse_args()
@@ -65,6 +66,7 @@ traindiff=args.traindiff
 onsetData=args.onsetData
 perfThreshold=args.perfThreshold
 runSpatial = args.Spatial
+RSNmean = args.rsnMean
 
 def getSubjectButtonResponses():
     filelist=pd.read_csv('/home/jmuraskin/Projects/CCD/CCD-scripts/NARSAD_stimulus_JM.csv')
@@ -340,8 +342,11 @@ if run1Sample:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + rsn_name  + '/' + pheno_measure_name
                     if train and traindiff:
                         foldername=foldername + '/' + 'Difference'
+                    elif train and RSNmean:
+                        foldername = foldername + '/' + 'Mean'
                     elif train:
                         foldername=foldername + '/' + fbNames[train_vs]
+
                 elif runFC:
                     foldername='/home/jmuraskin/Projects/CCD/working_v1/groupAnalysis/randomise/' + secondlevel_folder_names[fb] + '/' + motionDir + '/' + fc + '/' + pheno_measure_name
                     if train and traindiff:
